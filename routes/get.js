@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const mkekadb = require('../model/mkeka-mega')
-const supatips = require('../model/supatips')
+const fametipsModel = require('../model/fametips')
 const betslip = require('../model/betslip')
 const graphModel = require('../model/graph-tips')
 
@@ -15,28 +15,29 @@ router.get('/favicon.ico', (req, res) => res.status(204).end());
 
 router.get('/', async (req, res) => {
     try {
-        //supatip ya leo
-        let stips = await supatips.find({ siku: d })
+        //fametip ya leo
+        let d = new Date().toLocaleDateString('en-GB', {timeZone: 'Africa/Nairobi'})
+        let ftips = await fametipsModel.find({ siku: d })
 
-        //supatip ya jana
+        //fametip ya jana
         let _nd = new Date()
         _nd.setDate(_nd.getDate() - 1)
         let _d = _nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let ytips = await supatips.find({ siku: _d })
+        let ytips = await fametipsModel.find({ siku: _d })
 
-        //supatip ya juzi
+        //fametip ya juzi
         let _jd = new Date()
         _jd.setDate(_jd.getDate() - 2)
         let _s = _jd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let jtips = await supatips.find({ siku: _s })
+        let jtips = await fametipsModel.find({ siku: _s })
 
-        //supatip ya kesho
+        //fametip ya kesho
         let new_d = new Date()
         new_d.setDate(new_d.getDate() + 1)
         let kesho = new_d.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let ktips = await supatips.find({ siku: kesho })
+        let ktips = await fametipsModel.find({ siku: kesho })
 
-        res.render('1-home/home', { stips, ytips, ktips, jtips })
+        res.render('1-home/home', { ftips, ytips, ktips, jtips })
     } catch (err) {
         console.log(err)
         console.log(err.message)
