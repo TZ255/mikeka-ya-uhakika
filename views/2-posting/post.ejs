@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="nofollow,noindex">
+    <title>Admin Posting</title>
+    <style>
+        body {
+            padding: 24px 12px;
+            margin: auto;
+        }
+
+        .cont {
+            background-color: bisque;
+            padding: 16px;
+        }
+
+        .gr {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .gr input,
+        .gr select {
+            padding: 16px;
+            border-radius: 6px;
+        }
+
+        .submit {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 16px;
+        }
+
+        .submit button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: large;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 8px;
+        }
+
+        .submit #reset {
+            background-color: gray;
+        }
+
+        .mikeka {
+            padding: 24px;
+            background-color: aliceblue;
+            height: 400px;
+            width: 90%;
+            overflow-y: scroll;
+        }
+
+        .mikeka .match {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px black solid;
+            border-right: 2px black solid;
+            border-left: 2px black solid;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px auto;
+        }
+
+        .mikeka .match div {
+            width: 20%;
+        }
+
+        .mikeka .match .mtc {
+            width: 40%;
+        }
+
+        .mikeka .match .mtc span {
+            display: block;
+        }
+
+        .mikeka .match .mtc .bt {
+            color: gray;
+        }
+
+        .mikeka .delete button {
+            background-color: red;
+            padding: 6px;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/post" method="post" target="_blank">
+        <div class="cont" style="margin-bottom: 24px;">
+            <h2 style="text-align: center;">Accumulator - <sub>Flashscore.mobi is +2</sub> </h2>
+            <div class="gr1 gr">
+                <input type="date" name="date" required>
+                <input type="text" placeholder="Match" name="match" required>
+                <%- include('./partials/options.ejs'); %>
+                    <input type="number" placeholder="Odds" name="odds" required step="any">
+                    <input type="text" placeholder="Secret word" name="secret" required>
+            </div>
+            <div class="submit">
+                <button type="submit">SUBMIT BET</button>
+                <button id="reset" type="reset">RESET</button>
+            </div>
+        </div>
+    </form>
+    <br><br><br>
+
+    <h2>Megas</h2>
+    <div class="mikeka">
+        <% for( let mk of mikeka ) { %>
+            <div class="match">
+                <div class="dt">
+                    <%= mk.date %>
+                </div>
+                <div class="mtc">
+                    <span class="gm">
+                        <%= mk.match %>
+                    </span>
+                    <span class="bt">
+                        <%= mk.bet %> @ <%= mk.odds %>
+                    </span>
+                </div>
+                <div class="delete" style=" width: 30;">
+                    <form action="/delete/<%= mk._id %>" method="post"
+                        style="display: flex; justify-content: space-between;">
+                        <input type="text" name="secret" placeholder="secret" required style="display: block;">
+                        <button type="submit" style="display: flex;">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+    </div>
+    <br>
+    <hr><br>
+    <!-- betslips -->
+    <h2>Betslips</h2>
+    <div class="mikeka">
+        <% for( let mk of slips ) { %>
+            <div class="match">
+                <div class="dt">
+                    <%= mk.date %>
+                </div>
+                <div class="mtc">
+                    <span class="gm">
+                        <%= mk.match %>
+                    </span>
+                    <span class="bt">
+                        <%= mk.tip %> @ <%= mk.odd %>
+                    </span>
+                </div>
+                <div class="delete" style=" width: 30;">
+                    <form action="/delete-slip/<%= mk._id %>" method="post"
+                        style="display: flex; justify-content: space-between;">
+                        <input type="text" name="secret" placeholder="secret" required style="display: block;">
+                        <button type="submit" style="display: flex;">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+    </div>
+    <br><br><br>
+    <!-- editing Betslips -->
+    <h2>Editing Betslips</h2>
+    <div class="mikeka">
+        <% for( let mk of slips ) { %>
+            <div class="editmatch" id="<%= mk._id %>">
+                <div class="oneg">
+                    <div class="dt">
+                        <%= mk.date %>
+                    </div>
+                    <div class="mtc">
+                        <span class="gm">
+                            <%= mk.match %>
+                        </span> <br>
+                        <span class="bt">
+                            <%= mk.tip %> @ <%= mk.odd %>
+                        </span>
+                    </div>
+                </div>
+                <div class="edit" style=" width: 30;">
+                    <form action="/edit-slip/<%= mk._id %>" method="post"
+                        style="display: flex; justify-content: space-between;">
+                        <%- include('./partials/options.ejs'); %>
+                            <input type="number" placeholder="Odds" name="odds" required step="any">
+                            <input type="text" name="secret" placeholder="secret" required style="display: block;">
+                            <button type="submit" style="display: flex;">Edit</button>
+                    </form>
+                </div>
+                <br><hr><br>
+            </div>
+            <% } %>
+    </div>
+</body>
+
+</html>

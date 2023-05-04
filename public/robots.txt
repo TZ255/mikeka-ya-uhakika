@@ -1,0 +1,5 @@
+User-Agent: *
+Disallow: /pmatch/register
+Disallow: /10bet/register
+Disallow: /gsb/register
+Disallow: /contact/telegram

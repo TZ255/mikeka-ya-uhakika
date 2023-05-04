@@ -1,0 +1,451 @@
+<style>
+    hr.style-eight {
+        overflow: visible;
+        /* For IE */
+        padding: 0;
+        border: none;
+        border-top: medium double #333;
+        color: #333;
+        text-align: center;
+        width: 95%;
+        margin: 48px auto;
+    }
+
+    hr.style-eight:after {
+        content: "§";
+        display: inline-block;
+        position: relative;
+        top: -0.7em;
+        font-size: 1.5em;
+        padding: 0 0.25em;
+        background: white;
+    }
+
+    .left .p {
+        padding: 12px;
+    }
+
+    .left .toggle-cont {
+        padding: 12px 6px;
+        margin-bottom: -16px;
+    }
+
+    .left .toggle-cont .toggles {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 16px;
+        background-color: lightgray;
+        color: gray;
+    }
+
+    .left .toggle-cont .toggles div {
+        width: calc(100% / 4);
+        text-align: center;
+        font-weight: bold;
+        padding: 12px;
+        cursor: pointer;
+    }
+
+    .left .toggle-cont .toggles .jtoggle {
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        border-right: 1px solid white;
+    }
+
+    .left .toggle-cont .toggles .ktoggle {
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
+    }
+
+    .left .toggle-cont .toggles .ltoggle {
+        border-left: 1px solid white;
+        border-right: 1px solid white;
+    }
+
+    .left .toggle-cont .toggles .active_toggle {
+        background-color: brown;
+        color: white;
+    }
+
+    .left .zakesho {
+        margin: 12px auto 40px auto;
+        display: none;
+        text-align: center;
+        color: brown;
+        font-weight: bold;
+        border: 2px solid brown;
+        padding: 12px;
+    }
+
+    .left div.ficha {
+        display: none;
+    }
+
+    .left .tble-cont {
+        padding: 12px 6px;
+    }
+
+    .left .tble-cont .table-head h2,
+    .left .betslipCont h2 {
+        padding: 12px 8px;
+        font-weight: bold;
+        font-size: 17px;
+        color: white;
+        background-color: black;
+        text-align: center;
+        margin-bottom: 2px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
+    .left .tble-cont table .results-th,
+    .left .tble-cont table .tips-th {
+        text-align: center;
+    }
+
+    .left .tble-cont table .time-td {
+        font-size: small;
+        vertical-align: middle;
+    }
+
+    .left .tble-cont table .time-td span,
+    .left .tble-cont table .match-td span {
+        font-size: xx-small;
+    }
+
+    .left .tble-cont table .match-td span {
+        border-bottom: 1px white solid;
+        display: inline-block;
+        padding-bottom: 1px;
+    }
+
+    .left .tble-cont table .match-td {
+        font-family: serif;
+    }
+
+    .left .tble-cont table .tip-td,
+    .left .tble-cont table .matokeo-td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .left .tble-cont .aff {
+        background-color: #212529;
+        color: white;
+        margin-top: -14px;
+        padding: 12px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+
+    .left .tble-cont .aff h4 {
+        font-size: small;
+        margin-bottom: 1px;
+    }
+
+    .left .tble-cont .aff .sasa {
+        text-align: center;
+        margin: 8px auto;
+    }
+
+    .left .tble-cont .aff .sasa button {
+        border: none;
+        background-color: green;
+        color: white;
+        padding: 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .left .tble-cont .aff .sasa button:active,
+    .left .tble-cont .aff .sasa button:hover {
+        background-color: white;
+        color: black;
+    }
+
+
+    /* ***************************** */
+
+
+    .left .betslipCont {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .left .betslipCont #betslip-ya-leo .slip-siku {
+        font-size: 12px;
+    }
+
+    .left .betslipCont table tr .cell-left {
+        text-align: right;
+    }
+
+    .left .betslipCont table .match {
+        font-family: serif;
+        color: rgb(78, 77, 77);
+    }
+
+    .left .betslipCont table .tip {
+        font-size: 13px;
+        font-family: 'Trebuchet MS', sans-serif;
+    }
+
+    .left .betslipCont table .brown {
+        color: brown;
+    }
+
+    .left .betslipCont .bottomSlip {
+        background-color: black;
+        color: gold;
+        margin-top: -14px;
+        padding: 12px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .left .betslipCont .bottomSlip div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .left .betslipCont .bottomSlip div:nth-child(1) {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .left .betslipCont .bottomSlip div:nth-child(2) {
+        display: flex;
+        background-color: green;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .left .betslipCont .bottomSlip div:nth-child(2) span {
+        font-size: 16px;
+        font-weight: bold;
+        display: block;
+        margin-right: 12px;
+    }
+
+    .left .betslipCont .bottomSlip div:nth-child(2) i {
+        color: white;
+        font-size: 24px;
+    }
+
+
+    /* ******************************* */
+
+    .left .cont {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        background-color: white;
+        width: 98%;
+        flex-direction: column;
+        margin: 12px auto 4px auto;
+        border-left: black solid 2px;
+        border-right: black solid 2px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .cont .header {
+        background-color: black;
+        color: white;
+        font-weight: bold;
+        font-size: 17px;
+        padding: 16px 8px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        text-align: center;
+    }
+
+    .cont .sect {
+        border-bottom: 2px black solid;
+        padding: 16px;
+        width: 98%;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 12px;
+    }
+
+    .cont .sect .time,
+    .cont .sect .odds {
+        width: 15%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cont .sect .time {
+        flex-direction: column;
+    }
+
+    .cont .sect .time span {
+        display: flex;
+    }
+
+    .cont .sect .odds span {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        color: white;
+        font-weight: bold;
+    }
+
+    .cont .sect .game .match {
+        font-weight: bold;
+        font-family: serif;
+    }
+
+    .cont .sect .game .tip {
+        color: brown;
+    }
+
+    .cont .sect .game {
+        width: 60%;
+        padding: 4px 4px 4px 12px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        border-left: 2px solid black;
+        border-right: 2px solid black;
+    }
+
+    .total {
+        width: 98%;
+        margin: 0 auto 12px auto;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        border-left: black solid 2px;
+        border-right: black solid 2px;
+        border-radius: 10px;
+        border-bottom: black solid 2px;
+    }
+
+    .subtotal {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .total .w25 {
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .total .w40 {
+        width: 40%;
+    }
+
+    .total .btm span {
+        display: flex;
+    }
+
+    .total .btm .hdr {
+        font-weight: bold;
+    }
+
+    .total .btm .ct {
+        background-color: black;
+        color: white;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        border-radius: 3px;
+    }
+
+    .total .tangazo {
+        text-align: center;
+        font-family: monospace;
+        margin-top: 12px;
+        font-weight: lighter;
+        font-size: smaller;
+    }
+
+    .total .sasa {
+        text-align: center;
+        margin: 12px auto 2px auto;
+        width: 100%;
+    }
+
+    .total .sasa button {
+        background-color: green;
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 12px;
+        font-weight: bold;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .total .sasa button:active,
+    .total .sasa button:hover {
+        background-color: brown;
+        color: white;
+    }
+
+    .left .maana {
+        margin-top: 100px;
+    }
+
+    .left .maana li {
+        margin-bottom: 24px;
+        padding-right: 8px;
+    }
+
+    .left .maana li .brown {
+        color: brown;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 800px) {
+        main .left .cont {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 480px) {
+        main .left .cont .sect {
+            font-size: 12px;
+        }
+
+        main .left .cont .sect .game {
+            padding: 4px;
+        }
+
+        main .left .total .btm {
+            font-size: 12px;
+        }
+
+        .left .toggle-cont .toggles div {
+            padding: 10px 4px;
+        }
+
+        .left .tble-cont table .match-td {
+            font-size: 13px;
+        }
+
+        .left .betslipCont table .match {
+            font-size: 13px;
+        }
+    }
+</style>

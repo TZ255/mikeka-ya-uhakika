@@ -1,0 +1,244 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Acme&family=Caveat&family=Hurricane&family=Palette+Mosaic&family=Smokum&display=swap');
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: white;
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+    }
+
+    header {
+        box-shadow: 0 12px 12px gray;
+        margin-bottom: 48px;
+    }
+
+    .navbar {
+        background-color: black;
+        color: white;
+        padding-bottom: 24px !important;
+    }
+
+    .navbar a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        font-size: large;
+        font-family: 'Palette Mosaic', cursive;
+        border-radius: 4px;
+        padding: 12px;
+        border-radius: 14px;
+        border: solid lightgray 1px;
+    }
+
+    .navbar-brand span {
+        font-size: small;
+        display: block;
+        font-family: 'Caveat', cursive;
+    }
+
+    .navbar ul {
+        margin-top: 16px;
+    }
+
+    .navbar .nav-item {
+        font-weight: bold;
+        padding-left: 12px;
+        color: white;
+        display: block;
+        margin-top: 8px;
+        cursor: pointer;
+    }
+
+    .navbar .nav-item b {
+        display: block;
+        margin-bottom: -4px;
+    }
+
+    .navbar .nav-item b a:hover {
+        color: white;
+    }
+
+    .navbar .navbar-toggler {
+        border: 1px lightgray solid;
+    }
+
+    main {
+        display: flex !important;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1.5%;
+    }
+
+    main .left {
+        width: 70%;
+    }
+
+    main .left .mwisho {
+        margin: 24px auto;
+    }
+
+    main .left .mwisho h2 {
+        background-color: brown;
+        color: white;
+        padding: 12px;
+        font-weight: bold;
+        margin-top: 16px;
+    }
+
+    main .left .mwisho p {
+        display: block;
+        background-color: whitesmoke;
+        border-radius: 8px;
+        width: 98%;
+        margin: 12px auto;
+        color: gray;
+        padding: 16px;
+    }
+
+    main .right {
+        width: 27%;
+    }
+
+    main .left .h2,
+    main .right .h2 {
+        background-color: brown;
+        padding: 12px;
+        font-weight: bold;
+        color: white;
+    }
+
+    main .right .cont {
+        padding: 12px;
+    }
+
+    main .right .cont .kitu {
+        border: 6px black double;
+        padding: 24px;
+        border-radius: 16px;
+        color: black;
+        margin: 12px;
+    }
+
+    main .right .kitu h3 {
+        border-bottom: 2px black solid;
+        color: black;
+        font-size: 16px;
+        padding-bottom: 4px;
+    }
+
+    main .right .kitu a {
+        text-decoration: none;
+        color: brown;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    footer {
+        display: flex;
+        background-color: white;
+        color: gray;
+        justify-content: space-between;
+        box-shadow: 0 0 0 white, 0 -12px 12px gray;
+        padding: 24px;
+        margin-top: 64px;
+    }
+
+    footer .left,
+    footer.right {
+        width: 47%;
+    }
+
+    footer a {
+        text-decoration: none;
+        color: brown;
+        font-weight: bold;
+    }
+
+    footer h4 {
+        font-size: 16px;
+    }
+
+    footer h3 {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    footer .h4 {
+        color: gray;
+        margin-top: 12px;
+        margin-bottom: 0;
+        font-size: 18px;
+        margin-left: -24px;
+    }
+
+    footer #tg {
+        border: none;
+        color: brown;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: white;
+    }
+
+    footer #tg:active,
+    footer #tg:hover {
+        color: dodgerblue;
+    }
+
+    #toAds {
+        height: 8px;
+    }
+
+    .ads {
+        width: 100%;
+        text-align: center;
+        border-radius: 2px;
+        border-left: 1px lightgray solid;
+        border-right: 1px lightgray solid;
+        border-radius: 8px;
+        margin: 16px auto;
+        height: fit-content;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    @media (max-width: 420px) {
+        header {
+            box-shadow: 0 12px 12px gray;
+            margin-bottom: 32px;
+        }
+
+        footer h3 {
+            font-size: 18px;
+            margin-top: 12px;
+            border-right: 2px solid gray;
+            padding-right: 4px;
+        }
+
+        footer h4.rights {
+            font-size: 12px;
+            border-right: 2px solid gray;
+            padding-right: 4px;
+        }
+    }
+
+    @media (max-width: 800px) {
+        main {
+            flex-direction: column;
+        }
+
+        main .left,
+        main .right {
+            width: 100%;
+        }
+    }
+</style>
