@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     try {
         //fametip ya leo
         let d = new Date().toLocaleDateString('en-GB', {timeZone: 'Africa/Nairobi'})
-        let ftips = await fametipsModel.find({ siku: d })
+        let ftips = await fametipsModel.find({ siku: d }).sort('time')
 
         //fametip ya jana
         let _nd = new Date()
