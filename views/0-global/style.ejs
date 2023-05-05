@@ -1,6 +1,6 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Acme&family=Caveat&family=Hurricane&family=Palette+Mosaic&family=Smokum&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Acme&family=Caveat&family=Hurricane&family=Palette+Mosaic&family=Smokum&family=Creepster&display=swap');
 
     *,
     *::before,
@@ -31,9 +31,8 @@
     }
 
     .navbar-brand {
-        font-weight: bold;
-        font-size: large;
-        font-family: 'Palette Mosaic', cursive;
+        font-size: 32px !important;
+        font-family: Creepster;
         border-radius: 4px;
         padding: 12px;
         border-radius: 14px;
@@ -122,11 +121,14 @@
     }
 
     main .right .cont .kitu {
-        border: 6px black double;
+        border-left: 4px solid black;
+        border-right: 4px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
         padding: 24px;
         border-radius: 16px;
         color: black;
-        margin: 12px;
+        margin: 12px 4px;
     }
 
     main .right .kitu h3 {
@@ -158,10 +160,12 @@
         width: 47%;
     }
 
+    footer li,
     footer a {
         text-decoration: none;
         color: #1e90ff;
         font-weight: bold;
+        cursor: pointer;
     }
 
     footer h4 {
@@ -215,6 +219,10 @@
         header {
             box-shadow: 0 12px 12px gray;
             margin-bottom: 32px;
+        }
+
+        .navbar-brand {
+            font-size: 24px !important;
         }
 
         footer h3 {

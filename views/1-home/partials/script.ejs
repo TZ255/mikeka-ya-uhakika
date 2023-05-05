@@ -67,4 +67,13 @@
         yday_cont.classList.add('ficha')
         jday_cont.classList.add('ficha')
     })
+
+    //matokeo-td open affiliate
+    const matokeo_tds = document.querySelectorAll('.matokeo-td')
+
+    matokeo_tds.forEach((el, indx)=> {
+        el.addEventListener('click', ()=> {
+            window.open('/pmatch2/register')
+        })
+    })
 </script>

@@ -53,6 +53,11 @@ router.get('/pmatch/register', (req, res) => {
     res.redirect('https://pmaff.com/?serial=61288670&creative_id=1788&anid=mkekawaleo&pid=mkekawaleo')
 })
 
+router.get('/pmatch2/register', (req, res) => {
+    //ya-uhakika deal
+    res.redirect('https://pmaff.com/?serial=61292164&creative_id=1788')
+})
+
 router.get('/10bet/register', (req, res) => {
     res.redirect('https://go.aff.10betafrica.com/ys6tiwg4')
 })
