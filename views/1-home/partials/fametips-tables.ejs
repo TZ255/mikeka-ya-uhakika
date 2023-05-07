@@ -33,12 +33,7 @@
                     </td>
                     <th class="tip-td"><%= el.tip %></th>
                     <td class="matokeo-td">
-                        <% if (el.matokeo == '-:-') { %>
-                            <span class="m2" id="wekaBet">Bet</span>
-                        <% } %>
-                        <% if (el.matokeo != '-:-') { %>
-                            <span class="m1"><%= el.matokeo %></span>
-                        <% } %>
+                        <span class="m1"><%= el.matokeo %></span>
                     </td>
                 </tr>
                 <% }) %>
@@ -73,12 +68,7 @@
                     </td>
                     <th class="tip-td"><%= el.tip %></th>
                     <td class="matokeo-td">
-                        <% if (el.matokeo == '-:-') { %>
-                            <span class="m2" id="wekaBet">Bet</span>
-                        <% } %>
-                        <% if (el.matokeo != '-:-') { %>
-                            <span class="m1"><%= el.matokeo %></span>
-                        <% } %>
+                        <span class="m1"><%= el.matokeo %></span>
                     </td>
                 </tr>
                 <% }) %>
