@@ -33,5 +33,6 @@ const supatipSchema = new Schema({
     }
 }, {strict: false, timestamps: true })
 
-let model = mongoose.model('supatips', supatipSchema)
+let supatipsDB = mongoose.connection.useDb('mkeka-wa-leo')
+let model = supatipsDB.model('supatips', supatipSchema)
 module.exports = model

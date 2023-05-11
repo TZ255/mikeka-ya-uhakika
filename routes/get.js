@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const mkekadb = require('../model/mkeka-mega')
 const fametipsModel = require('../model/fametips')
+const supatipsModel = require('../model/supatips')
 const betslip = require('../model/betslip')
 const graphModel = require('../model/graph-tips')
 
@@ -15,21 +16,33 @@ router.get('/favicon.ico', (req, res) => res.status(204).end());
 
 router.get('/', async (req, res) => {
     try {
-        //fametip ya leo
+        //fametip ya leo //kama hakuna chukua toka kwa parent (supatips)
         let d = new Date().toLocaleDateString('en-GB', {timeZone: 'Africa/Nairobi'})
         let ftips = await fametipsModel.find({ siku: d }).sort('time')
 
-        //fametip ya jana
+        if(ftips.length == 0) {
+            ftips = await supatipsModel.find({ siku: d }).sort('time')
+        }
+
+        //fametip ya jana //kama hakuna chukua toka kwa parent (supatips)
         let _nd = new Date()
         _nd.setDate(_nd.getDate() - 1)
         let _d = _nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let ytips = await fametipsModel.find({ siku: _d })
+        let ytips = await fametipsModel.find({ siku: _d }).sort('time')
 
-        //fametip ya juzi
+        if(ytips.length == 0) {
+            ytips = await supatipsModel.find({ siku: _d }).sort('time')
+        }
+
+        //fametip ya juzi //kama hakuna chukua toka kwa parent (supatips)
         let _jd = new Date()
         _jd.setDate(_jd.getDate() - 2)
         let _s = _jd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let jtips = await fametipsModel.find({ siku: _s })
+        let jtips = await fametipsModel.find({ siku: _s }).sort('time')
+
+        if(jtips.length == 0) {
+            jtips = await supatipsModel.find({ siku: _s }).sort('time')
+        }
 
         //fametip ya kesho
         let new_d = new Date()
