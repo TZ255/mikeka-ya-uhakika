@@ -1,0 +1,33 @@
+<div class="zanyuma tble-cont">
+    <div class="table-head">
+        <h2><b>🔥 Chambuzi Zetu 100 za Siku za Nyuma</b></h2>
+    </div>
+    <table class="table table-striped-columns">
+        <thead>
+            <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Match</th>
+                <th class="tips-th" scope="col">Tip</th>
+                <th class="results-th" scope="col">Results</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% zaNyuma100.forEach(el=> { %>
+                <tr>
+                    <td class="time-td">
+                        <%= el.time %> <br> <span><%= el.siku %></span> 
+                    </td>
+                    <td class="match-td">
+                        <span><%= el.league %></span> <br>
+                        <%- el.match.replace(/ - /g, '<br>' ) %>
+                    </td>
+                    <th class="tip-td"><%= el.tip %></th>
+                    <td class="matokeo-td">
+                        <span class="m1"><%= el.matokeo %></span>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+    <%- include('../../0-global/aff.ejs'); %>
+</div>

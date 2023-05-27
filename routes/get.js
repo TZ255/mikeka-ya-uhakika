@@ -24,6 +24,9 @@ router.get('/', async (req, res) => {
             ftips = await supatipsModel.find({ siku: d }).sort('time')
         }
 
+        //fametips 100 za nyuma
+        let zaNyuma100 = await fametipsModel.find({siku: {$ne: d}}).limit(100).sort('createdAt time')
+
         //fametip ya jana //kama hakuna chukua toka kwa parent (supatips)
         let _nd = new Date()
         _nd.setDate(_nd.getDate() - 1)
@@ -50,7 +53,7 @@ router.get('/', async (req, res) => {
         let kesho = new_d.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
         let ktips = await fametipsModel.find({ siku: kesho })
 
-        res.render('1-home/home', { ftips, ytips, ktips, jtips })
+        res.render('1-home/home', { ftips, ytips, ktips, jtips, zaNyuma100 })
     } catch (err) {
         console.log(err)
         console.log(err.message)
