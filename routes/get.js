@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
         }
 
         //fametips 100 za nyuma
-        let zaNyuma100 = await fametipsModel.find({siku: {$ne: d}}).limit(100).sort('createdAt time')
+        let zaNyuma100 = await fametipsModel.find({siku: {$ne: d}}).limit(100).sort('-createdAt').sort('time')
 
         //fametip ya jana //kama hakuna chukua toka kwa parent (supatips)
         let _nd = new Date()
