@@ -30,6 +30,9 @@ const supatipSchema = new Schema({
     status: {
         type: String,
         default: 'pending'
+    },
+    UTC3: {
+        type: Number
     }
 }, {strict: false, timestamps: true })
 
