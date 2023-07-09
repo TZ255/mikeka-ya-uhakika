@@ -652,87 +652,87 @@ const reginaBot = async () => {
         }
     })
 
-    setInterval(() => {
-        let now = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let timeStrings = now.split(':')
-        let time2check = `${timeStrings[0]}:${timeStrings[1]}`
-        console.log(time2check)
-        let trhLeo = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+    // setInterval(() => {
+    //     let now = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi' })
+    //     let timeStrings = now.split(':')
+    //     let time2check = `${timeStrings[0]}:${timeStrings[1]}`
+    //     console.log(time2check)
+    //     let trhLeo = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
-        //kesho
-        let k = new Date()
-        k.setDate(k.getDate() + 1)
-        let trhKesho = k.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+    //     //kesho
+    //     let k = new Date()
+    //     k.setDate(k.getDate() + 1)
+    //     let trhKesho = k.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
-        //jana
-        let j = new Date()
-        j.setDate(j.getDate() - 1)
-        let trhJana = j.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+    //     //jana
+    //     let j = new Date()
+    //     j.setDate(j.getDate() - 1)
+    //     let trhJana = j.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
-        switch (time2check) {
-            case '03:10':
-            case '06:00':
-            case '08:00':
-            case '09:00':
-            case '10:00':
-            case '11:00':
-            case '12:00':
-            case '13:00':
-                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#2', trhLeo)
-                break;
+    //     switch (time2check) {
+    //         case '03:10':
+    //         case '06:00':
+    //         case '08:00':
+    //         case '09:00':
+    //         case '10:00':
+    //         case '11:00':
+    //         case '12:00':
+    //         case '13:00':
+    //             call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#2', trhLeo)
+    //             break;
 
-            case '19:00':
-            case '22:15':
-            case '23:55':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhLeo)
-                break;
+    //         case '19:00':
+    //         case '22:15':
+    //         case '23:55':
+    //             call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhLeo)
+    //             break;
 
-            case '19:30':
-            case '20:30':
-            case '21:45':
-            case '22:30':
-            case '23:45':
-                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#3', trhKesho)
-                break;
+    //         case '19:30':
+    //         case '20:30':
+    //         case '21:45':
+    //         case '22:30':
+    //         case '23:45':
+    //             call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#3', trhKesho)
+    //             break;
 
-            case '00:55':
-            case '01:00':
-            case '01:55':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhJana)
-                break;
+    //         case '00:55':
+    //         case '01:00':
+    //         case '01:55':
+    //             call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhJana)
+    //             break;
 
-            case '03:03':
-            case '04:03':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#1', trhJana)
-                break;
+    //         case '03:03':
+    //         case '04:03':
+    //             call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#1', trhJana)
+    //             break;
 
-            //fametips
-            case '06:07':
-            case '08:07':
-            case '09:07':
-            case '10:07':
-            case '12:07':
-            case '15:07':
-                call_famescheduled_fn.famecheckMatokeo(botRegi, imp, '#home', trhJana)
-                break;
+    //         //fametips
+    //         case '06:07':
+    //         case '08:07':
+    //         case '09:07':
+    //         case '10:07':
+    //         case '12:07':
+    //         case '15:07':
+    //             call_famescheduled_fn.famecheckMatokeo(botRegi, imp, '#home', trhJana)
+    //             break;
 
-            case '06:17':
-            case '09:17':
-                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#profile', trhLeo)
-                break;
+    //         case '06:17':
+    //         case '09:17':
+    //             call_famescheduled_fn.famecheckOdds(botRegi, imp, '#profile', trhLeo)
+    //             break;
 
-            case '16:07':
-            case '18:07':
-            case '19:07':
-            case '20:07':
-            case '21:07':
-            case '22:07':
-            case '23:07':
-            case '23:57':
-                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#contact', trhKesho)
-                break;
-        }
-    }, 59 * 1000)
+    //         case '16:07':
+    //         case '18:07':
+    //         case '19:07':
+    //         case '20:07':
+    //         case '21:07':
+    //         case '22:07':
+    //         case '23:07':
+    //         case '23:57':
+    //             call_famescheduled_fn.famecheckOdds(botRegi, imp, '#contact', trhKesho)
+    //             break;
+    //     }
+    // }, 59 * 1000)
 
     botRegi.launch().then(async ()=> {
         await botRegi.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
