@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 const getRouter = require('./routes/get')
 const elimit = require('express-rate-limit')
+const regina_bot = require('./bot/regibot/bot')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.set('trust proxy', true) //our app is hosted on server using proxy to pass u
 app.use(limiter)
 app.use(getRouter)
 
+regina_bot.rbot()
 
 app.listen(process.env.PORT || 3000, ()=> console.log('Running on port 3000'))
 
