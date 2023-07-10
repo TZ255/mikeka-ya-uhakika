@@ -77,11 +77,12 @@ const reginaBot = async () => {
                 let pload = ctx.startPayload
                 let rahatupu = `https://t.me/+PWiPWm0vB5Y4ZDhk`
                 let urafiki = `https://t.me/+EOEvgGu3B49lYmY0`
+                let utamuFolder = `https://t.me/addlist/88O_60izot4xNmE0`
                 if (pload == 'ngono_bongo') {
                     console.log('Ngono Payload Started')
                     await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7617, {
                         reply_markup: {
-                            inline_keyboard: [[{ text: '✅ Kubali / Accept', url: urafiki }]]
+                            inline_keyboard: [[{ text: '✅ Kubali / Accept', url: utamuFolder }]]
                         }
                     })
                 }
