@@ -317,6 +317,8 @@ const rtfunction = async () => {
                 await call_function.rudiNyumaReply(botRT, ctx, chatid, imp, 12, cmsgid)
             } else if (cdata == 'nimelipia') {
                 await call_function.rudiNyumaReply(botRT, ctx, chatid, imp, 30, cmsgid)
+            } else if (cdata == 'video-zingine') {
+                await botRT.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 37)
             }
         } catch (err) {
             console.log(err.message)

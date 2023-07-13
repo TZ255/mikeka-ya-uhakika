@@ -32,7 +32,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid) => {
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: "← Video Zingine", url: rt },
+                    { text: "⇐ Video Zingine", callback_data: 'video-zingine' },
                 ],
                 [
                     { text: "💰 Points Zangu", callback_data: 'salio' },
