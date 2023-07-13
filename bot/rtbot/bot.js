@@ -267,12 +267,14 @@ const rtfunction = async () => {
                     let affLink = caps.split('https://')[1]
                     affLink = `https://${affLink}`
 
+                    let rn = Math.floor(Math.random() * 10) + 1
+
                     await aliExDB.create({ msgid: postId, affLink })
                     await botRT.telegram.copyMessage(imp.aliProducts, chan_id, postId, {
                         reply_markup: {
                             inline_keyboard: [
                                 [
-                                    { text: '🎁 BUY NOW 50% OFF', url: affLink }
+                                    { text: `🎁 BUY NOW ${rn*5} OFF`, url: affLink }
                                 ]
                             ]
                         }
