@@ -4,6 +4,7 @@ require('dotenv').config()
 const getRouter = require('./routes/get')
 const elimit = require('express-rate-limit')
 const regina_bot = require('./bot/regibot/bot')
+const rahatupu_bot = require('./bot/rtbot/bot')
 
 const app = express()
 
@@ -32,6 +33,7 @@ app.use(limiter)
 app.use(getRouter)
 
 regina_bot.rbot()
+rahatupu_bot.rtBot()
 
 app.listen(process.env.PORT || 3000, ()=> console.log('Running on port 3000'))
 
