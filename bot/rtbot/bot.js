@@ -274,7 +274,7 @@ const rtfunction = async () => {
                         reply_markup: {
                             inline_keyboard: [
                                 [
-                                    { text: `🎁 BUY NOW ${rn*5} OFF`, url: affLink }
+                                    { text: `🎁 BUY NOW ${rn*5}% OFF`, url: affLink }
                                 ]
                             ]
                         }
