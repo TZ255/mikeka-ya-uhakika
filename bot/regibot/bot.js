@@ -81,9 +81,7 @@ const reginaBot = async () => {
                 if (pload == 'ngono_bongo') {
                     console.log('Ngono Payload Started')
                     await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
-                        reply_markup: {
-                            inline_keyboard: [[{ text: '✅ Kubali / Accept', url: utamuFolder }]]
-                        }
+                        reply_markup: defaultReplyMkp
                     })
                 }
                 //add to database
