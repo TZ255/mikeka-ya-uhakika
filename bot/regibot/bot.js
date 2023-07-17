@@ -14,7 +14,8 @@ const reginaBot = async () => {
     const vidb = require('./database/db')
     const mkekaMega = require('./database/mkeka-mega')
     const graphDB = require('./database/graph-tips')
-    const mongoose = require('mongoose')
+    const waombajiModel = require('./database/waombaji')
+
 
     const call_supatips_function = require('./fns/supatips')
     const call_fametips_function = require('./fns/fametips')
@@ -64,7 +65,12 @@ const reginaBot = async () => {
     let defaultReplyMkp = {
         keyboard: [
             [
-                { text: "🔥 MIKEKA YA UHAKIKA LEO 💰" }
+                { text: "🔥 MKEKA #1" },
+                { text: "💰 MKEKA #2" }
+            ],
+            [
+                { text: "🤑 MKEKA #3" },
+                { text: "💡 MSAADA" }
             ]
         ],
         is_persistent: true,
@@ -404,6 +410,9 @@ const reginaBot = async () => {
                     }
                 }
                 else if (txt.toLowerCase().includes('wrap gsb')) {
+                    let waombaji = await waombajiModel.findOne({pid: 'shemdoe'})
+                    await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
+                    await delay(1000)
                     await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 54)
                     await delay(500)
                     await ctx.deleteMessage(txtid)
@@ -423,7 +432,8 @@ const reginaBot = async () => {
                 if (txt.includes(' - ') && !txt.toLowerCase().includes('graph')) {
                     let data = txt.split(' - ')
                     await tg_slips.create({ brand: data[0].toLowerCase(), siku: data[1] + '/2023', mid: rp_id })
-                    let info = await ctx.reply('Mkeka posted', { reply_to_message_id: rp_id })
+                    await waombajiModel.findOneAndUpdate({pid: 'shemdoe'}, {$set: {mk1: 0, mk2: 0, mk3: 0}})
+                    let info = await ctx.reply('Mkeka posted and waombaji reseted', { reply_to_message_id: rp_id })
                     await delay(1000)
                     await ctx.deleteMessage(info.message_id)
                 } else if (txt.toLowerCase().includes('graph')) {
@@ -580,7 +590,7 @@ const reginaBot = async () => {
                     await call_sendMikeka_functions.sendMkeka3(ctx, delay, botRegi, imp)
                 } else if (txt == '👑 SUPATIPS') {
                     await call_sendMikeka_functions.supatips(ctx, botRegi, delay, imp)
-                } else if (txt == '💡 MSAADA GAL SPORT 💡') {
+                } else if (txt == '💡 MSAADA') {
                     await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 481)
                 } else if (txt == '🔥 MIKEKA YA UHAKIKA LEO 💰') {
                     await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 592)
