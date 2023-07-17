@@ -32,7 +32,7 @@ const sendMkeka2 = async (ctx, delay, bot, imp) => {
         } else {
             await ctx.sendChatAction('typing')
             await delay(1000)
-            await ctx.reply('Mkeka namba 2 bado haujaandaliwa, jaribu:\n▷ Mkeka namba 1 👉 /mkeka1\n\n▷ Mkeka namba 3 👉 /mkeka3')
+            await ctx.reply('Mkeka namba 2 bado haujaandaliwa, jaribu:\n\n▷ Mkeka namba 1 👉 /mkeka1\n\n▷ Mkeka namba 3 👉 /mkeka3')
         }
     } catch (error) {
         console.log(error.message)
