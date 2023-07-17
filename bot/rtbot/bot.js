@@ -40,7 +40,7 @@ const rtfunction = async () => {
         _pack1: -1001943515650
     }
 
-    const miamala = ['nimelipia', 'tayari', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa']
+    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa']
     const admins = [imp.halot, imp.shemdoe]
 
     //delaying
@@ -149,6 +149,27 @@ const rtfunction = async () => {
                 console.log(err.message)
             }
         } else { await ctx.reply('You are not authorized') }
+    })
+
+    botRT.command('bless', async ctx=> {
+        try {
+            if (ctx.chat.id = imp.rtmalipo) {
+                await ctx.reply('Starting')
+                let all = await rtStarterModel.find({points: 0})
+
+                all.forEach((u, i)=> {
+                    setTimeout(()=> {
+                        u.updateOne({$set: {points: 100}})
+                        .catch(eu=> console.log(eu.message))
+                        botRT.telegram.copyMessage(u.chatid, imp.matangazoDB, 42)
+                        .then(()=> console.log('✅ done kwa '+u.chatid))
+                        .catch(e => console.log('❌ '+ e.message))
+                    }, 40 * i)
+                })
+            }
+        } catch (err) {
+            console.log(err.message, err)
+        }
     })
 
     botRT.command('info', async ctx => {
