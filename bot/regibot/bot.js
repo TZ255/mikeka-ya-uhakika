@@ -40,7 +40,8 @@ const reginaBot = async () => {
         xbongo: -1001263624837,
         mikekaDB: -1001696592315,
         logsBin: -1001845473074,
-        mylove: -1001748858805
+        mylove: -1001748858805,
+        mkekaLeo: -1001733907813
     }
 
     const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
@@ -431,9 +432,16 @@ const reginaBot = async () => {
 
                 if (txt.includes(' - ') && !txt.toLowerCase().includes('graph')) {
                     let data = txt.split(' - ')
+
+                    //create mkeka
                     await tg_slips.create({ brand: data[0].toLowerCase(), siku: data[1] + '/2023', mid: rp_id })
+
+                    //reset waombaji db
                     await waombajiModel.findOneAndUpdate({pid: 'shemdoe'}, {$set: {mk1: 0, mk2: 0, mk3: 0}})
-                    let info = await ctx.reply('Mkeka posted and waombaji reseted', { reply_to_message_id: rp_id })
+
+                    //copy to mkeka wa leo channel
+                    await botRegi.telegram.copyMessage(imp.mkekaLeo, ctx.chat.id, rp_id)
+                    let info = await ctx.reply('Mkeka posted, waombaji reseted and mkeka forwarded to Mkeka wa Leo Channel', { reply_to_message_id: rp_id })
                     await delay(1000)
                     await ctx.deleteMessage(info.message_id)
                 } else if (txt.toLowerCase().includes('graph')) {

@@ -10,6 +10,7 @@ const sendMkeka1 = async (ctx, delay, bot, imp) => {
         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $inc: { mk1: 1 } })
         if (mk) {
             await ctx.sendChatAction('upload_photo')
+            await delay(500)
             await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, mk.mid)
         } else {
             await ctx.sendChatAction('typing')
@@ -28,6 +29,7 @@ const sendMkeka2 = async (ctx, delay, bot, imp) => {
         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $inc: { mk2: 1 } })
         if (mk) {
             await ctx.sendChatAction('upload_photo')
+            await delay(500)
             await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, mk.mid)
         } else {
             await ctx.sendChatAction('typing')
