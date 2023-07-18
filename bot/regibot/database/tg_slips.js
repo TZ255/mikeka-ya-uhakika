@@ -9,7 +9,10 @@ const mkekaSchema = new Schema({
         type: String
     },
     brand: {
-        type: 'String'
+        type: String
+    },
+    posted: {
+        type: Boolean
     }
 }, {strict: false, timestamps: true })
 

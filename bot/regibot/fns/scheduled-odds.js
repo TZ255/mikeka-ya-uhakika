@@ -5,6 +5,7 @@ const { nanoid } = require('nanoid')
 
 const supatips_Model = require('../database/supatips')
 const bin_supatips_Model = require('../database/supatips-bin')
+const tg_slips = require('../database/tg_slips')
 
 
 const checkOdds = async (bot, imp, tablehusika, siku) => {
@@ -118,7 +119,28 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
     }
 }
 
+const check_waLeo = async (bot, imp, siku) => {
+    try {
+        let checker = await tg_slips.find({siku})
+        if(!checker) {
+            await bot.telegram.sendMessage(imp.shemdoe, 'Nakukumbusha, Post Mkeka wa Leo. Una hadi 03:11')
+        } else {
+            for (let c of checker) {
+                if(c.posted == false) {
+                    await bot.telegram.copyMessage(imp.mkekaLeo, imp.mikekaDB, c.mid)
+                    await c.updateOne({$set: {posted: true}})
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err.message, err)
+        await bot.telegram.sendMessage(imp.shemdoe, err.message)
+        .catch(e=> console.log(e.message))
+    }
+}
+
 module.exports = {
     checkOdds,
-    checkMatokeo
+    checkMatokeo,
+    check_waLeo
 }

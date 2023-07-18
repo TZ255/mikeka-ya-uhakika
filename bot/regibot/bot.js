@@ -411,7 +411,7 @@ const reginaBot = async () => {
                     }
                 }
                 else if (txt.toLowerCase().includes('wrap gsb')) {
-                    let waombaji = await waombajiModel.findOne({pid: 'shemdoe'})
+                    let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
                     await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
                     await delay(1000)
                     await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 54)
@@ -434,21 +434,24 @@ const reginaBot = async () => {
                     let data = txt.split(' - ')
 
                     //create mkeka
-                    await tg_slips.create({ brand: data[0].toLowerCase(), siku: data[1] + '/2023', mid: rp_id })
+                    await tg_slips.create({ brand: data[0].toLowerCase(), siku: data[1] + '/2023', mid: rp_id, posted: false })
 
                     //reset waombaji db
-                    await waombajiModel.findOneAndUpdate({pid: 'shemdoe'}, {$set: {mk1: 0, mk2: 0, mk3: 0}})
+                    await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $set: { mk1: 0, mk2: 0, mk3: 0 } })
 
-                    //copy to mkeka wa leo channel
-                    await botRegi.telegram.copyMessage(imp.mkekaLeo, ctx.chat.id, rp_id)
-                    let info = await ctx.reply('Mkeka posted, waombaji reseted and mkeka forwarded to Mkeka wa Leo Channel', { reply_to_message_id: rp_id })
-                    setTimeout(()=>{
-                        ctx.deleteMessage(info.message_id).catch(e=> {
+                    let info = await ctx.reply('Mkeka posted & waombaji reseted', { reply_to_message_id: rp_id })
+                    setTimeout(() => {
+                        ctx.deleteMessage(info.message_id).catch(e => {
                             console.log(e.message, e)
                             ctx.reply(e.message).catch(ee => console.log(ee))
                         })
                     }, 3000)
-                } else if (txt.toLowerCase().includes('graph')) {
+                }
+                else if (txt.toLowerCase() == 'delete') {
+                    await tg_slips.findOneAndDelete({ mid: rp_id })
+                    await ctx.reply('This post deleted from DB', { reply_to_message_id: rp_id })
+                }
+                else if (txt.toLowerCase().includes('graph')) {
                     let link = ctx.channelPost.reply_to_message.text
                     let siku = txt.split('ph - ')[1]
                     await graphDB.create({
@@ -722,6 +725,10 @@ const reginaBot = async () => {
                 call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhJana)
                 break;
 
+            case '00:01': case '00:51': case '01:31': case '02:11': case '03:11':
+                call_scheduled_checker_fn.check_waLeo(botRegi, imp, trhLeo)
+                break;
+
             case '03:03':
             case '04:03':
                 call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#1', trhJana)
@@ -755,13 +762,13 @@ const reginaBot = async () => {
         }
     }, 59 * 1000)
 
-    botRegi.launch().then(async ()=> {
+    botRegi.launch().then(async () => {
         await botRegi.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
     })
-    .catch(async e => {
-        console.log(e.message + ` \n${e}`)
-        await botRegi.telegram.sendMessage(imp.shemdoe, e.message)
-    })
+        .catch(async e => {
+            console.log(e.message + ` \n${e}`)
+            await botRegi.telegram.sendMessage(imp.shemdoe, e.message)
+        })
 }
 
 module.exports = {
