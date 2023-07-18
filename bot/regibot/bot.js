@@ -442,8 +442,12 @@ const reginaBot = async () => {
                     //copy to mkeka wa leo channel
                     await botRegi.telegram.copyMessage(imp.mkekaLeo, ctx.chat.id, rp_id)
                     let info = await ctx.reply('Mkeka posted, waombaji reseted and mkeka forwarded to Mkeka wa Leo Channel', { reply_to_message_id: rp_id })
-                    await delay(1000)
-                    await ctx.deleteMessage(info.message_id)
+                    setTimeout(()=>{
+                        ctx.deleteMessage(info.message_id).catch(e=> {
+                            console.log(e.message, e)
+                            ctx.reply(e.message).catch(ee => console.log(ee))
+                        })
+                    }, 3000)
                 } else if (txt.toLowerCase().includes('graph')) {
                     let link = ctx.channelPost.reply_to_message.text
                     let siku = txt.split('ph - ')[1]
