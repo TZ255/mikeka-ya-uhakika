@@ -36,6 +36,8 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                 if (actual_time >= 24) {
                     actual_time = `23`
                     min = '59'
+                } else if(actual_time.toString().length == 1) {
+                    actual_time = '0' + actual_time
                 }
                 let time = `${actual_time}:${min}`
                 let nano = nanoid(4)

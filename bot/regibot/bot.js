@@ -731,6 +731,10 @@ const reginaBot = async () => {
 
             case '03:03':
             case '04:03':
+            case '06:03':
+            case '08:03':
+            case '09:03':
+            case '10:33':
                 call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#1', trhJana)
                 break;
 
