@@ -171,12 +171,12 @@ const reginaBot = async () => {
                                 ctx.reply('Nimemaliza conversation')
                             }
                             botRegi.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => console.log('convo sent to ' + u.chatid))
+                                .then(() => console.log('✅ convo sent to ' + u.chatid))
                                 .catch((err) => {
                                     if (err.message.includes('blocked') || err.message.includes('initiate')) {
                                         nyumbuModel.findOneAndDelete({ chatid: u.chatid })
                                             .then(() => { console.log(u.chatid + ' is deleted') })
-                                    }
+                                    } else {console.log('❌ '+err.message)}
                                 })
                         }, index * 40)
                     }
