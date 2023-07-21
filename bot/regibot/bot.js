@@ -160,6 +160,7 @@ const reginaBot = async () => {
         let myId = ctx.chat.id
         let txt = ctx.message.text
         let msg_id = Number(txt.split('/convo-')[1].trim())
+        let bads = ['deactivated', 'blocked', 'initiate']
         if (myId == imp.shemdoe || myId == imp.halot) {
             try {
                 let all_users = await nyumbuModel.find({ refferer: "Regina" })
@@ -173,10 +174,10 @@ const reginaBot = async () => {
                             botRegi.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
                                 .then(() => console.log('✅ convo sent to ' + u.chatid))
                                 .catch((err) => {
-                                    if (err.message.includes('blocked') || err.message.includes('initiate')) {
+                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         nyumbuModel.findOneAndDelete({ chatid: u.chatid })
-                                            .then(() => { console.log(u.chatid + ' is deleted') })
-                                    } else {console.log('❌ '+err.message)}
+                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                    }
                                 })
                         }, index * 40)
                     }
