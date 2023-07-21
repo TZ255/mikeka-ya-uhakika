@@ -177,7 +177,7 @@ const reginaBot = async () => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         nyumbuModel.findOneAndDelete({ chatid: u.chatid })
                                             .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                    }
+                                    } else{console.log(`🤷‍♂️ ${err.message}`)}
                                 })
                         }, index * 40)
                     }
