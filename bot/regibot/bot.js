@@ -726,9 +726,10 @@ const reginaBot = async () => {
                 call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhJana)
                 break;
 
-            case '00:01': case '00:51': case '01:31': case '02:11': case '03:11':
-                call_scheduled_checker_fn.check_waLeo(botRegi, imp, trhLeo)
-                break;
+            //checking for mkeka-wa-leo telegram
+            // case '00:01': case '00:51': case '01:31': case '02:11': case '03:11':
+            //     call_scheduled_checker_fn.check_waLeo(botRegi, imp, trhLeo)
+            //     break;
 
             case '03:03':
             case '04:03':
