@@ -64,7 +64,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid) => {
                         { text: "⛑ Help / Msaada ⛑" }
                     ]
                 ],
-                is_persistent: true,
+                is_persistent: false,
                 resize_keyboard: true
             }
         })
