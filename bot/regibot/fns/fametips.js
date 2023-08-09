@@ -18,6 +18,7 @@ module.exports = (bot) => {
     //supatoday
     bot.command('fameleo', async ctx => {
         try {
+            await bin_supatips_Model.deleteMany({})
             let sup_url = `https://www.tipsfame.com/`
 
             let html = await axios.get(sup_url)
@@ -93,6 +94,7 @@ module.exports = (bot) => {
     //supatomorrow
     bot.command('famekesho', async ctx => {
         try {
+            await bin_supatips_Model.deleteMany({})
             let sup_url = `https://www.tipsfame.com/`
 
             let html = await axios.get(sup_url)
@@ -166,6 +168,7 @@ module.exports = (bot) => {
 
     bot.command('famejana', async ctx => {
         try {
+            await bin_supatips_Model.deleteMany({})
             let sup_url = `https://www.tipsfame.com/`
 
             let html = await axios.get(sup_url)
