@@ -40,7 +40,7 @@ const rtfunction = async () => {
         _pack1: -1001943515650
     }
 
-    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa']
+    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa', 'umechangia']
     const admins = [imp.halot, imp.shemdoe]
 
     //delaying
@@ -387,6 +387,9 @@ const rtfunction = async () => {
                 for (let m of miamala) {
                     if (txt.toLowerCase().includes(m)) {
                         await botRT.telegram.sendMessage(imp.shemdoe, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
+
+                        await botRT.telegram.copyMessage(userid, imp.matangazoDB, 63)
+                        break
                     }
                 }
 
