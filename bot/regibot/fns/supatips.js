@@ -29,7 +29,7 @@ module.exports = (bot) => {
             let nanoArr = ''
 
             let tday_table = $('#tab2222 table tbody tr')
-            if(tday_table.length > 0) {await bin_supatips_Model.deleteMany({})}
+            if (tday_table.length > 0) { await bin_supatips_Model.deleteMany({}) }
             tday_table.each(async (i, el) => {
                 if (i > 1) {
                     let time_data = $('td:nth-child(1)', el).text()
@@ -181,46 +181,49 @@ module.exports = (bot) => {
             nn.setDate(nn.getDate() - 1)
             let siku = nn.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let actual_time = hrs + 2
-                if (actual_time > 24) {
-                    actual_time = '0' + (actual_time - 25)
+                if (i > 1) {
+                    let time_data = $('td:nth-child(1)', el).text()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let actual_time = hrs + 2
+                    if (actual_time > 24) {
+                        actual_time = '0' + (actual_time - 25)
+                    }
+                    let min = time_arr[1]
+                    let time = `${actual_time}:${min}`
+
+                    let nano = nanoid(4)
+
+                    let league = $('td:nth-child(2)', el).text()
+                    let match = $('td:nth-child(3)', el).text()
+                    match = match.replace(/ vs /g, ' - ')
+
+                    let tip = $('td:nth-child(4)', el).text()
+                    let matokeo = $('td:nth-child(5)', el).text()
+                    if (matokeo.length < 2) {
+                        matokeo = '-:-'
+                    }
+
+                    //create text
+                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
+                    if (i == tday_table.length - 1) {
+                        nanoArr = nanoArr + `${nano}`
+                    } else {
+                        nanoArr = nanoArr + `${nano}+`
+                    }
+
+                    await bin_supatips_Model.create({
+                        time, league, match, tip, siku, nano, matokeo
+                    })
                 }
-                let min = time_arr[1]
-                let time = `${actual_time}:${min}`
 
-                let nano = nanoid(4)
-
-                let league = $('td:nth-child(2)', el).text()
-                let match = $('td:nth-child(3)', el).text()
-                match = match.replace(/ vs /g, ' - ')
-
-                let tip = $('td:nth-child(4)', el).text()
-                let matokeo = $('td:nth-child(5)', el).text()
-                if (matokeo.length < 2) {
-                    matokeo = '-:-'
-                }
-
-                //create text
-                text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
-                if (i == tday_table.length - 1) {
-                    nanoArr = nanoArr + `${nano}`
-                } else {
-                    nanoArr = nanoArr + `${nano}+`
-                }
-
-                await bin_supatips_Model.create({
-                    time, league, match, tip, siku, nano, matokeo
-                })
             })
             await ctx.reply(text + `Arrs: ${nanoArr}`, {
                 parse_mode: "HTML",
                 reply_markup: {
                     inline_keyboard: [
                         [
-                            { text: 'upd. as yesterday (trh ya jana +3)', callback_data: `updateyd_${nanoArr}` }
+                            { text: 'upd. as yesterday (trh ya jana +3)', callback_data: `updateyd_` }
                         ],
                         [
                             { text: 'Ignore 🤷‍♂️', callback_data: `ignore_bin` }

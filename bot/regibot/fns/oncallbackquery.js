@@ -67,6 +67,7 @@ module.exports = (bot, delay) => {
                 })
             } else if (data.includes('updateyd_')) {
                 let nano_Arr = await bin_supatips_Model.find()
+                await supatips_Model.deleteMany({siku: ydd})
                 for (let bin of nano_Arr) {
                     await supatips_Model.create({
                         matokeo: bin.matokeo,
