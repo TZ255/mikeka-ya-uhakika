@@ -703,13 +703,13 @@ const reginaBot = async () => {
             case '11:00':
             case '12:00':
             case '13:00':
-                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#2', trhLeo)
+                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#tab2222', trhLeo)
                 break;
 
             case '19:00':
             case '22:15':
             case '23:55':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhLeo)
+                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#tab2222', trhLeo)
                 break;
 
             case '19:30':
@@ -717,13 +717,13 @@ const reginaBot = async () => {
             case '21:45':
             case '22:30':
             case '23:45':
-                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#3', trhKesho)
+                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#tab3333', trhKesho)
                 break;
 
             case '00:55':
             case '01:00':
             case '01:55':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#2', trhJana)
+                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#tab2222', trhJana)
                 break;
 
             //checking for mkeka-wa-leo telegram
@@ -739,7 +739,7 @@ const reginaBot = async () => {
             case '10:33':
             case '13:03':
             case '15:03':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#1', trhJana)
+                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#tab1111', trhJana)
                 break;
 
             //fametips

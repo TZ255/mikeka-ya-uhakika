@@ -27,43 +27,46 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#exTab2 .tab-content div#2 .widget-table-fixtures table tbody')
+            let tday_table = $('#tab2222 table tbody tr')
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let min = time_arr[1]
-                let actual_time = hrs + 2
-                if(actual_time >= 24) {
-                    actual_time = `23`
-                    min = '59'
+                if (i > 1) {
+                    let time_data = $('td:nth-child(1)', el).text()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let min = time_arr[1]
+                    let actual_time = hrs + 2
+                    if (actual_time >= 24) {
+                        actual_time = `23`
+                        min = '59'
+                    }
+                    let time = `${actual_time}:${min}`
+
+                    let siku = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+                    let nano = nanoid(4)
+
+                    let league = $('td:nth-child(2)', el).text()
+                    let match = $('td:nth-child(3)', el).text()
+                    match = match.replace(/ vs /g, ' - ')
+
+                    let tip = $('td:nth-child(4)', el).text()
+                    let matokeo = $('td:nth-child(5)', el).text()
+                    if (matokeo.length < 2) {
+                        matokeo = '-:-'
+                    }
+
+                    //create text
+                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
+                    if (i == tday_table.length - 1) {
+                        nanoArr = nanoArr + `${nano}`
+                    } else {
+                        nanoArr = nanoArr + `${nano}+`
+                    }
+
+                    await bin_supatips_Model.create({
+                        time, league, match, tip, siku, nano, matokeo
+                    })
                 }
-                let time = `${actual_time}:${min}`
 
-                let siku = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-                let nano = nanoid(4)
-
-                let league = $('td:nth-child(2)', el).text()
-                let match = $('td:nth-child(3)', el).text()
-                match = match.replace(/ vs /g, ' - ')
-
-                let tip = $('td:nth-child(4)', el).text()
-                let matokeo = $('td:nth-child(5)', el).text()
-                if (matokeo.length < 2) {
-                    matokeo = '-:-'
-                }
-
-                //create text
-                text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
-                if (i == tday_table.length - 1) {
-                    nanoArr = nanoArr + `${nano}`
-                } else {
-                    nanoArr = nanoArr + `${nano}+`
-                }
-
-                await bin_supatips_Model.create({
-                    time, league, match, tip, siku, nano, matokeo
-                })
             })
             await ctx.reply(text + `Arrs: ${nanoArr}`, {
                 parse_mode: "HTML",
@@ -98,39 +101,42 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#exTab2 .tab-content div#3 .widget-table-fixtures table tbody')
+            let tday_table = $('#tab3333 table tbody tr')
             let nd = new Date()
             let siku = nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
             if (tday_table.length >= 1) {
                 tday_table.each(async (i, el) => {
-                    let time_data = $('td:nth-child(1)', el).text()
-                    let time_arr = time_data.split(':')
-                    let hrs = Number(time_arr[0])
-                    let min = time_arr[1]
-                    let time = `${hrs + 2}:${min}`
-                    let nano = nanoid(4)
+                    if (i > 1) {
+                        let time_data = $('td:nth-child(1)', el).text()
+                        let time_arr = time_data.split(':')
+                        let hrs = Number(time_arr[0])
+                        let min = time_arr[1]
+                        let time = `${hrs + 2}:${min}`
+                        let nano = nanoid(4)
 
-                    let league = $('td:nth-child(2)', el).text()
-                    let match = $('td:nth-child(3)', el).text()
-                    match = match.replace(/ vs /g, ' - ')
+                        let league = $('td:nth-child(2)', el).text()
+                        let match = $('td:nth-child(3)', el).text()
+                        match = match.replace(/ vs /g, ' - ')
 
-                    let tip = $('td:nth-child(4)', el).text()
-                    let matokeo = $('td:nth-child(5)', el).text()
-                    if (matokeo.length < 2) {
-                        matokeo = '-:-'
+                        let tip = $('td:nth-child(4)', el).text()
+                        let matokeo = $('td:nth-child(5)', el).text()
+                        if (matokeo.length < 2) {
+                            matokeo = '-:-'
+                        }
+
+                        //create text
+                        text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
+                        if (i == tday_table.length - 1) {
+                            nanoArr = nanoArr + `${nano}`
+                        } else {
+                            nanoArr = nanoArr + `${nano}+`
+                        }
+
+                        await bin_supatips_Model.create({
+                            time, league, match, tip, siku, nano, matokeo
+                        })
                     }
 
-                    //create text
-                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
-                    if (i == tday_table.length - 1) {
-                        nanoArr = nanoArr + `${nano}`
-                    } else {
-                        nanoArr = nanoArr + `${nano}+`
-                    }
-
-                    await bin_supatips_Model.create({
-                        time, league, match, tip, siku, nano, matokeo
-                    })
                 })
 
                 await ctx.reply(text + `Arrs: ${nanoArr}`, {
@@ -165,16 +171,16 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#exTab2 .tab-content div#1 .widget-table-fixtures table tbody')
+            let tday_table = $('#tab1111 table tbody tr')
             let nn = new Date()
-            nn.setDate(nn.getDate()-1)
+            nn.setDate(nn.getDate() - 1)
             let siku = nn.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
             tday_table.each(async (i, el) => {
                 let time_data = $('td:nth-child(1)', el).text()
                 let time_arr = time_data.split(':')
                 let hrs = Number(time_arr[0])
                 let actual_time = hrs + 2
-                if(actual_time > 24) {
+                if (actual_time > 24) {
                     actual_time = '0' + (actual_time - 25)
                 }
                 let min = time_arr[1]

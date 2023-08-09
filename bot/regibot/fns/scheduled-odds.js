@@ -22,48 +22,50 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
         let ourDb = await supatips_Model.find({ siku })
 
         //fetch supatips table
-        let tday_table = $(`#exTab2 .tab-content ${tablehusika} .widget-table-fixtures table tbody`)
+        let tday_table = $(`${tablehusika} table tbody tr`)
 
         //compare length
-        if (ourDb.length < tday_table.length) {
+        if (ourDb.length < (tday_table.length - 2)) {
             await supatips_Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let min = time_arr[1]
-                let actual_time = hrs + 2
-                if (actual_time >= 24) {
-                    actual_time = `23`
-                    min = '59'
-                } else if(actual_time.toString().length == 1) {
-                    actual_time = '0' + actual_time
+                if (i > 1) {
+                    let time_data = $('td:nth-child(1)', el).text()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let min = time_arr[1]
+                    let actual_time = hrs + 2
+                    if (actual_time >= 24) {
+                        actual_time = `23`
+                        min = '59'
+                    } else if (actual_time.toString().length == 1) {
+                        actual_time = '0' + actual_time
+                    }
+                    let time = `${actual_time}:${min}`
+                    let nano = nanoid(4)
+
+                    let league = $('td:nth-child(2)', el).text()
+                    let match = $('td:nth-child(3)', el).text()
+                    match = match.replace(/ vs /g, ' - ')
+
+                    let tip = $('td:nth-child(4)', el).text()
+                    let matokeo = $('td:nth-child(5)', el).text()
+                    if (matokeo.length < 2) {
+                        matokeo = '-:-'
+                    }
+
+                    //create text
+                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
+                    if (i == tday_table.length - 1) {
+                        nanoArr = nanoArr + `${nano}`
+                    } else {
+                        nanoArr = nanoArr + `${nano}+`
+                    }
+
+                    //add to database
+                    await supatips_Model.create({
+                        matokeo, time, siku, league, match, tip, nano
+                    })
                 }
-                let time = `${actual_time}:${min}`
-                let nano = nanoid(4)
-
-                let league = $('td:nth-child(2)', el).text()
-                let match = $('td:nth-child(3)', el).text()
-                match = match.replace(/ vs /g, ' - ')
-
-                let tip = $('td:nth-child(4)', el).text()
-                let matokeo = $('td:nth-child(5)', el).text()
-                if (matokeo.length < 2) {
-                    matokeo = '-:-'
-                }
-
-                //create text
-                text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
-                if (i == tday_table.length - 1) {
-                    nanoArr = nanoArr + `${nano}`
-                } else {
-                    nanoArr = nanoArr + `${nano}+`
-                }
-
-                //add to database
-                await supatips_Model.create({
-                    matokeo, time, siku, league, match, tip, nano
-                })
             })
 
             await bot.telegram.sendMessage(imp.shemdoe, `New matches found and mkeka created successfully\n\n` + text + `Arrs: ${nanoArr}`, {
@@ -85,36 +87,39 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
         let $ = cheerio.load(html.data)
 
         //fetch supatips today table
-        let tday_table = $(`#exTab2 .tab-content ${tablehusika} .widget-table-fixtures table tbody`)
+        let tday_table = $(`${tablehusika} table tbody tr`)
 
         tday_table.each(async (i, el) => {
-            let time_data = $('td:nth-child(1)', el).text()
-            let time_arr = time_data.split(':')
-            let hrs = Number(time_arr[0])
-            let min = time_arr[1]
-            let actual_time = hrs + 2
-            if (actual_time >= 24) {
-                actual_time = `23`
-                min = '59'
-            }
-            let time = `${actual_time}:${min}`
-            let nano = nanoid(4)
+            if (i > 1) {
+                let time_data = $('td:nth-child(1)', el).text()
+                let time_arr = time_data.split(':')
+                let hrs = Number(time_arr[0])
+                let min = time_arr[1]
+                let actual_time = hrs + 2
+                if (actual_time >= 24) {
+                    actual_time = `23`
+                    min = '59'
+                }
+                let time = `${actual_time}:${min}`
+                let nano = nanoid(4)
 
-            let league = $('td:nth-child(2)', el).text()
-            let match = $('td:nth-child(3)', el).text()
-            match = match.replace(/ vs /g, ' - ')
+                let league = $('td:nth-child(2)', el).text()
+                let match = $('td:nth-child(3)', el).text()
+                match = match.replace(/ vs /g, ' - ')
 
-            let tip = $('td:nth-child(4)', el).text()
-            let matokeo = $('td:nth-child(5)', el).text()
+                let tip = $('td:nth-child(4)', el).text()
+                let matokeo = $('td:nth-child(5)', el).text()
 
-            //check matokeo, if updated, update
-            if (matokeo.length > 2) {
-                let mtch = await supatips_Model.findOne({ match, siku })
-                if (mtch.matokeo == '-:-') {
-                    await mtch.updateOne({ $set: { matokeo } })
-                    await bot.telegram.sendMessage(imp.shemdoe, `Results for ${mtch.match} updated to ${matokeo}`)
+                //check matokeo, if updated, update
+                if (matokeo.length > 2) {
+                    let mtch = await supatips_Model.findOne({ match, siku })
+                    if (mtch.matokeo == '-:-') {
+                        await mtch.updateOne({ $set: { matokeo } })
+                        await bot.telegram.sendMessage(imp.shemdoe, `Results for ${mtch.match} updated to ${matokeo}`)
+                    }
                 }
             }
+
         })
     } catch (err) {
         await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
@@ -123,21 +128,21 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
 
 const check_waLeo = async (bot, imp, siku) => {
     try {
-        let checker = await tg_slips.find({siku})
-        if(!checker) {
+        let checker = await tg_slips.find({ siku })
+        if (!checker) {
             await bot.telegram.sendMessage(imp.shemdoe, 'Nakukumbusha, Post Mkeka wa Leo. Una hadi 03:11')
         } else {
             for (let c of checker) {
-                if(c.posted == false) {
+                if (c.posted == false) {
                     await bot.telegram.copyMessage(imp.mkekaLeo, imp.mikekaDB, c.mid)
-                    await c.updateOne({$set: {posted: true}})
+                    await c.updateOne({ $set: { posted: true } })
                 }
             }
         }
     } catch (err) {
         console.log(err.message, err)
         await bot.telegram.sendMessage(imp.shemdoe, err.message)
-        .catch(e=> console.log(e.message))
+            .catch(e => console.log(e.message))
     }
 }
 
