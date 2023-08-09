@@ -18,7 +18,7 @@ mongoose.connect(`mongodb://${process.env.USER}:${process.env.PASS}@nodetuts-sha
 
 const limiter = elimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 7, // Limit each IP to 7 requests per `window` (here, per 1 minute)
+    max: 30, // Limit each IP to 30 requests per `window` (here, per 1 minute)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     message: "To many request, please try again after 3 minutes"
@@ -34,11 +34,10 @@ app.use(limiter)
 app.use(getRouter)
 
 if (process.env.environment == 'production') {
-    
+    regina_bot.rbot()
     rahatupu_bot.rtBot()
     pipyTida_bot.PipyBot()
 }
-regina_bot.rbot()
 
 
 app.listen(process.env.PORT || 3000, () => console.log('Running on port 3000'))
