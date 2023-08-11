@@ -105,7 +105,7 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
 
                 let league = $('td:nth-child(2)', el).text()
                 let match = $('td:nth-child(3)', el).text()
-                match = match.replace(/ vs /g, ' - ')
+                match = match.replace(/ vs /g, ' - ').replace(/ vs/g, ' - ')
 
                 let tip = $('td:nth-child(4)', el).text()
                 let matokeo = $('td:nth-child(5)', el).text()

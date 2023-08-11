@@ -34,11 +34,11 @@ app.use(limiter)
 app.use(getRouter)
 
 if (process.env.environment == 'production') {
-    regina_bot.rbot()
+    
     rahatupu_bot.rtBot()
     pipyTida_bot.PipyBot()
 }
-
+regina_bot.rbot()
 
 app.listen(process.env.PORT || 3000, () => console.log('Running on port 3000'))
 
