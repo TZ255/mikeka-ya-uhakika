@@ -67,11 +67,8 @@ const reginaBot = async () => {
         keyboard: [
             [
                 { text: "🔥 MKEKA #1" },
-                { text: "💰 MKEKA #2" }
-            ],
-            [
+                { text: "💰 MKEKA #2" },
                 { text: "🤑 MKEKA #3" },
-                { text: "💡 MSAADA" }
             ]
         ],
         is_persistent: true,
