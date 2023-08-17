@@ -40,7 +40,7 @@ const rtfunction = async () => {
         _pack1: -1001943515650
     }
 
-    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa', 'umechangia']
+    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa', 'umechangia', 'transaction id']
     const admins = [imp.halot, imp.shemdoe]
 
     //delaying
@@ -105,7 +105,10 @@ const rtfunction = async () => {
                     $set: { paid: true }
                 }, { new: true })
 
-                let txt1 = `User Points Added to ${upuser.points}`
+                let rev = await rtStarterModel.findOneAndUpdate({chatid: imp.rtmalipo}, {$inc: {revenue: points}}, {new: true})
+
+                let txt1 = `User Points Added to ${upuser.points}\n\nMapato added to ${rev.revenue.toLocaleString('en-US')}`
+                
                 let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 100.\n\nEnjoy, ❤.</b>`
 
                 await ctx.reply(txt1)
@@ -117,6 +120,17 @@ const rtfunction = async () => {
             console.log(err)
             await ctx.reply(err.message)
                 .catch(e => console.log(e.message))
+        }
+    })
+
+    botRT.command('rev', async ctx=> {
+        try {
+            let rt = await rtStarterModel.findOne({chatid: imp.rtmalipo})
+            let paids = await rtStarterModel.countDocuments({paid: true})
+            await ctx.reply(`<b>Jumla ya Mapato. \nTokea tumeanza May 1, 2023</b>\n\n▷ Tumeingiza jumla ya Tsh. ${rt.revenue.toLocaleString('en-US')}/= tukiwa na jumla ya wateja ${paids.toLocaleString('en-US')}`, {parse_mode: 'HTML'})
+        } catch (err) {
+            console.log(err, err.message)
+            await ctx.reply(err.message)
         }
     })
 
