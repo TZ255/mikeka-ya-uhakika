@@ -128,7 +128,7 @@ const PipyBot = async () => {
         let myId = ctx.chat.id
         let txt = ctx.message.text
         let msg_id = Number(txt.split('/convo-')[1].trim())
-        let bads = ['deactivated', 'blocked', 'initiate']
+        let bads = ['deactivated', 'blocked']
         if (myId == imp.shemdoe || myId == imp.halot) {
             try {
                 let all_users = await pipyUsers.find({ refferer: "Pipy" })
