@@ -35,10 +35,10 @@ app.use(getRouter)
 
 if (process.env.environment == 'production') {
     regina_bot.rbot()
-    
+    rahatupu_bot.rtBot()
     pipyTida_bot.PipyBot()
 }
-rahatupu_bot.rtBot()
+
 
 app.listen(process.env.PORT || 3000, () => console.log('Running on port 3000'))
 

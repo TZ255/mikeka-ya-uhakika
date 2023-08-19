@@ -27,7 +27,8 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_trs = $('#myTabContent #profile table tbody tr')
+            let tday_trs = $('#pills-tabContent #pills-profile table tbody tr')
+            console.log(tday_trs.length)
             tday_trs.each(async (i, el) => {
                 let time_data = $('td:nth-child(1)', el).text()
                 let time_arr = time_data.split(':')
@@ -103,7 +104,7 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#myTabContent #contact table tbody tr')
+            let tday_table = $('#pills-tabContent #pills-contact table tbody tr')
             let nd = new Date()
             nd.setDate(nd.getDate() + 1)
             let siku = nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
@@ -177,7 +178,7 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#myTabContent #home table tbody tr')
+            let tday_table = $('#pills-tabContent #pills-home table tbody tr')
             let nn = new Date()
             nn.setDate(nn.getDate() - 1)
             let siku = nn.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })

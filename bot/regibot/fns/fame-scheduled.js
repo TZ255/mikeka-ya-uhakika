@@ -20,7 +20,7 @@ const famecheckOdds = async (bot, imp, tablehusika, siku) => {
         let ourDb = await fametips_Model.find({ siku })
 
         //fetch fametips table
-        let tday_trs = $(`#myTabContent ${tablehusika} table tbody tr`)
+        let tday_trs = $(`#pills-tabContent ${tablehusika} table tbody tr`)
 
         //compare length
         if (ourDb.length < tday_trs.length) {
@@ -85,7 +85,7 @@ const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
         let $ = cheerio.load(html.data)
 
         //fetch supatips today table
-        let tday_trs = $(`#myTabContent ${tablehusika} table tbody tr`)
+        let tday_trs = $(`#pills-tabContent ${tablehusika} table tbody tr`)
 
         tday_trs.each(async (i, el) => {
             let match = $('td:nth-child(3)', el).text()

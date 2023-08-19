@@ -750,12 +750,12 @@ const reginaBot = async () => {
             case '10:07':
             case '12:07':
             case '15:07':
-                call_famescheduled_fn.famecheckMatokeo(botRegi, imp, '#home', trhJana)
+                call_famescheduled_fn.famecheckMatokeo(botRegi, imp, '#pills-home', trhJana)
                 break;
 
             case '06:17':
             case '09:17':
-                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#profile', trhLeo)
+                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#pills-profile', trhLeo)
                 break;
 
             case '16:07':
@@ -766,7 +766,7 @@ const reginaBot = async () => {
             case '22:07':
             case '23:07':
             case '23:57':
-                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#contact', trhKesho)
+                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#pills-contact', trhKesho)
                 break;
         }
     }, 59 * 1000)
