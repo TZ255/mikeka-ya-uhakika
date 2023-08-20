@@ -1,7 +1,7 @@
 const rtStarterModel = require('../database/chats')
 const binModel = require('../database/rtbin')
 
-const createUser = async (ctx) => {
+const createUser = async (ctx, delay) => {
     try {
         let chatid = ctx.chat.id
         let username = ctx.chat.first_name
@@ -19,24 +19,21 @@ const createUser = async (ctx) => {
             await rtStarterModel.create({
                 chatid, username, handle, refferer, paid: false, points: 500
             })
+            await delay(1000)
         }
     } catch (error) {
         console.log(error.message)
     }
 }
 
-const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid) => {
-    let rt = `https://t.me/+lcBycrCJ_9o0ZGI0`
+const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //upload video
     await ctx.sendChatAction('upload_video')
     let dvid = await bot.telegram.copyMessage(userid, imp.ohmyDB, vid.msgId, {
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: "⇐ Video Zingine", callback_data: 'video-zingine' },
-                ],
-                [
-                    { text: "💰 Points Zangu", callback_data: 'salio' },
+                    { text: "🔙 Video Zingine", url: OS },
                     { text: "➕ Ongeza Points", callback_data: 'vid_ongeza_pts' },
                 ]
             ]

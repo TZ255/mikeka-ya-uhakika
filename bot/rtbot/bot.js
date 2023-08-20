@@ -49,18 +49,27 @@ const rtfunction = async () => {
     botRT.start(async ctx => {
         try {
             //add to database if not
-            await call_function.createUser(ctx)
+            await call_function.createUser(ctx, delay)
 
             if (ctx.startPayload) {
                 let pload = ctx.startPayload
                 let userid = ctx.chat.id
                 if (pload.includes('RTBOT-')) {
+                    let android = `https://t.me/+lcBycrCJ_9o0ZGI0`
+                    let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
+                    let gen = `https://telegra.ph/Channels-za-RT-Premium-08-20-2`
                     let nano = pload.split('RTBOT-')[1]
                     let vid = await videosDB.findOne({ nano })
 
                     let user = await rtStarterModel.findOne({ chatid: userid })
                     if (user.points > 99) {
-                        await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid)
+                        if(pload.includes('iphone-')) {
+                            await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid, iphone)
+                        } else if(pload.includes('android-')) {
+                            await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid, android)
+                        } else {
+                            await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid, gen)
+                        }
                     } else {
                         await call_function.payingInfo(botRT, ctx, delay, imp, userid, 16)
                     }
@@ -391,7 +400,7 @@ const rtfunction = async () => {
 
             else {
                 //create user if not on database
-                await call_function.createUser(ctx)
+                await call_function.createUser(ctx, delay)
 
                 let userid = ctx.chat.id
                 let txt = ctx.message.text
