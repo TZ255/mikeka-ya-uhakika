@@ -63,9 +63,9 @@ const rtfunction = async () => {
 
                     let user = await rtStarterModel.findOne({ chatid: userid })
                     if (user.points > 99) {
-                        if(pload.includes('iphone-')) {
+                        if (pload.includes('iphone-')) {
                             await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid, iphone)
-                        } else if(pload.includes('android-')) {
+                        } else if (pload.includes('android-')) {
                             await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid, android)
                         } else {
                             await call_function.sendPaidVideo(ctx, delay, botRT, imp, vid, userid, gen)
@@ -114,13 +114,13 @@ const rtfunction = async () => {
                     $set: { paid: true }
                 }, { new: true })
 
-                let rev = await rtStarterModel.findOneAndUpdate({chatid: imp.rtmalipo}, {$inc: {revenue: points}}, {new: true})
+                let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
 
                 let txt1 = `User Points Added to ${upuser.points}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
-                
+
                 let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 100.\n\nEnjoy, ❤.</b>`
 
-                await ctx.reply(txt1, {parse_mode: 'HTML'})
+                await ctx.reply(txt1, { parse_mode: 'HTML' })
                 await delay(1000)
                 await botRT.telegram.sendMessage(chatid, txt2, { parse_mode: 'HTML' })
             } else { await ctx.reply('You are not authorized to do this') }
@@ -132,11 +132,11 @@ const rtfunction = async () => {
         }
     })
 
-    botRT.command('rev', async ctx=> {
+    botRT.command('rev', async ctx => {
         try {
-            let rt = await rtStarterModel.findOne({chatid: imp.rtmalipo})
-            let paids = await rtStarterModel.countDocuments({paid: true})
-            await ctx.reply(`<b>Jumla ya Mapato. \nTokea tumeanza May 1, 2023</b>\n\n▷ Tumeingiza jumla ya Tsh. ${rt.revenue.toLocaleString('en-US')}/= tukiwa na jumla ya wateja ${paids.toLocaleString('en-US')}`, {parse_mode: 'HTML'})
+            let rt = await rtStarterModel.findOne({ chatid: imp.rtmalipo })
+            let paids = await rtStarterModel.countDocuments({ paid: true })
+            await ctx.reply(`<b>Jumla ya Mapato. \nTokea tumeanza May 1, 2023</b>\n\n▷ Tumeingiza jumla ya Tsh. ${rt.revenue.toLocaleString('en-US')}/= tukiwa na jumla ya wateja ${paids.toLocaleString('en-US')}`, { parse_mode: 'HTML' })
         } catch (err) {
             console.log(err, err.message)
             await ctx.reply(err.message)
@@ -174,19 +174,38 @@ const rtfunction = async () => {
         } else { await ctx.reply('You are not authorized') }
     })
 
-    botRT.command('bless', async ctx=> {
+    botRT.command('bless', async ctx => {
         try {
             if (ctx.chat.id = imp.rtmalipo) {
                 await ctx.reply('Starting')
-                let all = await rtStarterModel.find({points: 0})
+                let all = await rtStarterModel.find({ points: 0 })
 
-                all.forEach((u, i)=> {
-                    setTimeout(()=> {
-                        u.updateOne({$set: {points: 100}})
-                        .catch(eu=> console.log(eu.message))
+                all.forEach((u, i) => {
+                    setTimeout(() => {
+                        u.updateOne({ $set: { points: 100 } })
+                            .catch(eu => console.log(eu.message))
                         botRT.telegram.copyMessage(u.chatid, imp.matangazoDB, 42)
-                        .then(()=> console.log('✅ done kwa '+u.chatid))
-                        .catch(e => console.log('❌ '+ e.message))
+                            .then(() => console.log('✅ done kwa ' + u.chatid))
+                            .catch(e => console.log('❌ ' + e.message))
+                    }, 40 * i)
+                })
+            }
+        } catch (err) {
+            console.log(err.message, err)
+        }
+    })
+
+    botRT.command('remind', async ctx => {
+        try {
+            if (ctx.chat.id = imp.rtmalipo) {
+                await ctx.reply('Starting')
+                let all = await rtStarterModel.find({ points: 500, paid: false })
+
+                all.forEach((u, i) => {
+                    setTimeout(() => {
+                        botRT.telegram.copyMessage(u.chatid, imp.matangazoDB, 65)
+                            .then(() => console.log('✅ done kwa ' + u.chatid))
+                            .catch(e => console.log('❌ ' + e.message))
                     }, 40 * i)
                 })
             }
@@ -318,7 +337,7 @@ const rtfunction = async () => {
                         reply_markup: {
                             inline_keyboard: [
                                 [
-                                    { text: `🎁 BUY NOW ▷ ${rn*5}% OFF`, url: affLink }
+                                    { text: `🎁 BUY NOW ▷ ${rn * 5}% OFF`, url: affLink }
                                 ]
                             ]
                         }
