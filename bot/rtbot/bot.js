@@ -107,7 +107,7 @@ const rtfunction = async () => {
 
                 let rev = await rtStarterModel.findOneAndUpdate({chatid: imp.rtmalipo}, {$inc: {revenue: points}}, {new: true})
 
-                let txt1 = `User Points Added to ${upuser.points}\n\nMapato added to ${rev.revenue.toLocaleString('en-US')}`
+                let txt1 = `User Points Added to ${upuser.points}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
                 
                 let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 100.\n\nEnjoy, ❤.</b>`
 
