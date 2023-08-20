@@ -15,6 +15,7 @@ const createUser = async (ctx) => {
         let user = await rtStarterModel.findOne({ chatid })
 
         if (!user) {
+            await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 500 bure zitakazokuwezesha kupata videos zetu. Kila video itakugharimu points 100`)
             await rtStarterModel.create({
                 chatid, username, handle, refferer, paid: false, points: 500
             })
