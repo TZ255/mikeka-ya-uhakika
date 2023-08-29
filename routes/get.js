@@ -71,7 +71,7 @@ router.get('/gsb/register', (req, res) => {
 })
 
 router.get('/pmatch/register', (req, res) => {
-    res.redirect('https://pmaff.com/?serial=61288670&creative_id=1788&anid=mkekawaleo&pid=mkekawaleo')
+    res.redirect('https://grwptraq.com/?serial=61288670&creative_id=1788&anid=web&pid=web')
 })
 
 router.get('/pmatch2/register', (req, res) => {
