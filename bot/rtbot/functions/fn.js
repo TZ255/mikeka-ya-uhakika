@@ -19,7 +19,7 @@ const createUser = async (ctx, delay) => {
             await rtStarterModel.create({
                 chatid, username, handle, refferer, paid: false, points: 500
             })
-            await delay(1000)
+            await delay(2000)
         }
     } catch (error) {
         console.log(error.message)
@@ -49,23 +49,25 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
 
         let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -100 } }, { new: true })
         await delay(1000)
-        await ctx.reply(`Umepokea Full Video na Points 100 zimekatwa kutoka katika account yako ya RT Malipo. \n\n<b>Umebakiwa na Points ${rcvr.points}.</b>`, {
-            reply_to_message_id: dvid.message_id,
-            parse_mode: "HTML",
-            reply_markup: {
-                keyboard: [
-                    [
-                        { text: "💰 Points Zangu" },
-                        { text: "➕ Ongeza Points" },
+        setTimeout(() => {
+            ctx.reply(`Umepokea Full Video na Points 100 zimekatwa kutoka katika account yako ya RT Malipo. \n\n<b>Umebakiwa na Points ${rcvr.points}.</b>`, {
+                reply_to_message_id: dvid.message_id,
+                parse_mode: "HTML",
+                reply_markup: {
+                    keyboard: [
+                        [
+                            { text: "💰 Points Zangu" },
+                            { text: "➕ Ongeza Points" },
+                        ],
+                        [
+                            { text: "⛑ Help / Msaada ⛑" }
+                        ]
                     ],
-                    [
-                        { text: "⛑ Help / Msaada ⛑" }
-                    ]
-                ],
-                is_persistent: false,
-                resize_keyboard: true
-            }
-        })
+                    is_persistent: false,
+                    resize_keyboard: true
+                }
+            }).catch(e => console.log(e.message))
+        }, 5000);
     }
 }
 
@@ -103,7 +105,7 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
                     { text: '✅ Nimelipia Tayari', callback_data: 'nimelipia' }
                 ],
                 [
-                    {text: '← Rudi nyuma', callback_data: 'rudi_nyuma'}
+                    { text: '← Rudi nyuma', callback_data: 'rudi_nyuma' }
                 ]
             ]
         }
@@ -116,7 +118,7 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
         reply_markup: {
             inline_keyboard: [
                 [
-                    {text: '← Rudi nyuma', callback_data: 'rudi_nyuma'},
+                    { text: '← Rudi nyuma', callback_data: 'rudi_nyuma' },
                     { text: '⛑ Admin', url: 'https://t.me/rt_malipo' }
                 ]
             ]
