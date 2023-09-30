@@ -86,6 +86,8 @@ const rtfunction = async () => {
                     })
                 } else if (pload.toLowerCase() == 'iphone') {
                     await botRT.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 33)
+                } else if (pload.toLowerCase() == 'ongeza_points') {
+                    await call_function.payingInfo(botRT, ctx, delay, imp, userid, 26)
                 } else if (pload.toLowerCase() == 'get-wakubwa-pack1') {
                     await ctx.sendChatAction('typing')
                     setTimeout(() => {
