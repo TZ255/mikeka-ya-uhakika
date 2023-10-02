@@ -410,7 +410,7 @@ const rtfunction = async () => {
 
                 for (let m of miamala) {
                     if (txt.toLowerCase().includes(m)) {
-                        await botRT.telegram.sendMessage(imp.shemdoe, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
+                        await botRT.telegram.sendMessage(imp.rtmalipo, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
 
                         await botRT.telegram.copyMessage(userid, imp.matangazoDB, 63)
                         break
