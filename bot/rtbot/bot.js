@@ -494,6 +494,16 @@ const rtfunction = async () => {
                     caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
                     parse_mode: 'HTML'
                 })
+                await delay(1000)
+                await botRT.telegram.copyMessage(chatid, imp.matangazoDB, 63, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                {text: `✉ Wasiliana na Admin Hapa`, url: 'https://t.me/rt_malipo'}
+                            ]
+                        ]
+                    }
+                })
             }
         } catch (err) {
             if (!err.message) {
