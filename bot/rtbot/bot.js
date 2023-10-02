@@ -41,7 +41,8 @@ const rtfunction = async () => {
     }
 
     const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa', 'umechangia', 'transaction id']
-    const admins = [imp.halot, imp.shemdoe]
+
+    const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
     //delaying
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
