@@ -413,7 +413,15 @@ const rtfunction = async () => {
                     if (txt.toLowerCase().includes(m)) {
                         await botRT.telegram.sendMessage(imp.rtmalipo, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
 
-                        await botRT.telegram.copyMessage(userid, imp.matangazoDB, 63)
+                        await botRT.telegram.copyMessage(userid, imp.matangazoDB, 63, {
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [
+                                        { text: `✉ Wasiliana na Admin Hapa`, url: 'https://t.me/rt_malipo' }
+                                    ]
+                                ]
+                            }
+                        })
                         break
                     }
                 }
@@ -499,7 +507,7 @@ const rtfunction = async () => {
                     reply_markup: {
                         inline_keyboard: [
                             [
-                                {text: `✉ Wasiliana na Admin Hapa`, url: 'https://t.me/rt_malipo'}
+                                { text: `✉ Wasiliana na Admin Hapa`, url: 'https://t.me/rt_malipo' }
                             ]
                         ]
                     }
