@@ -417,7 +417,7 @@ const rtfunction = async () => {
                             reply_markup: {
                                 inline_keyboard: [
                                     [
-                                        { text: `✉ Wasiliana na Admin Hapa`, url: 'https://t.me/rt_malipo' }
+                                        { text: `✉ Wasiliana na Admin Wetu Hapa`, url: 'https://t.me/rt_malipo' }
                                     ]
                                 ]
                             }
@@ -507,7 +507,7 @@ const rtfunction = async () => {
                     reply_markup: {
                         inline_keyboard: [
                             [
-                                { text: `✉ Wasiliana na Admin Hapa`, url: 'https://t.me/rt_malipo' }
+                                { text: `✉ Wasiliana na Admin Wetu Hapa`, url: 'https://t.me/rt_malipo' }
                             ]
                         ]
                     }
