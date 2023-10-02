@@ -300,31 +300,6 @@ const rtfunction = async () => {
         try {
             let chan_id = ctx.channelPost.chat.id
             let postId = ctx.channelPost.message_id
-            if (chan_id == imp.malayaDB && ctx.channelPost.reply_to_message) {
-                let msg = ctx.channelPost.text
-                let msg_id = ctx.channelPost.message_id
-                let rpid = ctx.channelPost.reply_to_message.message_id
-                if (msg.toLowerCase().includes('add malaya')) {
-                    let mkoa = msg.split('malaya - ')[1]
-                    let malaya_id = rpid + '-' + msg_id
-                    await malayaModel.create({
-                        mkoa, poaId: malaya_id
-                    })
-                    let del = await ctx.reply(`Malaya posted successfully as:\nMkoa: ${mkoa}\nID: ${malaya_id}`, {
-                        reply_to_message_id: rpid,
-                        reply_markup: {
-                            inline_keyboard: [
-                                [
-                                    { text: 'Publish This', callback_data: `push_bitch_${malaya_id}` }
-                                ],
-                                [
-                                    { text: 'Ignore', callback_data: `ignore_push` }
-                                ]
-                            ]
-                        }
-                    })
-                }
-            }
 
             if (chan_id == imp.aliDB && ctx.channelPost.video) {
                 let caps = ctx.channelPost.caption
@@ -426,11 +401,16 @@ const rtfunction = async () => {
                 let userid = ctx.chat.id
                 let txt = ctx.message.text
                 let username = ctx.chat.first_name
+                let surname = ''
+                if (ctx.chat.last_name) {
+                    surname = ctx.chat.last_name
+                    username = username + ' ' + surname
+                }
                 let mid = ctx.message.message_id
 
                 for (let m of miamala) {
                     if (txt.toLowerCase().includes(m)) {
-                        await botRT.telegram.sendMessage(imp.shemdoe, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
+                        await botRT.telegram.sendMessage(imp.shemdoe, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
 
                         await botRT.telegram.copyMessage(userid, imp.matangazoDB, 63)
                         break
@@ -469,6 +449,11 @@ const rtfunction = async () => {
         try {
             let mid = ctx.message.message_id
             let username = ctx.chat.first_name
+            let surname = ''
+            if (ctx.chat.last_name) {
+                surname = ctx.chat.last_name
+                username = username + ' ' + surname
+            }
             let chatid = ctx.chat.id
             let cap = ctx.message.caption
 
@@ -501,11 +486,11 @@ const rtfunction = async () => {
 
             else {
                 await botRT.telegram.copyMessage(imp.halot, chatid, mid, {
-                    caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
+                    caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
                     parse_mode: 'HTML'
                 })
-                await botRT.telegram.copyMessage(imp.shemdoe, chatid, mid, {
-                    caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
+                await botRT.telegram.copyMessage(imp.rtmalipo, chatid, mid, {
+                    caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
                     parse_mode: 'HTML'
                 })
             }
