@@ -31,12 +31,14 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     await ctx.sendChatAction('upload_video')
     let dvid = await bot.telegram.copyMessage(userid, imp.ohmyDB, vid.msgId, {
         reply_markup: {
-            inline_keyboard: [
+            keyboard: [
                 [
-                    { text: "🔙 Video Zingine", url: OS },
-                    { text: "➕ Ongeza Points", callback_data: 'vid_ongeza_pts' },
+                    { text: "➕ Ongeza Points" },
+                    { text: "⛑ Help / Msaada ⛑" }
                 ]
-            ]
+            ],
+            is_persistent: true,
+            resize_keyboard: true
         }
     })
 
@@ -50,24 +52,17 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
         let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -100 } }, { new: true })
         await delay(1000)
         setTimeout(() => {
-            ctx.reply(`Umepokea Full Video na Points 100 zimekatwa kutoka katika account yako ya RT Malipo. \n\n<b>Umebakiwa na Points ${rcvr.points}.</b>`, {
-                reply_to_message_id: dvid.message_id,
-                parse_mode: "HTML",
+            ctx.reply(`Umepokea Full Video kwa gharama ya points 100. Umebakiwa na Points ${rcvr.points}.`, {
                 reply_markup: {
-                    keyboard: [
+                    inline_keyboard: [
                         [
-                            { text: "💰 Points Zangu" },
-                            { text: "➕ Ongeza Points" },
-                        ],
-                        [
-                            { text: "⛑ Help / Msaada ⛑" }
+                            { text: "💰 Salio", callback_data: 'salio' },
+                            { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
                         ]
-                    ],
-                    is_persistent: false,
-                    resize_keyboard: true
+                    ]
                 }
             }).catch(e => console.log(e.message))
-        }, 5000);
+        }, 1000);
     }
 }
 
