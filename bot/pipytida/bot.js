@@ -117,6 +117,16 @@ const PipyBot = async () => {
 
     })
 
+    bot.command('zote', async ctx=> {
+        let all = await pipyUsers.find({promo: 'premier'}).limit(24000)
+        for (let u of all) {
+            await u.updateOne({$set: {promo: 'unknown'}})
+            console.log(u.chatid+' done')
+            await delay(12)
+        }
+        await ctx.reply('done')
+    })
+
     bot.command('supatips', async ctx => {
         try {
             await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
