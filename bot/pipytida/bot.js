@@ -39,6 +39,7 @@ const PipyBot = async () => {
             await pipyUsers.create({
                 chatid: ctx.chat.id,
                 username: ctx.chat.first_name,
+                promo: 'unknown',
                 refferer: "Pipy"
             })
             console.log('New user added to DB (Pipy)')
@@ -104,6 +105,14 @@ const PipyBot = async () => {
         } catch (err) {
             await ctx.reply(err.message)
         }
+    })
+
+    bot.command('zote', async ctx=> {
+        await pipyUsers.updateMany({}, {$set: {promo: 'unknown'}})
+        await ctx.reply('All promo unknown added')
+        await delay(2000)
+        await pipyUsers.updateMany({}, {$set: {promo: 'premier'}}).limit(30000)
+        await ctx.reply('30k updated to premier')
     })
 
     bot.command(['help', 'stop'], async ctx => {

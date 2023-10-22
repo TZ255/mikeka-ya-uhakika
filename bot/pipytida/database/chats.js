@@ -11,6 +11,10 @@ const pipySchema = new Schema({
     refferer: {
         type: String,
         default: 'Pipy'
+    },
+    promo: {
+        type: String,
+        default: 'unknown'
     }
 }, {strict: false, timestamps: true })
 
