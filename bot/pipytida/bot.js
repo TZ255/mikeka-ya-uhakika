@@ -107,14 +107,6 @@ const PipyBot = async () => {
         }
     })
 
-    bot.command('zote', async ctx=> {
-        await pipyUsers.updateMany({}, {$set: {promo: 'unknown'}})
-        await ctx.reply('All promo unknown added')
-        await delay(2000)
-        await pipyUsers.updateMany({}, {$set: {promo: 'premier'}}).limit(30000)
-        await ctx.reply('30k updated to premier')
-    })
-
     bot.command(['help', 'stop'], async ctx => {
         try {
             await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653)
@@ -228,7 +220,11 @@ const PipyBot = async () => {
         try {
             let nyumbusP = await pipyUsers.countDocuments({ refferer: "Pipy" })
             let jumla = nyumbusP
-            await ctx.reply(`Mpaka sasa kwenye Database yetu tuna nyumbu <b>${nyumbusP.toLocaleString('en-us')}</b> wa Pipy.\n\nJumla kuu ni <b>${jumla.toLocaleString('en-us')}</b>. \n\nWote unique, kama tayari mmoja wetu kamuongeza mimi simuongezi.`, { parse_mode: 'HTML' })
+            let unknown = await pipyUsers.countDocuments({ promo: "unknown" })
+            unknown = unknown.toLocaleString('en-us')
+            premier = premier.toLocaleString('en-us')
+            let premier = await pipyUsers.countDocuments({ promo: "premier" })
+            await ctx.reply(`Mpaka sasa kwenye Database yetu tuna nyumbu <b>${nyumbusP.toLocaleString('en-us')}</b> wa Pipy.\n\nJumla kuu ni <b>${jumla.toLocaleString('en-us')}</b>. \n\nWote unique, kama tayari mmoja wetu kamuongeza mimi simuongezi.\n\nPia upande wa promo tuko na:\n1. Uncategoriized: ${unknown}\n2. Premier: ${premier}`, { parse_mode: 'HTML' })
         } catch (err) {
             console.log(err.message)
         }
