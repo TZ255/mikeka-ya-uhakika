@@ -222,8 +222,8 @@ const PipyBot = async () => {
             let jumla = nyumbusP
             let unknown = await pipyUsers.countDocuments({ promo: "unknown" })
             unknown = unknown.toLocaleString('en-us')
-            premier = premier.toLocaleString('en-us')
             let premier = await pipyUsers.countDocuments({ promo: "premier" })
+            premier = premier.toLocaleString('en-us')
             await ctx.reply(`Mpaka sasa kwenye Database yetu tuna nyumbu <b>${nyumbusP.toLocaleString('en-us')}</b> wa Pipy.\n\nJumla kuu ni <b>${jumla.toLocaleString('en-us')}</b>. \n\nWote unique, kama tayari mmoja wetu kamuongeza mimi simuongezi.\n\nPia upande wa promo tuko na:\n1. Uncategoriized: ${unknown}\n2. Premier: ${premier}`, { parse_mode: 'HTML' })
         } catch (err) {
             console.log(err.message)
