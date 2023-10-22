@@ -117,19 +117,6 @@ const PipyBot = async () => {
 
     })
 
-    bot.command('zote', async ctx => {
-        let all = await pipyUsers.find({ promo: 'premier' }).limit(24000)
-
-        for (let [i, u] of all.entries()) {
-            setTimeout(() => {
-                u.updateOne({ $set: { promo: 'unknown' } })
-                .then(()=> console.log(u.chatid + ' done'))
-                .catch(e => console.log(e.message))
-            }, 12 * i)
-        }
-        await ctx.reply('done')
-    })
-
     bot.command('supatips', async ctx => {
         try {
             await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
@@ -146,6 +133,39 @@ const PipyBot = async () => {
         if (myId == imp.shemdoe || myId == imp.halot) {
             try {
                 let all_users = await pipyUsers.find({ refferer: "Pipy" })
+
+                all_users.forEach((u, index) => {
+                    if (u.blocked != true) {
+                        setTimeout(() => {
+                            if (index == all_users.length - 1) {
+                                ctx.reply('Nimemaliza conversation')
+                            }
+                            bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .then(() => console.log('✅ convo sent to ' + u.chatid))
+                                .catch((err) => {
+                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                        pipyUsers.findOneAndDelete({ chatid: u.chatid })
+                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                })
+                        }, index * 40)
+                    }
+                })
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+
+    })
+
+    bot.command('premier', async ctx => {
+        let myId = ctx.chat.id
+        let txt = ctx.message.text
+        let msg_id = Number(txt.split('/premier-')[1].trim())
+        let bads = ['deactivated', 'blocked']
+        if (myId == imp.shemdoe || myId == imp.halot) {
+            try {
+                let all_users = await pipyUsers.find({ refferer: "Pipy", promo: 'premier' })
 
                 all_users.forEach((u, index) => {
                     if (u.blocked != true) {
