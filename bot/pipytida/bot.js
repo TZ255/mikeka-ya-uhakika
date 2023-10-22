@@ -117,12 +117,15 @@ const PipyBot = async () => {
 
     })
 
-    bot.command('zote', async ctx=> {
-        let all = await pipyUsers.find({promo: 'premier'}).limit(24000)
-        for (let u of all) {
-            await u.updateOne({$set: {promo: 'unknown'}})
-            console.log(u.chatid+' done')
-            await delay(12)
+    bot.command('zote', async ctx => {
+        let all = await pipyUsers.find({ promo: 'premier' }).limit(24000)
+
+        for (let [i, u] of all.entries()) {
+            setTimeout(() => {
+                u.updateOne({ $set: { promo: 'unknown' } })
+                .then(()=> console.log(u.chatid + ' done'))
+                .catch(e => console.log(e.message))
+            }, 12 * i)
         }
         await ctx.reply('done')
     })
@@ -156,7 +159,7 @@ const PipyBot = async () => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         pipyUsers.findOneAndDelete({ chatid: u.chatid })
                                             .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                    } else{console.log(`🤷‍♂️ ${err.message}`)}
+                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, index * 40)
                     }
