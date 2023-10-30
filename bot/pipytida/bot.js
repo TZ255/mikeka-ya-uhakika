@@ -191,6 +191,39 @@ const PipyBot = async () => {
 
     })
 
+    bot.command('unknown', async ctx => {
+        let myId = ctx.chat.id
+        let txt = ctx.message.text
+        let msg_id = Number(txt.split('/premier-')[1].trim())
+        let bads = ['deactivated', 'blocked']
+        if (myId == imp.shemdoe || myId == imp.halot) {
+            try {
+                let all_users = await pipyUsers.find({ refferer: "Pipy", promo: 'unknown' })
+
+                all_users.forEach((u, index) => {
+                    if (u.blocked != true) {
+                        setTimeout(() => {
+                            if (index == all_users.length - 1) {
+                                ctx.reply('Nimemaliza conversation')
+                            }
+                            bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .then(() => console.log('✅ convo sent to ' + u.chatid))
+                                .catch((err) => {
+                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                        pipyUsers.findOneAndDelete({ chatid: u.chatid })
+                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                })
+                        }, index * 40)
+                    }
+                })
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+
+    })
+
     bot.command(['mkeka', 'mkeka1'], async ctx => {
         try {
             await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp)
