@@ -194,7 +194,7 @@ const PipyBot = async () => {
     bot.command('unknown', async ctx => {
         let myId = ctx.chat.id
         let txt = ctx.message.text
-        let msg_id = Number(txt.split('/premier-')[1].trim())
+        let msg_id = Number(txt.split('/unknown-')[1].trim())
         let bads = ['deactivated', 'blocked']
         if (myId == imp.shemdoe || myId == imp.halot) {
             try {
