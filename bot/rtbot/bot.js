@@ -40,7 +40,7 @@ const rtfunction = async () => {
         _pack1: -1001943515650
     }
 
-    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa. umelipa', 'umechangia', 'transaction id']
+    const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916']
 
     const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
