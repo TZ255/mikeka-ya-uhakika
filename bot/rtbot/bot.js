@@ -130,13 +130,16 @@ const rtfunction = async () => {
                     let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 100.\n\nEnjoy, ❤.</b>`
 
                     let botname = ctx.botInfo.username
-                    if (botname == 'rahatupu_tzbot') {
-                        botname = 'rtbot'
-                    }
-                    if (upuser.refferer == botname) {
+                    if (upuser.refferer == 'rahatupu_tzbot') {
+                        let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
+                        await axios.post(tgAPI, {
+                            chat_id: upuser.chatid,
+                            text: txt2,
+                            parse_mode: 'HTML'
+                        })
                         await ctx.reply(txt1, { parse_mode: 'HTML' })
                         await delay(1000)
-                        await bot.telegram.sendMessage(chatid, txt2, { parse_mode: 'HTML' })
+                        await ctx.reply('Message imetumwa kwa RT BOT')
                     } else if (upuser.refferer == 'pilau_bot') {
                         let tgAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
                         await axios.post(tgAPI, {
@@ -168,6 +171,11 @@ const rtfunction = async () => {
             }
         })
 
+        bot.command('zzz', async ctx=> {
+            await rtStarterModel.updateMany({refferer: 'rtbot'}, {$set:{refferer: 'rahatupu_tzbot'}})
+            await ctx.reply('Done')
+        })
+
         bot.command('convo', async ctx => {
             let myId = ctx.chat.id
             let txt = ctx.message.text
@@ -175,8 +183,7 @@ const rtfunction = async () => {
             if (myId == imp.shemdoe || myId == imp.halot) {
                 try {
                     await ctx.reply('starting')
-                    let botname = ctx.botInfo
-                    if(botname == 'rahatupu_tzbot') {botname = 'rtbot'}
+                    let botname = ctx.botInfo.username
                     let all_users = await rtStarterModel.find({ refferer: botname })
 
                     all_users.forEach((u, index) => {
@@ -186,14 +193,14 @@ const rtfunction = async () => {
                                     ctx.reply('Nimemaliza conversation')
                                 }
                                 bot.telegram.copyMessage(u.chatid, imp.matangazoDB, msg_id)
-                                    .then(() => console.log('convo sent to ' + u.chatid))
+                                    .then(() => console.log('✅ sent to ' + u.chatid))
                                     .catch((err) => {
                                         if (err.message.includes('blocked') || err.message.includes('initiate')) {
                                             rtStarterModel.findOneAndDelete({ chatid: u.chatid })
                                                 .then(() => { console.log(u.chatid + ' is deleted') })
                                         }
                                     })
-                            }, index * 100)
+                            }, index * 40)
                         }
                     })
                 } catch (err) {
@@ -206,7 +213,6 @@ const rtfunction = async () => {
             try {
                 if (ctx.chat.id = imp.rtmalipo) {
                     let botname = ctx.botInfo
-                    if(botname == 'rahatupu_tzbot') {botname = 'rtbot'}
                     await ctx.reply('Starting')
                     let all = await rtStarterModel.find({ points: 0, refferer: botname })
 
@@ -230,7 +236,6 @@ const rtfunction = async () => {
                 if (ctx.chat.id = imp.rtmalipo) {
                     await ctx.reply('Starting')
                     let botname = ctx.botInfo
-                    if(botname == 'rahatupu_tzbot') {botname = 'rtbot'}
                     let all = await rtStarterModel.find({ points: 500, paid: false, refferer: botname })
 
                     all.forEach((u, i) => {
