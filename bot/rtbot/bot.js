@@ -144,6 +144,8 @@ const rtfunction = async () => {
                             text: txt2,
                             parse_mode: 'HTML'
                         })
+                        await ctx.reply(txt1, { parse_mode: 'HTML' })
+                        await delay(1000)
                         await ctx.reply('Message imetumwa kwa PL BOT')
                     }
                 } else { await ctx.reply('You are not authorized to do this') }
