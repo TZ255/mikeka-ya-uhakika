@@ -50,6 +50,10 @@ const rtfunction = async () => {
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+        bot.catch((err, ctx) => {
+            console.log(err.message)
+        })
+
         bot.start(async ctx => {
             try {
                 //add to database if not
@@ -130,33 +134,34 @@ const rtfunction = async () => {
                     let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nEnjoy, ❤.</b>`
 
                     let botname = ctx.botInfo.username
-                    if (upuser.refferer == 'rahatupu_tzbot') {
-                        let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
-                        await axios.post(tgAPI, {
+                    let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
+                    let tgAPI2 = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+
+                    let res1 = await axios.post(tgAPI, {
+                        chat_id: upuser.chatid,
+                        text: txt2,
+                        parse_mode: 'HTML'
+                    })
+
+                    if (res1.status == 200) {
+                        await ctx.reply(txt1 + '\n\n✅ RTBOT', { parse_mode: 'HTML' })
+                    } else {
+                        let res2 = await axios.post(tgAPI2, {
                             chat_id: upuser.chatid,
                             text: txt2,
                             parse_mode: 'HTML'
                         })
-                        await ctx.reply(txt1, { parse_mode: 'HTML' })
-                        await delay(1000)
-                        await ctx.reply('Message imetumwa kwa RT BOT')
-                    } else if (upuser.refferer == 'pilau_bot') {
-                        let tgAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
-                        await axios.post(tgAPI, {
-                            chat_id: upuser.chatid,
-                            text: txt2,
-                            parse_mode: 'HTML'
-                        })
-                        await ctx.reply(txt1, { parse_mode: 'HTML' })
-                        await delay(1000)
-                        await ctx.reply('Message imetumwa kwa PL BOT')
+
+                        if(res2.status == 200) {
+                            await ctx.reply(txt1 + '\n\n❌ RTBOT ✅ PLBOT', { parse_mode: 'HTML' })
+                        } else {await ctx.reply('Bot blocked on both bots')}
                     }
-                } else { await ctx.reply('You are not authorized to do this') }
+                }
+                else { await ctx.reply('You are not authorized to do this') }
 
             } catch (err) {
                 console.log(err)
                 await ctx.reply(err.message)
-                    .catch(e => console.log(e.message))
             }
         })
 
@@ -231,7 +236,7 @@ const rtfunction = async () => {
                 if (ctx.chat.id = imp.rtmalipo) {
                     await ctx.reply('Starting')
                     let botname = ctx.botInfo
-                    let all = await rtStarterModel.find({ points: {$gte: 500}, paid: false, refferer: botname })
+                    let all = await rtStarterModel.find({ points: { $gte: 500 }, paid: false, refferer: botname })
 
                     all.forEach((u, i) => {
                         setTimeout(() => {
@@ -595,11 +600,8 @@ const rtfunction = async () => {
             .catch((err) => {
                 console.log('Bot is not running')
                 bot.telegram.sendMessage(imp.shemdoe, err.message)
+                    .catch(e => console.log(e.message))
             })
-
-
-        process.once('SIGINT', () => bot.stop('SIGINT'))
-        process.once('SIGTERM', () => bot.stop('SIGTERM'))
     }
 }
 
