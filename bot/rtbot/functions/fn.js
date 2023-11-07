@@ -20,10 +20,6 @@ const createUser = async (ctx, delay) => {
                 chatid, username, handle, refferer, paid: false, points: 1000
             })
             await delay(2000)
-        } else if (user && user.refferer != refferer) {
-            await rtStarterModel.create({
-                chatid, username, handle, refferer, paid: false, points: 1000
-            })
         }
     } catch (error) {
         console.log(error.message)
