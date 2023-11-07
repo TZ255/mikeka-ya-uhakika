@@ -294,7 +294,7 @@ const rtfunction = async () => {
             }
         })
 
-        bot.command(['ongeza_pts', 'ongeza_points'], async ctx => {
+        bot.command(['ongeza_pts', 'ongeza_points', 'ONGEZA POINTS'], async ctx => {
             try {
                 await call_function.payingInfo(bot, ctx, delay, imp, ctx.chat.id, 26)
             } catch (err) {
