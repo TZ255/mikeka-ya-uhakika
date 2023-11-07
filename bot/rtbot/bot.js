@@ -135,27 +135,27 @@ const rtfunction = async () => {
 
                     let botname = ctx.botInfo.username
                     if (upuser.refferer == 'rahatupu_tzbot') {
+                        await ctx.reply(txt1 + '\n✅ RT', { parse_mode: 'HTML' })
                         let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
                         await axios.post(tgAPI, {
                             chat_id: upuser.chatid,
                             text: txt2,
                             parse_mode: 'HTML'
                         })
-                        await ctx.reply(txt1 + '\n✅ RT', { parse_mode: 'HTML' })
                     } else if (upuser.refferer == 'pilau_bot') {
+                        await ctx.reply(txt1 + '\n✅ PL', { parse_mode: 'HTML' })
                         let tgAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
                         await axios.post(tgAPI, {
                             chat_id: upuser.chatid,
                             text: txt2,
                             parse_mode: 'HTML'
                         })
-                        await ctx.reply(txt1 + '\n✅ PL', { parse_mode: 'HTML' })
                     }
                 } else { await ctx.reply('You are not authorized to do this') }
 
             } catch (err) {
                 let msg = err.message
-                if (msg.includes('403')) { await ctx.reply('Blocked by user') }
+                if (msg.includes('403')) { await ctx.reply('Huyu boya kablock robot wetu') }
                 else { await ctx.reply(msg) }
             }
         })
