@@ -50,10 +50,10 @@ const rtfunction = async () => {
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-        bot.catch((err, ctx) => {
+        bot.catch((err, ctx)=> {
             console.log(err.message)
         })
-
+        
         bot.start(async ctx => {
             try {
                 //add to database if not
@@ -134,34 +134,29 @@ const rtfunction = async () => {
                     let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nEnjoy, ❤.</b>`
 
                     let botname = ctx.botInfo.username
-                    let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
-                    let tgAPI2 = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
-
-                    let res1 = await axios.post(tgAPI, {
-                        chat_id: upuser.chatid,
-                        text: txt2,
-                        parse_mode: 'HTML'
-                    })
-
-                    if (res1.status == 200) {
-                        await ctx.reply(txt1 + '\n\n✅ RTBOT', { parse_mode: 'HTML' })
-                    } else {
-                        let res2 = await axios.post(tgAPI2, {
+                    if (upuser.refferer == 'rahatupu_tzbot') {
+                        let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
+                        await axios.post(tgAPI, {
                             chat_id: upuser.chatid,
                             text: txt2,
                             parse_mode: 'HTML'
                         })
-
-                        if(res2.status == 200) {
-                            await ctx.reply(txt1 + '\n\n❌ RTBOT ✅ PLBOT', { parse_mode: 'HTML' })
-                        } else {await ctx.reply('Bot blocked on both bots')}
+                        await ctx.reply(txt1 + '\n✅ RT', { parse_mode: 'HTML' })
+                    } else if (upuser.refferer == 'pilau_bot') {
+                        let tgAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+                        await axios.post(tgAPI, {
+                            chat_id: upuser.chatid,
+                            text: txt2,
+                            parse_mode: 'HTML'
+                        })
+                        await ctx.reply(txt1 + '\n✅ PL', { parse_mode: 'HTML' })
                     }
-                }
-                else { await ctx.reply('You are not authorized to do this') }
+                } else { await ctx.reply('You are not authorized to do this') }
 
             } catch (err) {
                 console.log(err)
                 await ctx.reply(err.message)
+                    .catch(e => console.log(e.message))
             }
         })
 

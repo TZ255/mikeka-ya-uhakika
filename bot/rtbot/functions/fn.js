@@ -20,6 +20,8 @@ const createUser = async (ctx, delay) => {
                 chatid, username, handle, refferer, paid: false, points: 1000
             })
             await delay(2000)
+        } else if(user && user.refferer != refferer) {
+            await user.updateOne({$set: {refferer: refferer}})
         }
     } catch (error) {
         console.log(error.message)
