@@ -6,14 +6,7 @@ const createUser = async (ctx, delay) => {
         let chatid = ctx.chat.id
         let username = ctx.chat.first_name
         let handle = 'unknown'
-        let refferer = ''
-        let ref = ctx.botInfo.username
-        if (ref == 'rahatupu_tzbot') {
-            refferer = 'rtbot'
-        } else if (ref == 'pilau_bot') {
-            refferer = 'pilau_bot'
-        }
-
+        let refferer = ctx.botInfo.username
 
         if (ctx.chat.username) {
             handle = ctx.chat.username
