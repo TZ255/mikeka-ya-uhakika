@@ -130,7 +130,7 @@ const rtfunction = async () => {
                     let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 100.\n\nEnjoy, ❤.</b>`
 
                     let botname = ctx.botInfo.username
-                    if (botname == rahatupu_tzbot) {
+                    if (botname == 'rahatupu_tzbot') {
                         botname = 'rtbot'
                     }
                     if (upuser.refferer == botname) {
