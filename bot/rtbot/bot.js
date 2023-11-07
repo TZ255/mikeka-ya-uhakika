@@ -171,11 +171,6 @@ const rtfunction = async () => {
             }
         })
 
-        bot.command('zzz', async ctx=> {
-            await rtStarterModel.updateMany({refferer: 'rtbot'}, {$set:{refferer: 'rahatupu_tzbot'}})
-            await ctx.reply('Done')
-        })
-
         bot.command('convo', async ctx => {
             let myId = ctx.chat.id
             let txt = ctx.message.text
