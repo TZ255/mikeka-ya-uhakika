@@ -294,7 +294,7 @@ const rtfunction = async () => {
             }
         })
 
-        bot.command(['ongeza_pts', 'ongeza_points', 'ONGEZA POINTS'], async ctx => {
+        bot.command(['ongeza_pts', 'ongeza_points'], async ctx => {
             try {
                 await call_function.payingInfo(bot, ctx, delay, imp, ctx.chat.id, 26)
             } catch (err) {
@@ -461,7 +461,7 @@ const rtfunction = async () => {
                             await ctx.reply(`Umebakiwa na Points ${user.points}.`)
                             break;
 
-                        case '➕ Ongeza Points':
+                        case '➕ Ongeza Points': case '/ONGEZA_POINTS':
                             await call_function.payingInfo(bot, ctx, delay, imp, userid, 26)
                             break;
 
