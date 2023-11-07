@@ -12,7 +12,7 @@ const createUser = async (ctx, delay) => {
             handle = ctx.chat.username
         }
 
-        let user = await rtStarterModel.findOne({ chatid, refferer })
+        let user = await rtStarterModel.findOne({ chatid })
 
         if (!user) {
             await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 1000 bure zitakazokuwezesha kupata videos zetu. \nKila video itakugharimu points 250`)
@@ -20,6 +20,10 @@ const createUser = async (ctx, delay) => {
                 chatid, username, handle, refferer, paid: false, points: 1000
             })
             await delay(2000)
+        } else if (user && user.refferer != refferer) {
+            await rtStarterModel.create({
+                chatid, username, handle, refferer, paid: false, points: 1000
+            })
         }
     } catch (error) {
         console.log(error.message)
