@@ -66,7 +66,7 @@ const rtfunction = async () => {
                         let vid = await videosDB.findOne({ nano })
 
                         let user = await rtStarterModel.findOne({ chatid: userid })
-                        if (user.points > 99) {
+                        if (user.points > 249) {
                             if (pload.includes('iphone-')) {
                                 await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, iphone)
                             } else if (pload.includes('android-')) {
@@ -127,7 +127,7 @@ const rtfunction = async () => {
 
                     let txt1 = `User Points Added to ${upuser.points}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
 
-                    let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 100.\n\nEnjoy, ❤.</b>`
+                    let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nEnjoy, ❤.</b>`
 
                     let botname = ctx.botInfo.username
                     if (upuser.refferer == 'rahatupu_tzbot') {
@@ -213,7 +213,7 @@ const rtfunction = async () => {
 
                     all.forEach((u, i) => {
                         setTimeout(() => {
-                            u.updateOne({ $set: { points: 100 } })
+                            u.updateOne({ $set: { points: 500 } })
                                 .catch(eu => console.log(eu.message))
                             bot.telegram.copyMessage(u.chatid, imp.matangazoDB, 42)
                                 .then(() => console.log('✅ done kwa ' + u.chatid))
@@ -231,7 +231,7 @@ const rtfunction = async () => {
                 if (ctx.chat.id = imp.rtmalipo) {
                     await ctx.reply('Starting')
                     let botname = ctx.botInfo
-                    let all = await rtStarterModel.find({ points: 500, paid: false, refferer: botname })
+                    let all = await rtStarterModel.find({ points: {$gte: 500}, paid: false, refferer: botname })
 
                     all.forEach((u, i) => {
                         setTimeout(() => {

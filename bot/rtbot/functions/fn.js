@@ -12,12 +12,12 @@ const createUser = async (ctx, delay) => {
             handle = ctx.chat.username
         }
 
-        let user = await rtStarterModel.findOne({ chatid })
+        let user = await rtStarterModel.findOne({ chatid, refferer })
 
         if (!user) {
-            await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 500 bure zitakazokuwezesha kupata videos zetu. \nKila video itakugharimu points 100`)
+            await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 1000 bure zitakazokuwezesha kupata videos zetu. \nKila video itakugharimu points 250`)
             await rtStarterModel.create({
-                chatid, username, handle, refferer, paid: false, points: 500
+                chatid, username, handle, refferer, paid: false, points: 1000
             })
             await delay(2000)
         }
@@ -43,16 +43,16 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     })
 
     //check if video sent in past 4hrs
-    //if not add to duplicate and deduct 100 points
+    //if not add to duplicate and deduct 250 points
     let dup_checker = await binModel.findOne({ chatid: Number(userid), nano: vid.nano })
     if (!dup_checker) {
         await ctx.sendChatAction('typing')
         await binModel.create({ chatid: Number(userid), nano: vid.nano })
 
-        let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -100 } }, { new: true })
+        let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -250 } }, { new: true })
         await delay(1000)
         setTimeout(() => {
-            ctx.reply(`Umepokea Full Video kwa gharama ya points 100. Umebakiwa na Points ${rcvr.points}.`, {
+            ctx.reply(`Umepokea Full Video, Umekatwa Points 250. Umebakiwa na Points ${rcvr.points}.`, {
                 reply_markup: {
                     inline_keyboard: [
                         [
