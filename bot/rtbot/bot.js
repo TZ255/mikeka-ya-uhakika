@@ -50,10 +50,10 @@ const rtfunction = async () => {
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-        bot.catch((err, ctx)=> {
+        bot.catch((err, ctx) => {
             console.log(err.message)
         })
-        
+
         bot.start(async ctx => {
             try {
                 //add to database if not
@@ -154,9 +154,9 @@ const rtfunction = async () => {
                 } else { await ctx.reply('You are not authorized to do this') }
 
             } catch (err) {
-                console.log(err)
-                await ctx.reply(err.message)
-                    .catch(e => console.log(e.message))
+                let msg = err.message
+                if (msg.includes('403')) { await ctx.reply('Blocked by user') }
+                else { await ctx.reply(msg) }
             }
         })
 
