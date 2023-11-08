@@ -89,7 +89,7 @@ const rtfunction = async () => {
                             reply_markup: {
                                 inline_keyboard: [
                                     [
-                                        { text: 'Omba Kuongezwa kwenye List Hii', url: 'http://t.me/blackberry255' }
+                                        { text: 'Omba kuongezwa kwenye List Hii', url: 'http://t.me/blackberry255' }
                                     ]
                                 ]
                             }
