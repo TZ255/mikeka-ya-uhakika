@@ -75,6 +75,8 @@ const reginaBot = async () => {
         resize_keyboard: true
     }
 
+    botRegi.telegram.deleteWebhook({drop_pending_updates: true}).catch(e=>console.log(e.message))
+
     botRegi.start(async ctx => {
         try {
             if (ctx.startPayload) {
