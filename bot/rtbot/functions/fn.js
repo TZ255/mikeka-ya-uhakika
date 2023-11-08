@@ -54,7 +54,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
         let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -250 } }, { new: true })
         await delay(1000)
         setTimeout(() => {
-            ctx.reply(`Umepokea Full Video, Umekatwa Points 250. Umebakiwa na Points ${rcvr.points}.`, {
+            ctx.reply(`Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`, {
                 reply_markup: {
                     inline_keyboard: [
                         [

@@ -606,7 +606,7 @@ const rtfunction = async () => {
             process.once('SIGTERM', () => bot.stop('SIGTERM'))
         }
     } catch (error) {
-        console.log(err.message)
+        console.log(error.message)
     }
 }
 
