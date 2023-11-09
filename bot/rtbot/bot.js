@@ -135,26 +135,19 @@ const rtfunction = async () => {
 
                         let txt1 = `User Points Added to ${upuser.points}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
 
+                        let botname = ctx.botInfo.username
+                        if(botname == 'rahatupu_tzbot') {txt1+='\n\n✅ RTT'}
+                        else if(botname == 'pilau_bot') {txt1+='\n\n✅ PLL'}
+
                         let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nEnjoy, ❤.</b>`
 
-                        let botname = ctx.botInfo.username
-                        if (upuser.refferer == 'rahatupu_tzbot') {
-                            await ctx.reply(txt1 + '\n✅ RT', { parse_mode: 'HTML' })
-                            let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
-                            await axios.post(tgAPI, {
-                                chat_id: upuser.chatid,
-                                text: txt2,
-                                parse_mode: 'HTML'
-                            })
-                        } else if (upuser.refferer == 'pilau_bot') {
-                            await ctx.reply(txt1 + '\n✅ PL', { parse_mode: 'HTML' })
-                            let tgAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
-                            await axios.post(tgAPI, {
-                                chat_id: upuser.chatid,
-                                text: txt2,
-                                parse_mode: 'HTML'
-                            })
-                        }
+                        let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
+                        let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+
+                        let data = { chat_id: chatid, text: txt2, parse_mode: 'HTML' }
+                        await ctx.reply(txt1, { parse_mode: 'HTML' })
+                        axios.post(rtAPI, data).catch(e => console.log(e.message))
+                        axios.post(plAPI, data).catch(e => console.log(e.message))
                     } else { await ctx.reply('You are not authorized to do this') }
 
                 } catch (err) {
