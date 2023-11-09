@@ -312,16 +312,11 @@ const PipyBot = async () => {
         }
     })
 
-    bot.command('update', async ctx=> {
-        await pipyUsers.updateMany({}, {$set: {blocked: false}})
-        await ctx.reply('false')
-    })
-
     bot.command('block', async ctx=> {
         try {
             if(ctx.chat.id == imp.shemdoe) {
                 let chatid = Number(ctx.message.text.split('block=')[1])
-                await nyumbuModel.findOneAndUpdate({chatid}, {$set: {blocked: true}})
+                await pipyUsers.findOneAndUpdate({chatid}, {$set: {blocked: true}})
                 await ctx.reply('User blocked successfully')
             }
         } catch (err) {
