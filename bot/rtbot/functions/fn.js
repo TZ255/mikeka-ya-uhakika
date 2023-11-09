@@ -82,7 +82,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
                 ]
             }
         }
-        let other = `Umepokea video kutoka kwenye channel yetu nyingine. Umebakiwa na points <b>${rcvr.points}</b>`
+        let other = `Umepokea video ... Umebakiwa na points <b>${rcvr.points}</b>`
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
 
@@ -90,7 +90,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
             if (botname == 'rahatupu_tzbot') {
                 axios.post(rtAPI, data)
                     .then(() => {
-                        data.text = other
+                        data.text = other.replace(/.../, /kutoka kwa <b>@rahatupu_tzbot<\/b>/)
                         data.disable_notification = true
                         data.reply_markup.inline_keyboard[0].shift()
                         axios.post(plAPI, data).catch(e => console.log(e.message))
@@ -98,7 +98,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
             } else if (botname == 'pilau_bot') {
                 axios.post(plAPI, data)
                     .then(() => {
-                        data.text = other
+                        data.text = other.replace(/.../, /kutoka kwa <b>@pilau_bot.<\/b>/)
                         data.disable_notification = true
                         data.reply_markup.inline_keyboard[0].shift()
                         axios.post(rtAPI, data).catch(e => console.log(e.message))
