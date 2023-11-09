@@ -61,7 +61,7 @@ const PipyBot = async () => {
         resize_keyboard: true
     }
 
-    bot.telegram.deleteWebhook({drop_pending_updates: true}).catch(e=>console.log(e.message))
+    bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
     bot.start(async ctx => {
         try {
@@ -134,24 +134,22 @@ const PipyBot = async () => {
         let bads = ['deactivated', 'blocked']
         if (myId == imp.shemdoe || myId == imp.halot) {
             try {
-                let all_users = await pipyUsers.find({ refferer: "Pipy" })
+                let all_users = await pipyUsers.find({ refferer: "Pipy", blocked: false })
 
                 all_users.forEach((u, index) => {
-                    if (u.blocked != true) {
-                        setTimeout(() => {
-                            if (index == all_users.length - 1) {
-                                ctx.reply('Nimemaliza conversation')
-                            }
-                            bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                .catch((err) => {
-                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        pipyUsers.findOneAndDelete({ chatid: u.chatid })
-                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                })
-                        }, index * 40)
-                    }
+                    setTimeout(() => {
+                        if (index == all_users.length - 1) {
+                            ctx.reply('Nimemaliza conversation')
+                        }
+                        bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                            .then(() => console.log('✅ convo sent to ' + u.chatid))
+                            .catch((err) => {
+                                if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                    pipyUsers.findOneAndDelete({ chatid: u.chatid })
+                                        .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                } else { console.log(`🤷‍♂️ ${err.message}`) }
+                            })
+                    }, index * 40)
                 })
             } catch (err) {
                 console.log(err.message)
@@ -311,6 +309,23 @@ const PipyBot = async () => {
             await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
         } catch (err) {
             console.log(err.message)
+        }
+    })
+
+    bot.command('update', async ctx=> {
+        await pipyUsers.updateMany({}, {$set: {blocked: false}})
+        await ctx.reply('false')
+    })
+
+    bot.command('block', async ctx=> {
+        try {
+            if(ctx.chat.id == imp.shemdoe) {
+                let chatid = Number(ctx.message.text.split('block=')[1])
+                await nyumbuModel.findOneAndUpdate({chatid}, {$set: {blocked: true}})
+                await ctx.reply('User blocked successfully')
+            }
+        } catch (err) {
+            await ctx.reply(err.message)
         }
     })
 

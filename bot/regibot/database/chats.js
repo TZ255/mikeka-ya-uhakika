@@ -10,7 +10,8 @@ const nyumbuSchema = new Schema({
     },
     refferer: {
         type: String
-    }
+    },
+    blocked: {type: Boolean, default: false}
 }, {strict: false, timestamps: true })
 
 const ohMy = mongoose.connection.useDb('ohmyNew')

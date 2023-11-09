@@ -15,7 +15,8 @@ const pipySchema = new Schema({
     promo: {
         type: String,
         default: 'unknown'
-    }
+    },
+    blocked: {type: Boolean, default: false}
 }, {strict: false, timestamps: true })
 
 const ohMy = mongoose.connection.useDb('ohmyNew')
