@@ -4,7 +4,7 @@ const bot = require('../rtbot/bot')
 const reginaBot = async () => {
 
     const { Telegraf } = require('telegraf')
-    const botRegi = new Telegraf(process.env.REGI_TOKEN)
+    const bot = new Telegraf(process.env.REGI_TOKEN)
         .catch((err) => console.log(err.message))
 
     const nyumbuModel = require('./database/chats')
@@ -49,7 +49,7 @@ const reginaBot = async () => {
 
     const gsb_ug = `https://track.africabetpartners.com/visit/?bta=35468&nci=5559`
 
-    async function create(botRegi, ctx) {
+    async function create(bot, ctx) {
         let starter = await nyumbuModel.findOne({ chatid: ctx.chat.id })
         if (!starter) {
             await nyumbuModel.create({
@@ -77,9 +77,9 @@ const reginaBot = async () => {
         resize_keyboard: true
     }
 
-    botRegi.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+    bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
-    botRegi.start(async ctx => {
+    bot.start(async ctx => {
         try {
             if (ctx.startPayload) {
                 let pload = ctx.startPayload
@@ -88,15 +88,15 @@ const reginaBot = async () => {
                 let utamuFolder = `https://t.me/addlist/88O_60izot4xNmE0`
                 if (pload == 'ngono_bongo') {
                     console.log('Ngono Payload Started')
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                         reply_markup: defaultReplyMkp
                     })
                 }
                 //add to database
-                await create(botRegi, ctx)
+                await create(bot, ctx)
 
             } else {
-                await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653, {
+                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653, {
                     reply_markup: defaultReplyMkp
                 })
 
@@ -107,7 +107,7 @@ const reginaBot = async () => {
                         username: ctx.chat.first_name,
                         refferer: "Regina"
                     })
-                    await botRegi.telegram.sendMessage(imp.logsBin, '(Regi) New user found me - Added to DB')
+                    await bot.telegram.sendMessage(imp.logsBin, '(Regi) New user found me - Added to DB')
                 }
             }
 
@@ -116,7 +116,7 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command('admin', async ctx => {
+    bot.command('admin', async ctx => {
         try {
             let txt = `<u>Admin Commands</u>\n\n/stats - stats\n/convo-id - copy from mikekaDB\n/supaleo - fetch supatips (today)\n/supajana - fetch supatips (yesterday)\n/supakesho - fetch supatips (tomorrow)\n/graph - graph stats`
             if (ctx.chat.id == imp.shemdoe) { ctx.reply(txt, { parse_mode: 'HTML' }) }
@@ -125,17 +125,17 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command(['help', 'stop'], async ctx => {
+    bot.command(['help', 'stop'], async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653)
-            await create(botRegi, ctx)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653)
+            await create(bot, ctx)
         } catch (err) {
             console.log(err.message)
         }
 
     })
 
-    botRegi.command('graph', async ctx => {
+    bot.command('graph', async ctx => {
         try {
             let graphs = await graphDB.find()
             let txt = `https://font5.net/mkekawaleo/tanzania\n\n`
@@ -149,15 +149,15 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command('supatips', async ctx => {
+    bot.command('supatips', async ctx => {
         try {
-            await call_sendMikeka_functions.supatips(ctx, botRegi, delay, imp)
+            await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
         } catch (error) {
             console.log(err.message)
         }
     })
 
-    botRegi.command('convo', async ctx => {
+    bot.command('convo', async ctx => {
         let myId = ctx.chat.id
         let txt = ctx.message.text
         let msg_id = Number(txt.split('/convo-')[1].trim())
@@ -171,7 +171,7 @@ const reginaBot = async () => {
                         if (index == all_users.length - 1) {
                             ctx.reply('Nimemaliza conversation')
                         }
-                        botRegi.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                        bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
                             .then(() => console.log('✅ convo sent to ' + u.chatid))
                             .catch((err) => {
                                 if (bads.some((b) => err.message.toLowerCase().includes(b))) {
@@ -188,38 +188,38 @@ const reginaBot = async () => {
 
     })
 
-    botRegi.command(['mkeka', 'mkeka1'], async ctx => {
+    bot.command(['mkeka', 'mkeka1'], async ctx => {
         try {
-            await call_sendMikeka_functions.sendMkeka1(ctx, delay, botRegi, imp)
+            await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp)
         } catch (err) {
             console.log(err)
-            await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+            await bot.telegram.sendMessage(imp.shemdoe, err.message)
                 .catch(e => console.log(e.message))
         }
     })
 
-    botRegi.command('mkeka2', async ctx => {
+    bot.command('mkeka2', async ctx => {
         try {
-            await call_sendMikeka_functions.sendMkeka2(ctx, delay, botRegi, imp)
+            await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp)
         } catch (err) {
             console.log(err)
-            await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+            await bot.telegram.sendMessage(imp.shemdoe, err.message)
                 .catch(e => console.log(e.message))
         }
     })
 
-    botRegi.command('mkeka3', async ctx => {
+    bot.command('mkeka3', async ctx => {
         try {
-            await call_sendMikeka_functions.sendMkeka3(ctx, delay, botRegi, imp)
+            await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
         } catch (err) {
-            await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+            await bot.telegram.sendMessage(imp.shemdoe, err.message)
                 .catch((e) => console.log(e.message))
             console.log(err.message)
         }
 
     })
 
-    botRegi.command('wakesho', async ctx => {
+    bot.command('wakesho', async ctx => {
         try {
             let d = new Date()
             d.setDate(d.getDate() + 1)
@@ -240,19 +240,19 @@ const reginaBot = async () => {
                 await ctx.reply(finaText, { parse_mode: 'HTML', disable_web_page_preview: true })
             }
         } catch (err) {
-            await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+            await bot.telegram.sendMessage(imp.shemdoe, err.message)
                 .catch((e) => console.log(e.message))
             console.log(err.message)
         }
 
     })
 
-    botRegi.command('maelezo', async ctx => {
-        await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7567)
+    bot.command('maelezo', async ctx => {
+        await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7567)
             .catch((err) => console.log(err.message))
     })
 
-    botRegi.command('site', async ctx => {
+    bot.command('site', async ctx => {
         await ctx.reply(`Hello!, ukiona kimya tembelea site yangu ya mikeka \nhttps://mkekawaleo.com`, {
             reply_markup: {
                 inline_keyboard: [
@@ -263,12 +263,12 @@ const reginaBot = async () => {
             .catch((err) => console.log(err.message))
     })
 
-    botRegi.command('sll', async ctx => {
+    bot.command('sll', async ctx => {
         await nyumbuModel.updateMany({}, { $set: { refferer: "Regina" } })
         ctx.reply('Updated')
     })
 
-    botRegi.command('copy', async ctx => {
+    bot.command('copy', async ctx => {
         try {
             if (ctx.message.reply_to_message) {
                 let userid = ctx.message.reply_to_message.text
@@ -277,7 +277,7 @@ const reginaBot = async () => {
                 let pid = ctx.message.text
                 pid = Number(pid.split(' ')[1])
 
-                await botRegi.telegram.copyMessage(userid, imp.pzone, pid)
+                await bot.telegram.copyMessage(userid, imp.pzone, pid)
                 await ctx.reply(`msg with id ${pid} was copied successfully to user with id ${userid}`)
             }
         } catch (err) {
@@ -286,7 +286,7 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command('post_to_channels', async ctx => {
+    bot.command('post_to_channels', async ctx => {
         let txt = ctx.message.text
         let ch_link = 'https://t.me/+804l_wD7yYgzM2Q0'
         let pload_link = `https://t.me/regina_tzbot?start=ngono_bongo`
@@ -303,7 +303,7 @@ const reginaBot = async () => {
         let channels = await my_channels_db.find()
 
         for (ch of channels) {
-            await botRegi.telegram.copyMessage(ch.ch_id, imp.pzone, mid, {
+            await bot.telegram.copyMessage(ch.ch_id, imp.pzone, mid, {
                 disable_notification: true,
                 reply_markup: {
                     inline_keyboard: keyb
@@ -312,23 +312,23 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command('kujisajili', async ctx => {
+    bot.command('kujisajili', async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595)
         } catch (err) {
             console.log(err.message)
         }
     })
 
-    botRegi.command('kudeposit', async ctx => {
+    bot.command('kudeposit', async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596)
         } catch (err) {
             console.log(err.message)
         }
     })
 
-    botRegi.command('stats', async ctx => {
+    bot.command('stats', async ctx => {
         try {
             let nyumbusH = await nyumbuModel.countDocuments({ refferer: "Helen" })
             let nyumbusR = await nyumbuModel.countDocuments({ refferer: "Regina" })
@@ -339,17 +339,17 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command(['jisajili_m', 'deposit_m'], async ctx => {
+    bot.command(['jisajili_m', 'deposit_m'], async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
         } catch (err) {
             console.log(err.message)
         }
     })
 
-    botRegi.command('betbuilder', async ctx => {
+    bot.command('betbuilder', async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
         } catch (err) {
             console.log(err.message)
         }
@@ -372,23 +372,23 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.action('betbuilder', async ctx => {
+    bot.action('betbuilder', async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
         } catch (err) {
             console.log(err.message)
         }
     })
 
-    botRegi.action(['jisajili_m', 'deposit_m'], async ctx => {
+    bot.action(['jisajili_m', 'deposit_m'], async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
         } catch (err) {
             console.log(err.message)
         }
     })
 
-    botRegi.action('accept_pload', async ctx => {
+    bot.action('accept_pload', async ctx => {
         try {
             let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
             let org_msg_id = ctx.callbackQuery.message.message_id
@@ -400,7 +400,7 @@ const reginaBot = async () => {
 
     })
 
-    botRegi.on('channel_post', async ctx => {
+    bot.on('channel_post', async ctx => {
         let txt = ctx.channelPost.text
         let txtid = ctx.channelPost.message_id
 
@@ -414,15 +414,15 @@ const reginaBot = async () => {
                     if (!check_ch) {
                         await my_channels_db.create({ ch_id, ch_title })
                         let uj = await ctx.reply('channel added to db')
-                        await botRegi.telegram.deleteMessage(ch_id, txtid)
+                        await bot.telegram.deleteMessage(ch_id, txtid)
                         setTimeout(() => {
-                            botRegi.telegram.deleteMessage(ch_id, uj.message_id)
+                            bot.telegram.deleteMessage(ch_id, uj.message_id)
                                 .catch((err) => console.log(err))
                         }, 1000)
                     } else {
                         let already = await ctx.reply('Channel Already existed')
                         setTimeout(() => {
-                            botRegi.telegram.deleteMessage(ch_id, already.message_id)
+                            bot.telegram.deleteMessage(ch_id, already.message_id)
                                 .catch((err) => console.log(err))
                         }, 1000)
                     }
@@ -431,17 +431,17 @@ const reginaBot = async () => {
                     let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
                     await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
                     await delay(1000)
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 54)
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 54)
                     await delay(500)
                     await ctx.deleteMessage(txtid)
                 }
                 else if (txt.toLowerCase().includes('wrap 22bet')) {
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 1645)
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 1645)
                     await delay(500)
                     await ctx.deleteMessage(txtid)
                 }
                 else if (txt.toLowerCase().includes('wrap meridian')) {
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 55)
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 55)
                     await delay(500)
                     await ctx.deleteMessage(txtid)
                 }
@@ -449,7 +449,7 @@ const reginaBot = async () => {
                     let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
                     await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
                     await delay(1000)
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 1770)
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 1770)
                     await delay(500)
                     await ctx.deleteMessage(txtid)
                 }
@@ -497,33 +497,33 @@ const reginaBot = async () => {
         } catch (err) {
             console.log(err)
             if (!err.message) {
-                await botRegi.telegram.sendMessage(imp.shemdoe, err.description)
+                await bot.telegram.sendMessage(imp.shemdoe, err.description)
             } else {
-                await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.telegram.sendMessage(imp.shemdoe, err.message)
             }
         }
     })
 
-    botRegi.command('send', async ctx => {
+    bot.command('send', async ctx => {
         let txt = ctx.message.text
         if (ctx.chat.id == imp.shemdoe || ctx.chat.id == imp.halot) {
             let chatid = txt.split('=')[1]
             let ujumbe = txt.split('=')[2]
 
-            await botRegi.telegram.sendMessage(chatid, ujumbe)
+            await bot.telegram.sendMessage(chatid, ujumbe)
                 .catch((err) => console.log(err))
         }
     })
 
-    botRegi.command(['wakubwa', 'sodoma', 'sex', 'wadogo'], async ctx => {
+    bot.command(['wakubwa', 'sodoma', 'sex', 'wadogo'], async ctx => {
         try {
-            await botRegi.telegram.copyMessage(ctx.chat.id, imp.pzone, 8094)
+            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8094)
         } catch (err) {
             console.log(err.message)
         }
     })
 
-    botRegi.command('pending', async ctx => {
+    bot.command('pending', async ctx => {
         try {
             let baki = await tempChat.countDocuments()
             await ctx.reply('Tuna requests ' + baki)
@@ -532,14 +532,14 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.command('approving', async ctx => {
+    bot.command('approving', async ctx => {
         let man = ctx.chat.id
         try {
             if (man == imp.halot || man == imp.shemdoe) {
                 let all = await tempChat.countDocuments()
                 let toBeApproved = await tempChat.find().limit(all - 10)
                 for (let u of toBeApproved) {
-                    await botRegi.telegram.approveChatJoinRequest(u.cha_id, u.chatid)
+                    await bot.telegram.approveChatJoinRequest(u.cha_id, u.chatid)
                         .catch(async (e) => { await u.deleteOne() })
                     console.log(u.chatid + ' approved')
                     await u.deleteOne()
@@ -551,7 +551,7 @@ const reginaBot = async () => {
         }
     })
 
-    botRegi.on('chat_join_request', async ctx => {
+    bot.on('chat_join_request', async ctx => {
         try {
             let userid = ctx.chatJoinRequest.user_chat_id
             let chan_id = ctx.chatJoinRequest.chat.id
@@ -559,20 +559,20 @@ const reginaBot = async () => {
 
             await ctx.approveChatJoinRequest(userid)
             await delay(1000)
-            await botRegi.telegram.sendMessage(userid, `Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML', reply_markup: defaultReplyMkp })
+            await bot.telegram.sendMessage(userid, `Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML', reply_markup: defaultReplyMkp })
         } catch (err) {
             console.log(err.message)
-            await botRegi.telegram.sendMessage(imp.shemdoe, `(${ctx.chat.id}) ` + err.message)
+            await bot.telegram.sendMessage(imp.shemdoe, `(${ctx.chat.id}) ` + err.message)
                 .catch(e => console.log(e.message))
         }
     })
 
-    call_supatips_function(botRegi)
-    call_fametips_function(botRegi)
-    call_betslip_function(botRegi, imp)
-    call_oncallbackquery_function(botRegi, delay)
+    call_supatips_function(bot)
+    call_fametips_function(bot)
+    call_betslip_function(bot, imp)
+    call_oncallbackquery_function(bot, delay)
 
-    botRegi.on('text', async ctx => {
+    bot.on('text', async ctx => {
         try {
             if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
                 if (ctx.message.reply_to_message.text) {
@@ -595,7 +595,7 @@ const reginaBot = async () => {
                     }
 
                     else {
-                        await botRegi.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
+                        await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
                     }
 
                 }
@@ -608,14 +608,14 @@ const reginaBot = async () => {
                     let mid = Number(ids.split('&mid=')[1])
 
 
-                    await botRegi.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+                    await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
                 }
             }
 
 
             else {
                 //create user if not on database
-                await create(botRegi, ctx)
+                await create(bot, ctx)
 
                 let userid = ctx.chat.id
                 let txt = ctx.message.text
@@ -626,36 +626,36 @@ const reginaBot = async () => {
                 if (mkArrs.includes(txt.toLowerCase())) {
                     await ctx.sendChatAction('typing')
                     await delay(1000)
-                    await botRegi.telegram.copyMessage(userid, imp.pzone, 7664)
+                    await bot.telegram.copyMessage(userid, imp.pzone, 7664)
                 } else if (txt == '🔥 MKEKA #1') {
-                    await call_sendMikeka_functions.sendMkeka1(ctx, delay, botRegi, imp)
+                    await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp)
                 } else if (txt == '💰 MKEKA #2') {
-                    await call_sendMikeka_functions.sendMkeka2(ctx, delay, botRegi, imp)
+                    await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp)
                 } else if (txt == '🤑 MKEKA #3') {
-                    await call_sendMikeka_functions.sendMkeka3(ctx, delay, botRegi, imp)
+                    await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
                 } else if (txt == '👑 SUPATIPS') {
-                    await call_sendMikeka_functions.supatips(ctx, botRegi, delay, imp)
+                    await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
                 } else if (txt == '💡 MSAADA') {
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 481)
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 481)
                 } else if (txt == '🔥 MIKEKA YA UHAKIKA LEO 💰') {
-                    await botRegi.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 592)
+                    await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 592)
                 }
                 //forward to me if sio mkeka
                 else {
-                    await botRegi.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true })
+                    await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true })
                 }
             }
 
         } catch (err) {
             if (!err.message) {
-                await botRegi.telegram.sendMessage(imp.shemdoe, err.description)
+                await bot.telegram.sendMessage(imp.shemdoe, err.description)
             } else {
-                await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.telegram.sendMessage(imp.shemdoe, err.message)
             }
         }
     })
 
-    botRegi.on('photo', async ctx => {
+    bot.on('photo', async ctx => {
         try {
             let mid = ctx.message.message_id
             let username = ctx.chat.first_name
@@ -670,7 +670,7 @@ const reginaBot = async () => {
                     let rmid = Number(ids.split('&mid=')[1])
 
 
-                    await botRegi.telegram.copyMessage(userid, chatid, mid, {
+                    await bot.telegram.copyMessage(userid, chatid, mid, {
                         reply_to_message_id: rmid
                     })
                 }
@@ -682,7 +682,7 @@ const reginaBot = async () => {
                     let rmid = Number(ids.split('&mid=')[1])
 
 
-                    await botRegi.telegram.copyMessage(userid, chatid, mid, {
+                    await bot.telegram.copyMessage(userid, chatid, mid, {
                         reply_to_message_id: rmid
                     })
                 }
@@ -690,17 +690,17 @@ const reginaBot = async () => {
 
 
             else {
-                await botRegi.telegram.copyMessage(imp.halot, chatid, mid, {
+                await bot.telegram.copyMessage(imp.halot, chatid, mid, {
                     caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
                     parse_mode: 'HTML'
                 })
             }
         } catch (err) {
             if (!err.message) {
-                await botRegi.telegram.sendMessage(imp.shemdoe, err.description)
+                await bot.telegram.sendMessage(imp.shemdoe, err.description)
                 console.log(err)
             } else {
-                await botRegi.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.telegram.sendMessage(imp.shemdoe, err.message)
                 console.log(err)
             }
         }
@@ -732,13 +732,13 @@ const reginaBot = async () => {
             case '11:00':
             case '12:00':
             case '13:00':
-                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#tab2222', trhLeo)
+                call_scheduled_checker_fn.checkOdds(bot, imp, 'div#tab2222', trhLeo)
                 break;
 
             case '19:00':
             case '22:15':
             case '23:55':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#tab2222', trhLeo)
+                call_scheduled_checker_fn.checkMatokeo(bot, imp, 'div#tab2222', trhLeo)
                 break;
 
             case '19:30':
@@ -746,18 +746,18 @@ const reginaBot = async () => {
             case '21:45':
             case '22:30':
             case '23:45':
-                call_scheduled_checker_fn.checkOdds(botRegi, imp, 'div#tab3333', trhKesho)
+                call_scheduled_checker_fn.checkOdds(bot, imp, 'div#tab3333', trhKesho)
                 break;
 
             case '00:55':
             case '01:00':
             case '01:55':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#tab2222', trhJana)
+                call_scheduled_checker_fn.checkMatokeo(bot, imp, 'div#tab2222', trhJana)
                 break;
 
             //checking for mkeka-wa-leo telegram
             // case '00:01': case '00:51': case '01:31': case '02:11': case '03:11':
-            //     call_scheduled_checker_fn.check_waLeo(botRegi, imp, trhLeo)
+            //     call_scheduled_checker_fn.check_waLeo(bot, imp, trhLeo)
             //     break;
 
             case '03:03':
@@ -772,7 +772,7 @@ const reginaBot = async () => {
             case '18:03':
             case '20:03':
             case '21:29':
-                call_scheduled_checker_fn.checkMatokeo(botRegi, imp, 'div#tab1111', trhJana)
+                call_scheduled_checker_fn.checkMatokeo(bot, imp, 'div#tab1111', trhJana)
                 break;
 
             //fametips
@@ -782,12 +782,12 @@ const reginaBot = async () => {
             case '10:07':
             case '12:07':
             case '15:07':
-                call_famescheduled_fn.famecheckMatokeo(botRegi, imp, '#pills-home', trhJana)
+                call_famescheduled_fn.famecheckMatokeo(bot, imp, '#pills-home', trhJana)
                 break;
 
             case '06:17':
             case '09:17':
-                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#pills-profile', trhLeo)
+                call_famescheduled_fn.famecheckOdds(bot, imp, '#pills-profile', trhLeo)
                 break;
 
             case '16:07':
@@ -798,17 +798,17 @@ const reginaBot = async () => {
             case '22:07':
             case '23:07':
             case '23:57':
-                call_famescheduled_fn.famecheckOdds(botRegi, imp, '#pills-contact', trhKesho)
+                call_famescheduled_fn.famecheckOdds(bot, imp, '#pills-contact', trhKesho)
                 break;
         }
     }, 59 * 1000)
 
-    botRegi.launch().then(async () => {
-        await botRegi.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
+    bot.launch().then(async () => {
+        await bot.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
     })
         .catch(async e => {
             console.log(e.message + ` \n${e}`)
-            await botRegi.telegram.sendMessage(imp.shemdoe, e.message)
+            await bot.telegram.sendMessage(imp.shemdoe, e.message)
         })
 }
 
