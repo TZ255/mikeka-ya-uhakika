@@ -1,5 +1,6 @@
 const rtStarterModel = require('../database/chats')
 const binModel = require('../database/rtbin')
+const axios = require('axios').default
 
 const createUser = async (ctx, delay) => {
     try {
@@ -20,8 +21,8 @@ const createUser = async (ctx, delay) => {
                 chatid, username, handle, refferer, paid: false, points: 1000
             })
             await delay(2000)
-        } else if(user && user.refferer != refferer) {
-            await user.updateOne({$set: {refferer: refferer}})
+        } else if (user && user.refferer != refferer) {
+            await user.updateOne({ $set: { refferer: refferer } })
         }
     } catch (error) {
         console.log(error.message)
@@ -30,6 +31,7 @@ const createUser = async (ctx, delay) => {
 
 const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //upload video
+    let botname = ctx.botInfo.username
     await ctx.sendChatAction('upload_video')
     let dvid = await bot.telegram.copyMessage(userid, imp.ohmyDB, vid.msgId, {
         reply_markup: {
@@ -52,19 +54,57 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
         await binModel.create({ chatid: Number(userid), nano: vid.nano })
 
         let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -250 } }, { new: true })
-        await delay(1000)
-        setTimeout(() => {
-            ctx.reply(`Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`, {
-                reply_markup: {
-                    inline_keyboard: [
-                        [
-                            { text: "💰 Salio", callback_data: 'salio' },
-                            { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
-                        ]
+
+        // setTimeout(() => {
+        //     ctx.reply(`Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`, {
+        //         reply_markup: {
+        //             inline_keyboard: [
+        //                 [
+        //                     { text: "💰 Salio", callback_data: 'salio' },
+        //                     { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
+        //                 ]
+        //             ]
+        //         }
+        //     }).catch(e => console.log(e.message))
+        // }, 1000);
+
+        let txt = `Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`
+        let data = {
+            chat_id: ctx.chat.id,
+            text: txt,
+            parse_mode: 'HTML',
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        { text: "💰 Salio", callback_data: 'salio' },
+                        { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
                     ]
-                }
-            }).catch(e => console.log(e.message))
-        }, 1000);
+                ]
+            }
+        }
+        let other = `Umepokea video kutoka kwenye channel yetu nyingine. Umebakiwa na points <b>${rcvr.points}</b>`
+        let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
+        let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+
+        setTimeout(() => {
+            if (botname == 'rahatupu_tzbot') {
+                axios.post(rtAPI, data)
+                    .then(() => {
+                        data.text = other
+                        data.disable_notification = true
+                        data.reply_markup.inline_keyboard[0].shift()
+                        axios.post(plAPI, data).catch(e => console.log(e.message))
+                    }).catch(e => console.log(e.message))
+            } else if (botname == 'pilau_bot') {
+                axios.post(plAPI, data)
+                    .then(() => {
+                        data.text = other
+                        data.disable_notification = true
+                        data.reply_markup.inline_keyboard[0].shift()
+                        axios.post(rtAPI, data).catch(e => console.log(e.message))
+                    }).catch(e => console.log(e.message))
+            }
+        }, 1000)
     }
 }
 
