@@ -494,7 +494,7 @@ const PipyBot = async () => {
                 await bot.telegram.sendMessage(imp.shemdoe, e.message)
             })
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message, error)
     }
 }
 

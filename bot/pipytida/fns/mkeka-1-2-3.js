@@ -16,7 +16,7 @@ const sendMkeka1 = async (ctx, delay, bot, imp) => {
         } else if (mk && tzHrs >= 22) {
             await ctx.sendChatAction('typing')
             await delay(1000)
-            await ctx.reply('Mikeka ya leo tayari tumeweka na kwa leo tumefunga hesabu. Tafadhali rudi tena hapa baadae kupata mikeka ya kesho.')
+            await ctx.reply('Mikeka ya leo tayari tumeweka na kwa leo tumefunga hesabu. \n\nTafadhali rudi tena hapa baadae kupata mikeka ya kesho.')
         }
         else {
             await ctx.sendChatAction('typing')
@@ -24,7 +24,7 @@ const sendMkeka1 = async (ctx, delay, bot, imp) => {
             await ctx.reply('Mkeka namba 1 bado haujaandaliwa, jaribu mkeka namba 3 /mkeka3')
         }
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message, error)
     }
 }
 
@@ -48,7 +48,7 @@ const sendMkeka2 = async (ctx, delay, bot, imp) => {
             await ctx.reply('Mkeka namba 2 bado haujaandaliwa, jaribu:\n\n▷ Mkeka namba 1 👉 /mkeka1\n\n▷ Mkeka namba 3 👉 /mkeka3')
         }
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message, error)
     }
 }
 
@@ -91,7 +91,7 @@ const sendMkeka3 = async (ctx, delay, bot, imp) => {
             }, 1000)
         }
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message, error)
     }
 }
 
