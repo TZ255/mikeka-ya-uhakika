@@ -79,6 +79,10 @@ const reginaBot = async () => {
 
         bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
+        bot.catch((err, ctx)=> {
+            console.log(err.message, err)
+        }).catch(e => console.log(e.message))
+
         bot.start(async ctx => {
             try {
                 if (ctx.startPayload) {
