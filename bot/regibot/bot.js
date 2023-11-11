@@ -1,4 +1,4 @@
-const bot = require('../rtbot/bot')
+
 
 
 const reginaBot = async () => {
