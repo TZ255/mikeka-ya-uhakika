@@ -61,7 +61,7 @@ const PipyBot = async () => {
             resize_keyboard: true
         }
 
-        bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+        //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
         bot.start(async ctx => {
             try {
