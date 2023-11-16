@@ -10,6 +10,7 @@ const PipyBot = async () => {
         const tg_slips = require('./database/tg_slips')
         const vidb = require('./database/db')
         const mkekaMega = require('./database/mkeka-mega')
+        const switchUserText = require('./fns/text-arr')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
 
         const imp = {
@@ -396,8 +397,7 @@ const PipyBot = async () => {
                     }
                 }
 
-
-                else {
+                if (ctx.chat.type == 'private') {
                     //create user if not on database
                     await create(bot, ctx)
 
@@ -406,47 +406,12 @@ const PipyBot = async () => {
                     let username = ctx.chat.first_name
                     let mid = ctx.message.message_id
 
-                    //check if ni mkeka
-                    if (mkArrs.includes(txt.toLowerCase())) {
-                        await ctx.sendChatAction('typing')
-                        await delay(1000)
-                        await bot.telegram.copyMessage(userid, imp.pzone, 7664)
-                    } else if (txt == 'MKEKA 1') {
-                        await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp)
-                    } else if (txt == 'MKEKA 2') {
-                        await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp)
-                    } else if (txt == 'MKEKA 3') {
-                        await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
-                    } else if (txt == '👑 SUPATIPS') {
-                        await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
-                    } else if (txt == '💡 MSAADA') {
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 481)
-                    } else if (txt == '🔥 MIKEKA YA UHAKIKA LEO 💰') {
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 592)
-                    } else if (txt == '🪙 Crypto User (Get Free 5 USDT) 🪙') {
-                        await ctx.sendChatAction('typing')
-                        setTimeout(() => {
-                            bot.telegram.copyMessage(userid, imp.matangazoDB, 84, {
-                                reply_markup: {
-                                    inline_keyboard: [[{ text: "➕ RECEIVE YOUR 5 USDT", url: 'https://bc.game/i-vhy4ij2x-n/' }]]
-                                }
-                            }).catch(e => console.log(e.message))
-                        }, 1500)
-                    }
-                    //forward to me if sio mkeka
-                    else {
-                        if (ctx.chat.type == 'private') {
-                            await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true })
-                        }
-                    }
+                    //switch kybd, mkeka arrays, forwarding
+                    await switchUserText.switchTxt(txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay)
                 }
 
             } catch (err) {
-                if (!err.message) {
-                    await bot.telegram.sendMessage(imp.shemdoe, err.description)
-                } else {
-                    await bot.telegram.sendMessage(imp.shemdoe, err.message)
-                }
+                console.log(err.message, err)
             }
         })
 
