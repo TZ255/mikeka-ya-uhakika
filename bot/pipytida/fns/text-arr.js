@@ -1,14 +1,14 @@
-const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay) => {
+const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay, rp_id) => {
     try {
         switch (txt) {
             case 'MKEKA 1':
-                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp);
+                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rp_id,);
                 break;
             case 'MKEKA 2':
-                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp);
+                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rp_id);
                 break;
             case 'MKEKA 3':
-                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp);
+                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rp_id);
                 break;
             case '👑 SUPATIPS':
                 await call_sendMikeka_functions.supatips(ctx, bot, delay, imp);

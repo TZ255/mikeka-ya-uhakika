@@ -31,6 +31,7 @@ const PipyBot = async () => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             matangazoDB: -1001570087172,
+            r_chatting: -1001722693791
         }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
@@ -228,7 +229,8 @@ const PipyBot = async () => {
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
             try {
-                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp)
+                let rpid = ctx.message.message_id
+                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rpid)
             } catch (err) {
                 console.log(err)
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -238,7 +240,8 @@ const PipyBot = async () => {
 
         bot.command('mkeka2', async ctx => {
             try {
-                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp)
+                let rpid = ctx.message.message_id
+                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rpid)
             } catch (err) {
                 console.log(err)
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -248,7 +251,8 @@ const PipyBot = async () => {
 
         bot.command('mkeka3', async ctx => {
             try {
-                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
+                let rpid = ctx.message.message_id
+                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
             } catch (err) {
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
                     .catch((e) => console.log(e.message))
@@ -394,7 +398,7 @@ const PipyBot = async () => {
                     }
                 }
 
-                if (ctx.chat.type == 'private') {
+                if (ctx.chat.type == 'private' || ctx.chat.id == imp.r_chatting) {
                     //create user if not on database
                     await create(bot, ctx)
 
@@ -404,7 +408,7 @@ const PipyBot = async () => {
                     let mid = ctx.message.message_id
 
                     //switch kybd, mkeka arrays, forwarding
-                    await switchUserText.switchTxt(txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay)
+                    await switchUserText.switchTxt(txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay, mid)
                 }
 
             } catch (err) {
