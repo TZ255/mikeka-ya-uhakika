@@ -330,6 +330,16 @@ const PipyBot = async () => {
             }
         })
 
+        bot.command('setbtn', async ctx=> {
+            try {
+                await bot.telegram.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
+                    reply_markup: defaultReplyMkp
+                })
+            } catch (error) {
+                console.log(error.message)
+            }
+        })
+
         bot.action(['jisajili_m', 'deposit_m'], async ctx => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
