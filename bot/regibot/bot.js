@@ -454,8 +454,9 @@ const reginaBot = async () => {
                         await ctx.deleteMessage(txtid)
                     }
                     else if (txt.toLowerCase().includes('delete mkeka') && ctx.channelPost.reply_to_message) {
+                        let siku = new Date().toLocaleDateString('en-gb', {timeZone: 'Africa/Nairobi'})
                         let mid = ctx.channelPost.reply_to_message.message_id
-                        await tg_slips.findOneAndDelete({mid})
+                        await tg_slips.findOneAndDelete({mid, siku})
                         let mm = await ctx.reply('Mkeka Deleted')
                         await delay(2000)
                         await ctx.deleteMessage(mm.message_id)
