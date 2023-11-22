@@ -627,11 +627,11 @@ const reginaBot = async () => {
                         await ctx.sendChatAction('typing')
                         await delay(1000)
                         await bot.telegram.copyMessage(userid, imp.pzone, 7664)
-                    } else if (txt == '🔥 MKEKA 1') {
+                    } else if (txt == '🔥 MKEKA 1' || txt == '🔥 MKEKA #1') {
                         await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp)
-                    } else if (txt == '💰 MKEKA 2') {
+                    } else if (txt == '💰 MKEKA 2' || txt == '💰 MKEKA #2') {
                         await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp)
-                    } else if (txt == '🤑 MKEKA 3') {
+                    } else if (txt == '🤑 MKEKA 3' || txt == '🤑 MKEKA #3') {
                         await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
                     } else if (txt == '👑 SUPATIPS') {
                         await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
