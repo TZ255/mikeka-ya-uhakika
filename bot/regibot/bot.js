@@ -72,9 +72,6 @@ const reginaBot = async () => {
                     { text: "🔥 MKEKA 1" },
                     { text: "💰 MKEKA 2" },
                     { text: "🤑 MKEKA 3" },
-                ],
-                [
-                    { text: "🪙 Crypto User (Get Free 5 USDT) 🪙" }
                 ]
             ],
             is_persistent: true,
