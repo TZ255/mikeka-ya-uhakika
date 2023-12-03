@@ -454,9 +454,9 @@ const reginaBot = async () => {
                         await ctx.deleteMessage(txtid)
                     }
                     else if (txt.toLowerCase().includes('delete mkeka') && ctx.channelPost.reply_to_message) {
-                        let siku = new Date().toLocaleDateString('en-gb', {timeZone: 'Africa/Nairobi'})
+                        let siku = new Date().toLocaleDateString('en-gb', { timeZone: 'Africa/Nairobi' })
                         let mid = ctx.channelPost.reply_to_message.message_id
-                        await tg_slips.findOneAndDelete({mid, siku})
+                        await tg_slips.findOneAndDelete({ mid, siku })
                         let mm = await ctx.reply('Mkeka Deleted')
                         await delay(2000)
                         await ctx.deleteMessage(mm.message_id)
@@ -472,12 +472,22 @@ const reginaBot = async () => {
                         let data = txt.split(' - ')
 
                         //create mkeka
-                        await tg_slips.create({ brand: data[0].toLowerCase(), siku: data[1] + '/2023', mid: rp_id, posted: false })
+                        let brand = data[0].toLowerCase()
+                        let siku = data[1] + '/2023'
+
+                        //check if already there
+                        let check1 = await tg_slips.findOne({ brand, siku })
+                        //if there update, if not create
+                        if (check1) {
+                            await check1.updateOne({ $set: { mid: rp_id } })
+                        } else {
+                            await tg_slips.create({ brand, siku, mid: rp_id, posted: false })
+                        }
 
                         //reset waombaji db
                         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $set: { mk1: 0, mk2: 0, mk3: 0 } })
 
-                        let info = await ctx.reply('Mkeka posted & waombaji reseted', { reply_to_message_id: rp_id })
+                        let info = await ctx.reply(`Mkeka for ${siku} posted & waombaji reseted`, { reply_to_message_id: rp_id })
                         setTimeout(() => {
                             ctx.deleteMessage(info.message_id).catch(e => {
                                 console.log(e.message, e)
