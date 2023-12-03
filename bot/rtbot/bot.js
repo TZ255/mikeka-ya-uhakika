@@ -204,7 +204,7 @@ const rtfunction = async () => {
             bot.command('bless', async ctx => {
                 try {
                     if (ctx.chat.id = imp.rtmalipo) {
-                        let botname = ctx.botInfo
+                        let botname = ctx.botInfo.username
                         await ctx.reply('Starting')
                         let all = await rtStarterModel.find({ points: 0, refferer: botname })
 
@@ -227,7 +227,7 @@ const rtfunction = async () => {
                 try {
                     if (ctx.chat.id = imp.rtmalipo) {
                         await ctx.reply('Starting')
-                        let botname = ctx.botInfo
+                        let botname = ctx.botInfo.username
                         let all = await rtStarterModel.find({ points: { $gte: 500 }, paid: false, refferer: botname })
 
                         all.forEach((u, i) => {
