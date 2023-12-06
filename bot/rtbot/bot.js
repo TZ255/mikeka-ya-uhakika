@@ -378,7 +378,7 @@ const rtfunction = async () => {
                     } else if (cdata == 'halotel') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 20, cmsgid)
                     } else if (cdata == 'safaricom') {
-                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 24, cmsgid)
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 22, cmsgid)
                     } else if (cdata == 'other_networks') {
                         await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 23, cmsgid)
                     }
