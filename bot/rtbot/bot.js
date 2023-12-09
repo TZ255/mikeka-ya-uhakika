@@ -136,8 +136,8 @@ const rtfunction = async () => {
                         let txt1 = `User Points Added to ${upuser.points}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
 
                         let botname = ctx.botInfo.username
-                        if(botname == 'rahatupu_tzbot') {txt1+='\n\n✅ RTT'}
-                        else if(botname == 'pilau_bot') {txt1+='\n\n✅ PLL'}
+                        if (botname == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
+                        else if (botname == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
 
                         let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nEnjoy, ❤.</b>`
 
@@ -201,27 +201,27 @@ const rtfunction = async () => {
                 } else { await ctx.reply('You are not authorized') }
             })
 
-            bot.command('bless', async ctx => {
+            bot.command('bless', async (ctx) => {
                 try {
-                    if (ctx.chat.id = imp.rtmalipo) {
-                        let botname = ctx.botInfo.username
-                        await ctx.reply('Starting')
-                        let all = await rtStarterModel.find({ points: 0, refferer: botname })
+                    if (ctx.chat.id === imp.rtmalipo) {
+                        const botname = ctx.botInfo.username;
+                        await ctx.reply('Starting');
+                        const usersToUpdate = await rtStarterModel.find({ points: { $lt: 250 }, refferer: botname });
 
-                        all.forEach((u, i) => {
+                        usersToUpdate.forEach((u, i) => {
                             setTimeout(() => {
-                                u.updateOne({ $set: { points: 500 } })
-                                    .catch(eu => console.log(eu.message))
-                                bot.telegram.copyMessage(u.chatid, imp.matangazoDB, 42)
-                                    .then(() => console.log('✅ done kwa ' + u.chatid))
-                                    .catch(e => console.log('❌ ' + e.message))
-                            }, 40 * i)
-                        })
+                                const np = 500 - u.points
+                                u.updateOne({ $set: { points: u.points + np } }).catch(e => console.log(e.message))
+                                bot.telegram.copyMessage(u.chatid, imp.matangazoDB, 42).then(() => {
+                                    console.log('✅ done kwa ' + u.chatid);
+                                }).catch(e => console.log(e.message))
+                            }, 40 * i);
+                        });
                     }
                 } catch (err) {
-                    console.log(err.message, err)
+                    console.log(err.message, err);
                 }
-            })
+            });
 
             bot.command('remind', async ctx => {
                 try {
