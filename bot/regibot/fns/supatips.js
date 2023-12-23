@@ -28,7 +28,7 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#tab2222 table tbody tr')
+            let tday_table = $('#nav-profile table tbody')
             if (tday_table.length > 0) { await bin_supatips_Model.deleteMany({}) }
             tday_table.each(async (i, el) => {
                 if (i > 1) {
@@ -104,7 +104,7 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#tab3333 table tbody tr')
+            let tday_table = $('#nav-contact table tbody')
             let nd = new Date()
             let siku = nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
             if (tday_table.length >= 1) {
@@ -176,7 +176,7 @@ module.exports = (bot) => {
             let text = ''
             let nanoArr = ''
 
-            let tday_table = $('#tab1111 table tbody tr')
+            let tday_table = $('#nav-home table tbody')
             let nn = new Date()
             nn.setDate(nn.getDate() - 1)
             let siku = nn.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })

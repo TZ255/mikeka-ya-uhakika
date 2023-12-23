@@ -22,7 +22,7 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
         let ourDb = await supatips_Model.find({ siku })
 
         //fetch supatips table
-        let tday_table = $(`${tablehusika} table tbody tr`)
+        let tday_table = $(`${tablehusika} table tbody`)
 
         //compare length
         if (ourDb.length < (tday_table.length - 2)) {
@@ -87,7 +87,7 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
         let $ = cheerio.load(html.data)
 
         //fetch supatips today table
-        let tday_table = $(`${tablehusika} table tbody tr`)
+        let tday_table = $(`${tablehusika} table tbody`)
 
         tday_table.each(async (i, el) => {
             if (i > 1) {
