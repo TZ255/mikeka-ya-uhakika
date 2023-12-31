@@ -473,7 +473,7 @@ const reginaBot = async () => {
 
                         //create mkeka
                         let brand = data[0].toLowerCase()
-                        let siku = data[1] + '/2023'
+                        let siku = data[1] + '/2024'
 
                         //check if already there
                         let check1 = await tg_slips.findOne({ brand, siku })
