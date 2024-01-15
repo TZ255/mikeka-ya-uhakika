@@ -373,6 +373,8 @@ const rtfunction = async () => {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 17, cmsgid)
                     } else if (cdata == 'tigo') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 18, cmsgid)
+                        await delay(500)
+                        await bot.telegram.copyMessage(chatid, imp.matangazoDB, 94)
                     } else if (cdata == 'airtel') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 19, cmsgid)
                     } else if (cdata == 'halotel') {
