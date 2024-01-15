@@ -372,9 +372,7 @@ const rtfunction = async () => {
                     } else if (cdata == 'voda') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 17, cmsgid)
                     } else if (cdata == 'tigo') {
-                        await bot.telegram.copyMessage(chatid, imp.matangazoDB, 18)
-                        await delay(500)
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 94, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 95, cmsgid)
                     } else if (cdata == 'airtel') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 19, cmsgid)
                     } else if (cdata == 'halotel') {
