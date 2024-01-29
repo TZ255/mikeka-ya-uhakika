@@ -45,7 +45,9 @@ const rtfunction = async () => {
                 _pack1: -1001943515650
             }
 
-            const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa']
+            const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
+
+            const zingine = ['video', 'niunge', 'video zingine', 'zingine', 'nyingine', 'zngine', 'nyngine', 'nitumie video', 'link', 'wakubwa']
 
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
@@ -110,7 +112,7 @@ const rtfunction = async () => {
                         }
                     } else {
                         let user = ctx.chat.first_name
-                        await ctx.reply(`Habari, ${user},\n\nKupata Full Video zingine rudi katika channel yetu yenye trailers na ubonyeze botton ya <b>Download Full Video</b>. Kama wewe ni mgeni hapa wasiliana na admin wetu hapa 👉 <b>@RT_MALIPO</b> kupata links za magroup yetu ya kikubwa.`, { parse_mode: 'HTML' })
+                        await ctx.reply(`Habari, ${user},\n\nKupata Full Video zingine rudi katika channel yetu yenye trailers na ubonyeze botton ya <b>Download Full Video</b>. \n\nKama wewe ni mgeni hapa, tuma neno <b>"Niunge"</b> kupata links za magroup yetu ya kikubwa.`, { parse_mode: 'HTML' })
                     }
 
                 } catch (err) {
@@ -125,6 +127,8 @@ const rtfunction = async () => {
                         let splitter = ctx.message.text.split('=')
                         let chatid = Number(splitter[1])
                         let points = Number(splitter[2])
+                        let android = `https://t.me/+RFRJJNq0ERM1YTBk`
+                        let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
 
                         let upuser = await rtStarterModel.findOneAndUpdate({ chatid }, {
                             $inc: { points: points },
@@ -139,7 +143,7 @@ const rtfunction = async () => {
                         if (botname == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
                         else if (botname == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
 
-                        let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nEnjoy, ❤.</b>`
+                        let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android:\n${android}\n\n• iPhone:\n${iphone}</b>\n\n\n<b>Enjoy, ❤.</b>`
 
                         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
                         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
@@ -449,6 +453,12 @@ const rtfunction = async () => {
                                     }
                                 })
                                 break
+                            }
+                        }
+
+                        for (let t of zingine) {
+                            if(txt.toLocaleLowerCase().includes(t)) {
+                                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 96)
                             }
                         }
 
