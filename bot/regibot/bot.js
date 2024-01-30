@@ -72,6 +72,9 @@ const reginaBot = async () => {
                     { text: "🔥 MKEKA 1" },
                     { text: "💰 MKEKA 2" },
                     { text: "🤑 MKEKA 3" },
+                ],
+                [
+                    {text: "💯 BetWinner App (200% Bonus)"}
                 ]
             ],
             is_persistent: true,
@@ -314,6 +317,22 @@ const reginaBot = async () => {
                         inline_keyboard: keyb
                     }
                 })
+            }
+        })
+
+        bot.command('kujisajili_bw', async ctx => {
+            try {
+                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
+            } catch (err) {
+                console.log(err.message)
+            }
+        })
+
+        bot.command('app_bw', async ctx => {
+            try {
+                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
+            } catch (err) {
+                console.log(err.message)
             }
         })
 
@@ -651,6 +670,8 @@ const reginaBot = async () => {
                         await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp)
                     } else if (txt == '🤑 MKEKA 3' || txt == '🤑 MKEKA #3') {
                         await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
+                    } else if (txt == '💯 BetWinner App (200% Bonus)' || txt.toLowerCase() == 'betwinner') {
+                        await bot.telegram.copyMessage(userid, imp.matangazoDB, 97)
                     } else if (txt == '👑 SUPATIPS') {
                         await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
                     } else if (txt == '💡 MSAADA') {

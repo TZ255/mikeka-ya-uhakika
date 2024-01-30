@@ -58,6 +58,9 @@ const PipyBot = async () => {
                     { text: "MKEKA 1" },
                     { text: "MKEKA 2" },
                     { text: "MKEKA 3" },
+                ],
+                [
+                    {text: "💯 BetWinner App (200% Bonus)"}
                 ]
             ],
             is_persistent: true,
@@ -275,6 +278,22 @@ const PipyBot = async () => {
         bot.command('kujisajili', async ctx => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595)
+            } catch (err) {
+                console.log(err.message)
+            }
+        })
+
+        bot.command('kujisajili_bw', async ctx => {
+            try {
+                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
+            } catch (err) {
+                console.log(err.message)
+            }
+        })
+
+        bot.command('app_bw', async ctx => {
+            try {
+                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
             } catch (err) {
                 console.log(err.message)
             }

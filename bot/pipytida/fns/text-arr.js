@@ -10,6 +10,9 @@ const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, use
             case 'MKEKA 3':
                 await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rp_id);
                 break;
+            case '💯 BetWinner App (200% Bonus)':
+                await bot.telegram.copyMessage(userid, imp.matangazoDB, 97);
+                break;
             case '👑 SUPATIPS':
                 await call_sendMikeka_functions.supatips(ctx, bot, delay, imp);
                 break;
@@ -36,8 +39,8 @@ const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, use
                     await delay(1000);
                     await bot.telegram.copyMessage(userid, imp.pzone, 7664);
                 } else {
-                    if(ctx.chat.type == 'private')
-                    await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true });
+                    if (ctx.chat.type == 'private')
+                        await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true });
                 }
         }
     } catch (error) {
