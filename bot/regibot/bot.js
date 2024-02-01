@@ -671,7 +671,7 @@ const reginaBot = async () => {
                     } else if (txt == '🤑 MKEKA 3' || txt == '🤑 MKEKA #3') {
                         await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
                     } else if (txt == '💯 BetWinner App (200% Bonus)' || txt.toLowerCase() == 'betwinner') {
-                        await bot.telegram.copyMessage(userid, imp.matangazoDB, 97)
+                        await bot.telegram.copyMessage(userid, imp.matangazoDB, 102)
                     } else if (txt == '👑 SUPATIPS') {
                         await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
                     } else if (txt == '💡 MSAADA') {

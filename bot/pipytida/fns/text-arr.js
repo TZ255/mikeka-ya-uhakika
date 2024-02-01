@@ -11,7 +11,7 @@ const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, use
                 await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rp_id);
                 break;
             case '💯 BetWinner App (200% Bonus)':
-                await bot.telegram.copyMessage(userid, imp.matangazoDB, 97);
+                await bot.telegram.copyMessage(userid, imp.matangazoDB, 102);
                 break;
             case '👑 SUPATIPS':
                 await call_sendMikeka_functions.supatips(ctx, bot, delay, imp);
