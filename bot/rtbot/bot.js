@@ -466,6 +466,7 @@ const rtfunction = async () => {
                         for (let t of zingine) {
                             if (txt.toLocaleLowerCase().includes(t)) {
                                 await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 96)
+                                break;
                             }
                         }
 
