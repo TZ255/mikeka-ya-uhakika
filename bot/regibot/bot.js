@@ -86,8 +86,8 @@ const reginaBot = async () => {
 
         bot.start(async ctx => {
             try {
-                if (ctx.startPayload) {
-                    let pload = ctx.startPayload
+                if (ctx.payload) {
+                    let pload = ctx.payload
                     let rahatupu = `https://t.me/+PWiPWm0vB5Y4ZDhk`
                     let urafiki = `https://t.me/+EOEvgGu3B49lYmY0`
                     let utamuFolder = `https://t.me/addlist/88O_60izot4xNmE0`

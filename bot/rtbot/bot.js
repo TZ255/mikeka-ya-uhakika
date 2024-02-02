@@ -65,8 +65,8 @@ const rtfunction = async () => {
                     //add to database if not
                     await call_function.createUser(ctx, delay)
 
-                    if (ctx.startPayload) {
-                        let pload = ctx.startPayload
+                    if (ctx.payload) {
+                        let pload = ctx.payload
                         let userid = ctx.chat.id
                         if (pload.includes('RTBOT-')) {
                             let android = `https://t.me/+lcBycrCJ_9o0ZGI0`
