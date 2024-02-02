@@ -451,8 +451,13 @@ const reginaBot = async () => {
                         await delay(500)
                         await ctx.deleteMessage(txtid)
                     }
-                    else if (txt.toLowerCase().includes('wrap 22bet')) {
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 1645)
+                    else if (txt.toLowerCase().includes('wrap betway')) {
+                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 2608)
+                        await delay(500)
+                        await ctx.deleteMessage(txtid)
+                    }
+                    else if (txt.toLowerCase().includes('wrap betwinner')) {
+                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 2582)
                         await delay(500)
                         await ctx.deleteMessage(txtid)
                     }
