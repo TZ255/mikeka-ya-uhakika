@@ -34,7 +34,7 @@ const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, use
                 break;
             default:
                 //check if ni mkeka anataka
-                if (mkArrs.some(m => txt.toLowerCase().includes(m))) {
+                if ( txt && mkArrs.some(m => txt.toLowerCase().includes(m))) {
                     await ctx.sendChatAction('typing');
                     await delay(1000);
                     await bot.telegram.copyMessage(userid, imp.pzone, 7664);
