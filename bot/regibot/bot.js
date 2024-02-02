@@ -72,9 +72,6 @@ const reginaBot = async () => {
                     { text: "🔥 MKEKA 1" },
                     { text: "💰 MKEKA 2" },
                     { text: "🤑 MKEKA 3" },
-                ],
-                [
-                    {text: "💯 BetWinner App (200% Bonus)"}
                 ]
             ],
             is_persistent: true,
