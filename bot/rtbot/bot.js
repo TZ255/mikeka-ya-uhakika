@@ -66,10 +66,10 @@ const rtfunction = async () => {
             bot.start(async ctx => {
                 try {
                     //add to database if not
-                    rateLimitter.push()
                     await call_function.createUser(ctx, delay)
 
                     if (ctx.payload && !rateLimitter.includes(ctx.chat.id)) {
+                        rateLimitter.push(ctx.chat.id)
                         let pload = ctx.payload
                         let userid = ctx.chat.id
                         if (pload.includes('RTBOT-')) {
