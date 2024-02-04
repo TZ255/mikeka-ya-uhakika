@@ -52,7 +52,7 @@ const rtfunction = async () => {
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
             const rateLimitter = []
-            setInterval(()=>{rateLimitter.length = 0}, 15000)
+            setInterval(()=>{rateLimitter.length = 0}, 20000)
 
             //delaying
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -114,7 +114,11 @@ const rtfunction = async () => {
                             }, 1000)
 
                         }
-                    } else {
+                    } 
+                    else if (ctx.payload && rateLimitter.includes(ctx.chat.id)) {
+                        await ctx.deleteMessage(ctx.message.message_id)
+                    }
+                    else {
                         let user = ctx.chat.first_name
                         await ctx.reply(`Habari, ${user},\n\nKupata Full Video zingine rudi katika channel yetu yenye trailers na ubonyeze botton ya <b>Download Full Video</b>. \n\nKama wewe ni mgeni hapa, tuma neno <b>"Niunge"</b> kupata links za magroup yetu ya kikubwa.`, { parse_mode: 'HTML' })
                     }
