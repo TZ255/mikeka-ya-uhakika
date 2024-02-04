@@ -51,6 +51,9 @@ const rtfunction = async () => {
 
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
+            const rateLimitter = []
+            setInterval(()=>{rateLimitter.length = 0}, 15000)
+
             //delaying
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -63,9 +66,10 @@ const rtfunction = async () => {
             bot.start(async ctx => {
                 try {
                     //add to database if not
+                    rateLimitter.push()
                     await call_function.createUser(ctx, delay)
 
-                    if (ctx.payload) {
+                    if (ctx.payload && !rateLimitter.includes(ctx.chat.id)) {
                         let pload = ctx.payload
                         let userid = ctx.chat.id
                         if (pload.includes('RTBOT-')) {
