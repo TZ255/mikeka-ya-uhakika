@@ -6,6 +6,7 @@ const elimit = require('express-rate-limit')
 const regina_bot = require('./bot/regibot/bot')
 const rahatupu_bot = require('./bot/rtbot/bot')
 const pipyTida_bot = require('./bot/pipytida/bot')
+var cors = require('cors')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 app.set('trust proxy', true) //our app is hosted on server using proxy to pass user request
+app.use(cors())
 app.use(limiter)
 app.use(getRouter)
 

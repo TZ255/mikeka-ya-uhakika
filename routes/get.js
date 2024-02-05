@@ -66,8 +66,29 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/odds-blog', async (req, res) => {
+    try {
+        //fametip ya leo //kama hakuna chukua toka kwa parent (supatips)
+        let d = new Date().toLocaleDateString('en-GB', {timeZone: 'Africa/Nairobi'})
+        let ftips = await fametipsModel.find({ siku: d }).sort('time')
+
+        if(ftips.length == 0) {
+            ftips = await supatipsModel.find({ siku: d }).sort('time')
+        }
+        res.json(ftips)
+    } catch (err) {
+        let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/copyMessage`
+        console.log(err.message, err)
+        await axios.post(tgAPI, {
+            chat_id: 741815228,
+            from_chat_id: -1001570087172, //matangazoDB
+            message_id: 43
+        }).catch(e=> console.log(e.response.data))
+    }
+})
+
 router.get('/gsb/register', (req, res) => {
-    res.redirect('https://www.betway.co.tz/?btag=P94949-PR24696-CM77068-TS1971458&')
+    res.redirect('https://track.africabetpartners.com/visit/?bta=35468&nci=5657')
 })
 
 router.get('/pmatch/register', (req, res) => {
