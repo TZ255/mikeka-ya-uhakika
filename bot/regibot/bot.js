@@ -787,44 +787,12 @@ const reginaBot = async () => {
                     call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-profile', trhLeo)
                     break;
 
-                case '19:00':
-                case '22:15':
-                case '23:55':
-                    call_scheduled_checker_fn.checkMatokeo(bot, imp, 'div#nav-profile', trhLeo)
-                    break;
-
                 case '19:30':
                 case '20:30':
                 case '21:45':
                 case '22:30':
                 case '23:45':
                     call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-contact', trhKesho)
-                    break;
-
-                case '00:55':
-                case '01:00':
-                case '01:55':
-                    call_scheduled_checker_fn.checkMatokeo(bot, imp, 'div#nav-profile', trhJana)
-                    break;
-
-                //checking for mkeka-wa-leo telegram
-                // case '00:01': case '00:51': case '01:31': case '02:11': case '03:11':
-                //     call_scheduled_checker_fn.check_waLeo(bot, imp, trhLeo)
-                //     break;
-
-                case '03:03':
-                case '04:03':
-                case '06:03':
-                case '08:03':
-                case '09:03':
-                case '10:33':
-                case '13:03':
-                case '15:03':
-                case '17:03':
-                case '18:03':
-                case '20:03':
-                case '21:29':
-                    call_scheduled_checker_fn.checkMatokeo(bot, imp, 'div#nav-home', trhJana)
                     break;
 
                 //fametips
