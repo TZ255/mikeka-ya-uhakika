@@ -447,11 +447,14 @@ const reginaBot = async () => {
                         let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
                         await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
                         await delay(1000)
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 54)
+                        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 2652)
                         await delay(500)
                         await ctx.deleteMessage(txtid)
                     }
                     else if (txt.toLowerCase().includes('wrap betway')) {
+                        let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
+                        await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
+                        await delay(1000)
                         await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 2608)
                         await delay(500)
                         await ctx.deleteMessage(txtid)
