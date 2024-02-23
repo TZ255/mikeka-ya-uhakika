@@ -134,7 +134,6 @@ const payingInfo = async (bot, ctx, delay, imp, userid, mid) => {
 }
 
 const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    await ctx.deleteMessage(cbmid)
     await bot.telegram.copyMessage(chatid, imp.matangazoDB, msgid, {
         reply_markup: {
             inline_keyboard: [
@@ -147,10 +146,10 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
             ]
         }
     })
+    await ctx.deleteMessage(cbmid)
 }
 
 const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    await ctx.deleteMessage(cbmid)
     await bot.telegram.copyMessage(chatid, imp.matangazoDB, msgid, {
         reply_markup: {
             inline_keyboard: [
@@ -161,6 +160,7 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
             ]
         }
     })
+    await ctx.deleteMessage(cbmid)
 }
 
 module.exports = {
