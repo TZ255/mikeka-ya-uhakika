@@ -16,7 +16,7 @@ const createUser = async (ctx, delay) => {
         let user = await rtStarterModel.findOne({ chatid })
 
         if (!user) {
-            await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 1000 bure zitakazokuwezesha kupata videos zetu. \nKila video itakugharimu points 250`)
+            await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 1000 bure zitakazokuwezesha kupata videos na movies zetu. \nKila video/movie itakugharimu points 250`)
             await rtStarterModel.create({
                 chatid, username, handle, refferer, paid: false, points: 1000
             })
@@ -31,6 +31,7 @@ const createUser = async (ctx, delay) => {
 
 const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //upload video
+    let type = OS
     let botname = ctx.botInfo.username
     await ctx.sendChatAction('upload_video')
     let dvid = await bot.telegram.copyMessage(userid, imp.ohmyDB, vid.msgId, {
@@ -69,6 +70,9 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
         // }, 1000);
 
         let txt = `Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`
+        if(type == 'movie') {
+            txt = `Umepokea Movie kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`
+        }
         let data = {
             chat_id: ctx.chat.id,
             text: txt,
@@ -85,6 +89,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
         let other = `Umepokea video ... Umebakiwa na points <b>${rcvr.points}</b>`
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+        let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/sendMessage`
 
         setTimeout(() => {
             if (botname == 'rahatupu_tzbot') {
@@ -94,6 +99,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
                         data.disable_notification = true
                         data.reply_markup.inline_keyboard[0].shift()
                         axios.post(plAPI, data).catch(e => console.log(e.message))
+                        axios.post(mvAPI, data).catch(e => console.log(e.message))
                     }).catch(e => console.log(e.message))
             } else if (botname == 'pilau_bot') {
                 axios.post(plAPI, data)
@@ -102,6 +108,16 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
                         data.disable_notification = true
                         data.reply_markup.inline_keyboard[0].shift()
                         axios.post(rtAPI, data).catch(e => console.log(e.message))
+                        axios.post(mvAPI, data).catch(e => console.log(e.message))
+                    }).catch(e => console.log(e.message))
+            } else if (botname == 'muvikabot') {
+                axios.post(mvAPI, data)
+                    .then(() => {
+                        data.text = other.replace('video ...', 'Movie kutoka kwa <b>@muvikabot.</b>')
+                        data.disable_notification = true
+                        data.reply_markup.inline_keyboard[0].shift()
+                        axios.post(rtAPI, data).catch(e => console.log(e.message))
+                        axios.post(plAPI, data).catch(e => console.log(e.message))
                     }).catch(e => console.log(e.message))
             }
         }, 1000)

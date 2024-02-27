@@ -3,7 +3,7 @@
 const rtfunction = async () => {
 
     try {
-        let tksn = [process.env.RT_TOKEN, process.env.PL_TOKEN]
+        let tksn = [process.env.RT_TOKEN, process.env.PL_TOKEN, process.env.MUVIKA_TOKEN]
         for (let t of tksn) {
             const { Telegraf } = require('telegraf')
             const mongoose = require('mongoose')
@@ -72,11 +72,14 @@ const rtfunction = async () => {
                         rateLimitter.push(ctx.chat.id)
                         let pload = ctx.payload
                         let userid = ctx.chat.id
-                        if (pload.includes('RTBOT-')) {
+                        if (pload.includes('RTBOT-') || pload.includes('MOVIE-FILE')) {
                             let android = `https://t.me/+lcBycrCJ_9o0ZGI0`
                             let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
                             let gen = `https://telegra.ph/Channels-za-RT-Premium-08-20-2`
-                            let nano = pload.split('RTBOT-')[1]
+                            let nano = ''
+                            if(pload.includes('RTBOT-')) {nano = pload.split('RTBOT-')[1]}
+                            if(pload.includes('MOVIE-FILE')) {nano = pload.split('MOVIE-FILE')[1]}
+                            
                             let vid = await videosDB.findOne({ nano })
 
                             let user = await rtStarterModel.findOne({ chatid: userid })
@@ -85,6 +88,8 @@ const rtfunction = async () => {
                                     await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, iphone)
                                 } else if (pload.includes('android-')) {
                                     await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, android)
+                                } else if (pload.includes('MOVIE-FILE')) {
+                                    await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, 'movie')
                                 } else {
                                     await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, gen)
                                 }
@@ -137,6 +142,7 @@ const rtfunction = async () => {
                         let points = Number(splitter[2])
                         let android = `https://t.me/+RFRJJNq0ERM1YTBk`
                         let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
+                        let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
 
                         let upuser = await rtStarterModel.findOneAndUpdate({ chatid }, {
                             $inc: { points: points },
@@ -150,13 +156,15 @@ const rtfunction = async () => {
                         let botname = ctx.botInfo.username
                         if (botname == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
                         else if (botname == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
+                        else if (botname == 'muvikabot') { txt1 += '\n\n✅ MOVIE' }
 
-                        let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android:\n${android}\n\n• iPhone:\n${iphone}</b>\n\n\n<b>Enjoy, ❤.</b>`
+                        let txt2 = `<b>Hongera 🎉\nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android:\n${android}\n\n• iPhone:\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
 
                         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
                         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
                         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+                        let mvAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
 
 
                         await ctx.reply(txt1, { parse_mode: 'HTML' })
@@ -166,6 +174,7 @@ const rtfunction = async () => {
                         }
                         axios.post(rtAPI, data).catch(e => console.log(e.message))
                         axios.post(plAPI, data).catch(e => console.log(e.message))
+                        axios.post(mvAPI, data).catch(e => console.log(e.message))
 
                     } else { await ctx.reply('You are not authorized to do this') }
 
