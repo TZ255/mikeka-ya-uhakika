@@ -125,7 +125,7 @@ const rtfunction = async () => {
                     }
                     else {
                         let user = ctx.chat.first_name
-                        await ctx.reply(`Habari, ${user},\n\nKupata Full Video zingine rudi katika channel yetu yenye trailers na ubonyeze botton ya <b>Download Full Video</b>. \n\nKama wewe ni mgeni hapa, tuma neno <b>"Niunge"</b> kupata links za magroup yetu ya kikubwa.`, { parse_mode: 'HTML' })
+                        await ctx.reply(`Habari, ${user},\n\nKupata Full Videos na Movies rudi katika channel yetu yenye trailers na ubonyeze botton ya <b>Download Full Video</b>. \n\nKama wewe ni mgeni hapa, tuma neno <b>"Niunge"</b> kupata links za magroup yetu ya Videos.`, { parse_mode: 'HTML' })
                     }
 
                 } catch (err) {

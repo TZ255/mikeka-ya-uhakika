@@ -90,7 +90,7 @@ router.get('/odds-blog', async (req, res) => {
 router.get('/gsb/register', (req, res) => {
     let bway = `https://www.betway.co.tz/?btag=P94949-PR24696-CM77068-TS1971458&`
     let gsb = `https://track.africabetpartners.com/visit/?bta=35468&nci=5657`
-    res.redirect(bway)
+    res.redirect(gsb)
 })
 
 router.get('/pmatch/register', (req, res) => {
