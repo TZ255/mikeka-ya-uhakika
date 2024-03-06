@@ -81,6 +81,7 @@ const rtfunction = async () => {
                             if (pload.includes('MOVIE-FILE')) { nano = pload.split('MOVIE-FILE')[1] }
 
                             let vid = await videosDB.findOne({ nano })
+                            console.log(pload, nano)
 
                             let user = await rtStarterModel.findOne({ chatid: userid })
                             if (user.points > 249) {
