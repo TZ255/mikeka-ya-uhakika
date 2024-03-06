@@ -52,7 +52,7 @@ const rtfunction = async () => {
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
             const rateLimitter = []
-            setInterval(()=>{rateLimitter.length = 0}, 20000)
+            setInterval(() => { rateLimitter.length = 0 }, 20000)
 
             //delaying
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -77,9 +77,9 @@ const rtfunction = async () => {
                             let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
                             let gen = `https://telegra.ph/Channels-za-RT-Premium-08-20-2`
                             let nano = ''
-                            if(pload.includes('RTBOT-')) {nano = pload.split('RTBOT-')[1]}
-                            if(pload.includes('MOVIE-FILE')) {nano = pload.split('MOVIE-FILE')[1]}
-                            
+                            if (pload.includes('RTBOT-')) { nano = pload.split('RTBOT-')[1] }
+                            if (pload.includes('MOVIE-FILE')) { nano = pload.split('MOVIE-FILE')[1] }
+
                             let vid = await videosDB.findOne({ nano })
 
                             let user = await rtStarterModel.findOne({ chatid: userid })
@@ -119,7 +119,7 @@ const rtfunction = async () => {
                             }, 1000)
 
                         }
-                    } 
+                    }
                     else if (ctx.payload && rateLimitter.includes(ctx.chat.id)) {
                         await ctx.deleteMessage(ctx.message.message_id)
                     }
@@ -140,47 +140,11 @@ const rtfunction = async () => {
                         let splitter = ctx.message.text.split('=')
                         let chatid = Number(splitter[1])
                         let points = Number(splitter[2])
-                        let android = `https://t.me/+RFRJJNq0ERM1YTBk`
-                        let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
-                        let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
-
-                        let upuser = await rtStarterModel.findOneAndUpdate({ chatid }, {
-                            $inc: { points: points },
-                            $set: { paid: true }
-                        }, { new: true })
-
-                        let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
-
-                        let txt1 = `User Points Added to ${upuser.points}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
-
-                        if (rev.refferer == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
-                        else if (rev.refferer == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
-                        else if (rev.refferer == 'muvikabot') { txt1 += '\n\n✅ MOVIE' }
-
-                        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
-
-                        let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
-
-                        let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
-                        let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
-                        let mvAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
-
-
-                        await ctx.reply(txt1, { parse_mode: 'HTML' })
-                        let data = { chat_id: chatid, text: txt2, parse_mode: 'HTML' }
-                        if (points < 0) {
-                            data.text = txt3
-                        }
-                        axios.post(rtAPI, data).catch(e => console.log(e.message))
-                        axios.post(plAPI, data).catch(e => console.log(e.message))
-                        axios.post(mvAPI, data).catch(e => console.log(e.message))
-
+                        await call_function.addingPoints(ctx, chatid, points, imp)
                     } else { await ctx.reply('You are not authorized to do this') }
 
                 } catch (err) {
-                    let msg = err.message
-                    if (msg.includes('403')) { await ctx.reply('Huyu boya kablock robot wetu') }
-                    else { await ctx.reply(msg) }
+                    await ctx.reply(err.message)
                 }
             })
 
@@ -350,6 +314,16 @@ const rtfunction = async () => {
                 }
             })
 
+            bot.command('update', async ctx => {
+                try {
+                    if (ctx.chat.id == imp.rtmalipo) {
+                        await rtStarterModel.updateMany({}, { $set: { movie: 0, shows: 0 } })
+                    }
+                } catch (error) {
+                    await ctx.reply(error.message)
+                }
+            })
+
             bot.on('channel_post', async ctx => {
                 try {
                     let chan_id = ctx.channelPost.chat.id
@@ -406,6 +380,8 @@ const rtfunction = async () => {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 20, cmsgid)
                     } else if (cdata == 'safaricom') {
                         await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 22, cmsgid)
+                    } else if (cdata == 'uganda') {
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 112, cmsgid)
                     } else if (cdata == 'other_networks') {
                         await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 23, cmsgid)
                     }
@@ -433,7 +409,13 @@ const rtfunction = async () => {
                             let userid = Number(ids.split('&mid=')[0])
                             let mid = Number(ids.split('&mid=')[1])
 
-                            await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
+                            //check if adding points
+                            if (my_msg.toLocaleLowerCase().includes('paid ')) {
+                                let pts = Number(my_msg.split('paid ')[1])
+                                await call_function.addingPoints(ctx, userid, pts, imp)
+                            } else {
+                                await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
+                            }
                         }
 
                         else if (ctx.message.reply_to_message.photo) {
@@ -443,7 +425,13 @@ const rtfunction = async () => {
                             let userid = Number(ids.split('&mid=')[0])
                             let mid = Number(ids.split('&mid=')[1])
 
-                            await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+                            //check if adding points
+                            if (my_msg.toLocaleLowerCase().includes('paid ')) {
+                                let pts = Number(my_msg.split('paid ')[1])
+                                await call_function.addingPoints(ctx, userid, pts, imp)
+                            } else {
+                                await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+                            }
                         }
                     }
 

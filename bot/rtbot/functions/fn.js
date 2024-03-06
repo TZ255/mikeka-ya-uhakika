@@ -18,7 +18,7 @@ const createUser = async (ctx, delay) => {
         if (!user) {
             await ctx.reply(`Habari! ${username}\n\nHongera umepokea points 1000 bure zitakazokuwezesha kupata videos na movies zetu. \nKila video/movie itakugharimu points 250`)
             await rtStarterModel.create({
-                chatid, username, handle, refferer, paid: false, points: 1000
+                chatid, username, handle, refferer, paid: false, points: 1000, movie: 0, shows: 0
             })
             await delay(2000)
         } else if (user && user.refferer != refferer) {
@@ -56,22 +56,12 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
 
         let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -250 } }, { new: true })
 
-        // setTimeout(() => {
-        //     ctx.reply(`Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`, {
-        //         reply_markup: {
-        //             inline_keyboard: [
-        //                 [
-        //                     { text: "💰 Salio", callback_data: 'salio' },
-        //                     { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
-        //                 ]
-        //             ]
-        //         }
-        //     }).catch(e => console.log(e.message))
-        // }, 1000);
-
         let txt = `Umepokea Full Video kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`
-        if(type == 'movie') {
+        if (type == 'movie') {
             txt = `Umepokea Movie kwa gharama ya points 250. Umebakiwa na Points ${rcvr.points}.`
+            await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { movie: 1 } })
+        } else {
+            await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { shows: 1 } })
         }
         let data = {
             chat_id: ctx.chat.id,
@@ -139,14 +129,55 @@ const payingInfo = async (bot, ctx, delay, imp, userid, mid) => {
                 ],
                 [
                     { text: 'SafariCom 🇰🇪', callback_data: 'safaricom' },
-                    { text: 'Other 🏳️', callback_data: 'other_networks' }
+                    { text: 'Uganda 🇺🇬', callback_data: 'uganda' }
                 ],
                 [
-                    { text: '⛑ Help / Msaada ⛑', callback_data: 'help-msaada' }
+                    { text: '⛑ Get Help (Msaada)', callback_data: 'help-msaada' }
                 ]
             ]
         }
     })
+}
+
+const addingPoints = async (ctx, chatid, points, imp) => {
+    try {
+        let android = `https://t.me/+RFRJJNq0ERM1YTBk`
+        let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
+        let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
+
+        let upuser = await rtStarterModel.findOneAndUpdate({ chatid }, {
+            $inc: { points: points },
+            $set: { paid: true }
+        }, { new: true })
+
+        let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
+
+        let txt1 = `Points za ${upuser.username} zimeongezwa kuwa <b>${upuser.points}</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: ${upuser.id}\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
+
+        if (rev.refferer == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
+        else if (rev.refferer == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
+        else if (rev.refferer == 'muvikabot') { txt1 += '\n\n✅ MOVIE' }
+
+        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
+
+        let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
+
+        let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
+        let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
+        let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/sendMessage`
+
+
+        await ctx.reply(txt1, { parse_mode: 'HTML' })
+        let data = { chat_id: chatid, text: txt2, parse_mode: 'HTML' }
+        if (points < 0) {
+            data.text = txt3
+        }
+        axios.post(rtAPI, data).catch(e => console.log(e.message))
+        axios.post(plAPI, data).catch(e => console.log(e.message))
+        axios.post(mvAPI, data).catch(e => console.log(e.message))
+    } catch (error) {
+        await ctx.reply(error.message)
+    }
 }
 
 const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
@@ -170,7 +201,7 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: '← Rudi nyuma', callback_data: 'rudi_nyuma' },
+                    { text: '← Nyuma/Back', callback_data: 'rudi_nyuma' },
                     { text: '⛑ Admin', url: 'https://t.me/rt_malipo' }
                 ]
             ]
@@ -184,5 +215,6 @@ module.exports = {
     sendPaidVideo,
     payingInfo,
     mtandaoCallBack,
-    rudiNyumaReply
+    rudiNyumaReply,
+    addingPoints
 }
