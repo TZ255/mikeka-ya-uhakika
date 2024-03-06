@@ -71,6 +71,7 @@ const rtfunction = async () => {
                     if (ctx.payload && !rateLimitter.includes(ctx.chat.id)) {
                         rateLimitter.push(ctx.chat.id)
                         let pload = ctx.payload
+                        if(pload.includes('&size')) {pload = pload.split('&size')[0]}
                         let userid = ctx.chat.id
                         if (pload.includes('RTBOT-') || pload.includes('MOVIE-FILE')) {
                             let android = `https://t.me/+lcBycrCJ_9o0ZGI0`
@@ -81,7 +82,6 @@ const rtfunction = async () => {
                             if (pload.includes('MOVIE-FILE')) { nano = pload.split('MOVIE-FILE')[1] }
 
                             let vid = await videosDB.findOne({ nano })
-                            console.log(pload, nano)
 
                             let user = await rtStarterModel.findOne({ chatid: userid })
                             if (user.points > 249) {
