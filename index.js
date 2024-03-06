@@ -6,6 +6,7 @@ const elimit = require('express-rate-limit')
 const regina_bot = require('./bot/regibot/bot')
 const rahatupu_bot = require('./bot/rtbot/bot')
 const pipyTida_bot = require('./bot/pipytida/bot')
+const dayonce_bot = require('./bot/dayonce/bot')
 var cors = require('cors')
 
 const app = express()
@@ -39,8 +40,9 @@ if (process.env.environment == 'production') {
     regina_bot.rbot()
     rahatupu_bot.rtBot()
     pipyTida_bot.PipyBot()
+    
 }
-
+dayonce_bot.DayoBot()
 
 app.listen(process.env.PORT || 3000, () => console.log('Running on port 3000'))
 
