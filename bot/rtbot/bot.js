@@ -317,7 +317,10 @@ const rtfunction = async () => {
             bot.command('update', async ctx => {
                 try {
                     if (ctx.chat.id == imp.rtmalipo) {
+                        await rtStarterModel.updateMany({}, { $unset: { movie: 1, shows: 1 } })
+                        await ctx.reply('All Data Removed')
                         await rtStarterModel.updateMany({}, { $set: { movie: 0, shows: 0 } })
+                        await ctx.reply('All Data Readded')
                     }
                 } catch (error) {
                     await ctx.reply(error.message)
