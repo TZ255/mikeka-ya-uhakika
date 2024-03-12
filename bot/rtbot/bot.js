@@ -239,7 +239,7 @@ const rtfunction = async () => {
                 try {
                     let chatid = Number(ctx.message.text.split('/info=')[1])
                     let user = await rtStarterModel.findOne({ chatid })
-                    await ctx.reply(`User with id ${chatid} referred by ${user.refferer} has ${user.points} Points`)
+                    await ctx.reply(`User with id ${chatid} referred by ${user.refferer} has ${user.points} Points\n\nMovies: ${user.movie}\nSeries: ${user.shows}`)
                 } catch (err) {
                     await ctx.reply(err.message)
                 }
@@ -441,6 +441,13 @@ const rtfunction = async () => {
 
 
                     else {
+                        if (admins.includes(ctx.chat.id) && ctx.message.text.toLowerCase().includes('paid')) {
+                            let admin_txt = ctx.message.text
+                            let client_data = admin_txt.split(' ')
+                            let client_id = Number(client_data[1])
+                            let points = Number(client_data[2])
+                            await call_function.addingPoints(ctx, client_id, points, imp)
+                        }
                         //create user if not on database
                         await call_function.createUser(ctx, delay)
 
