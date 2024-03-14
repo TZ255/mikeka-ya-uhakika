@@ -444,7 +444,7 @@ const rtfunction = async () => {
                         if (admins.includes(ctx.chat.id) && ctx.message.text.toLowerCase().includes('paid')) {
                             let admin_txt = ctx.message.text
                             let client_data = admin_txt.split(' ')
-                            let client_id = Number(client_data[1])
+                            let client_id = Number(client_data[0])
                             let points = Number(client_data[2])
                             await call_function.addingPoints(ctx, client_id, points, imp)
                         }
