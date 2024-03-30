@@ -417,6 +417,9 @@ const rtfunction = async () => {
                             if (my_msg.toLocaleLowerCase().includes('paid ')) {
                                 let pts = Number(my_msg.toLocaleLowerCase().split('paid ')[1])
                                 await call_function.addingPoints(ctx, userid, pts, imp)
+                            } else if (my_msg.toLocaleLowerCase().includes(' p ')) {
+                                let pts = Number(my_msg.toLocaleLowerCase().split(' p ')[1])
+                                await call_function.addingPoints(ctx, userid, pts, imp)
                             } else {
                                 await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
                             }
