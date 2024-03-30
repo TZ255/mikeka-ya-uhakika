@@ -444,7 +444,7 @@ const rtfunction = async () => {
 
 
                     else {
-                        if (admins.includes(ctx.chat.id) && ctx.message.text.toLowerCase().includes('paid')) {
+                        if (admins.includes(ctx.chat.id) && (ctx.message.text.toLowerCase().includes('paid') || ctx.message.text.toLowerCase().includes(' p '))) {
                             let admin_txt = ctx.message.text
                             let client_data = admin_txt.split(' ')
                             let client_id = Number(client_data[0])
