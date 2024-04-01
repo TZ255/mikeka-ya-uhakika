@@ -3,14 +3,17 @@
 const PipyBot = async () => {
     try {
         const { Telegraf } = require('telegraf')
+        const { message } = require('telegraf/filters')
         const bot = new Telegraf(process.env.PIPY_TOKEN)
             .catch((err) => console.log(err.message))
 
         const pipyUsers = require('./database/chats')
+        const verifiedList = require('./database/verified')
         const tg_slips = require('./database/tg_slips')
         const vidb = require('./database/db')
         const mkekaMega = require('./database/mkeka-mega')
         const switchUserText = require('./fns/text-arr')
+        const otheFns = require('./fns/otherFn')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
 
         const imp = {
@@ -31,7 +34,10 @@ const PipyBot = async () => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             matangazoDB: -1001570087172,
-            r_chatting: -1001722693791
+            r_chatting: -1001722693791,
+            r_testing: -4115709988,
+            muvikap2: 5940671686,
+            blackberry: 1101685785
         }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
@@ -63,6 +69,9 @@ const PipyBot = async () => {
             is_persistent: true,
             resize_keyboard: true
         }
+
+        const admins = [imp.halot, imp.shemdoe, imp.muvikap2, imp.blackberry]
+        const chatGroups = [imp.r_chatting, imp.r_testing]
 
         //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
@@ -346,7 +355,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.command('setbtn', async ctx=> {
+        bot.command('setbtn', async ctx => {
             try {
                 await bot.telegram.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
                     reply_markup: defaultReplyMkp
@@ -384,49 +393,39 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on('message', async ctx => {
+        bot.on(message('text'), async ctx => {
             try {
-                if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
-                    if (ctx.message.reply_to_message.text) {
-                        let my_msg = ctx.message.text
-                        let myid = ctx.chat.id
-                        let my_msg_id = ctx.message.message_id
-                        let umsg = ctx.message.reply_to_message.text
-                        let ids = umsg.split('id = ')[1].trim()
-                        let userid = Number(ids.split('&mid=')[0])
-                        let mid = Number(ids.split('&mid=')[1])
-
-                        if (my_msg == 'block 666') {
-                            await pipyUsers.findOneAndUpdate({ chatid: userid }, { blocked: true })
-                            await ctx.reply(userid + ' blocked for mass massaging')
-                        }
-
-                        else if (my_msg == 'unblock 666') {
-                            await pipyUsers.findOneAndUpdate({ chatid: userid }, { blocked: false })
-                            await ctx.reply(userid + ' unblocked for mass massaging')
-                        }
-
-                        else {
-                            await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
-                        }
-
+                if (ctx.message.reply_to_message) {
+                    if (admins.includes(ctx.chat.id) && ctx.message.reply_to_message.text) {
+                        //call adminReplyToText
+                        await otheFns.adminReplyToMessageFn(bot, ctx, imp)
                     }
 
-                    else if (ctx.message.reply_to_message.photo) {
-                        let my_msg = ctx.message.text
-                        let umsg = ctx.message.reply_to_message.caption
-                        let ids = umsg.split('id = ')[1].trim()
-                        let userid = Number(ids.split('&mid=')[0])
-                        let mid = Number(ids.split('&mid=')[1])
+                    if (ctx.message.reply_to_message && chatGroups.includes(ctx.chat.id) && admins.includes(ctx.message.from.id)) {
+                        if (txt.toLocaleLowerCase() == 'verified') {
+                            //call verifying function
+                            await otheFns.verifyFn(bot, ctx, imp)
+                        }
+                    }
 
-
-                        await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+                    if (ctx.message.reply_to_message.photo && admins.includes(ctx.chat.id)) {
+                        //if its text reply to photo
+                        await otheFns.adminReplyTextToPhotoFn(bot, ctx, imp)
                     }
                 }
 
-                if (ctx.chat.type == 'private' || ctx.chat.id == imp.r_chatting) {
+                if (ctx.chat.type == 'private' || chatGroups.includes(ctx.chat.id)) {
+                    //check if admin
+                    if (admins.includes(ctx.message.from.id) && ctx.message.text.includes(' unverified')) {
+                        //unverify user
+                        let txt = ctx.message.text
+                        await otheFns.unverifyFn(bot, ctx, imp, txt)
+                    }
+
                     //create user if not on database
-                    await create(bot, ctx)
+                    if (ctx.chat.type == 'private') {
+                        await create(bot, ctx)
+                    }
 
                     let userid = ctx.chat.id
                     let txt = ctx.message.text
@@ -436,62 +435,84 @@ const PipyBot = async () => {
                     //switch kybd, mkeka arrays, forwarding
                     await switchUserText.switchTxt(txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay, mid)
                 }
-
             } catch (err) {
                 console.log(err.message, err)
             }
         })
 
-        bot.on('photo', async ctx => {
+        bot.on(message('photo'), async ctx => {
             try {
-                let mid = ctx.message.message_id
-                let username = ctx.chat.first_name
-                let chatid = ctx.chat.id
-                let cap = ctx.message.caption
+                if (ctx.chat.type == 'private') {
+                    let mid = ctx.message.message_id
+                    let username = ctx.chat.first_name
+                    let chatid = ctx.chat.id
+                    let cap = ctx.message.caption
 
-                if (ctx.message.reply_to_message && chatid == imp.halot) {
-                    if (ctx.message.reply_to_message.text) {
-                        let umsg = ctx.message.reply_to_message.text
-                        let ids = umsg.split('id = ')[1].trim()
-                        let userid = Number(ids.split('&mid=')[0])
-                        let rmid = Number(ids.split('&mid=')[1])
+                    if (ctx.message.reply_to_message && chatid == imp.halot) {
+                        if (ctx.message.reply_to_message.text) {
+                            let umsg = ctx.message.reply_to_message.text
+                            let ids = umsg.split('id = ')[1].trim()
+                            let userid = Number(ids.split('&mid=')[0])
+                            let rmid = Number(ids.split('&mid=')[1])
 
 
-                        await bot.telegram.copyMessage(userid, chatid, mid, {
-                            reply_to_message_id: rmid
-                        })
+                            await bot.telegram.copyMessage(userid, chatid, mid, {
+                                reply_to_message_id: rmid
+                            })
+                        }
+
+                        else if (ctx.message.reply_to_message.photo) {
+                            let umsg = ctx.message.reply_to_message.caption
+                            let ids = umsg.split('id = ')[1].trim()
+                            let userid = Number(ids.split('&mid=')[0])
+                            let rmid = Number(ids.split('&mid=')[1])
+
+
+                            await bot.telegram.copyMessage(userid, chatid, mid, {
+                                reply_to_message_id: rmid
+                            })
+                        }
                     }
 
-                    else if (ctx.message.reply_to_message.photo) {
-                        let umsg = ctx.message.reply_to_message.caption
-                        let ids = umsg.split('id = ')[1].trim()
-                        let userid = Number(ids.split('&mid=')[0])
-                        let rmid = Number(ids.split('&mid=')[1])
-
-
-                        await bot.telegram.copyMessage(userid, chatid, mid, {
-                            reply_to_message_id: rmid
-                        })
-                    }
-                }
-
-
-                else {
                     await bot.telegram.copyMessage(imp.halot, chatid, mid, {
                         caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
                         parse_mode: 'HTML'
                     })
                 }
-            } catch (err) {
-                if (!err.message) {
-                    await bot.telegram.sendMessage(imp.shemdoe, err.description)
-                    console.log(err)
-                } else {
-                    await bot.telegram.sendMessage(imp.shemdoe, err.message)
-                    console.log(err)
+                if (chatGroups.includes(ctx.chat.id)) {
+                    //check if is verified
+                    await otheFns.checkSenderFn(bot, ctx, imp)
                 }
+            } catch (err) {
+                console.log(err.message, err)
             }
         })
+
+        bot.on(message('video'), async ctx => {
+            try {
+                if (chatGroups.includes(ctx.chat.id)) {
+                    //check sender if is verified
+                    await otheFns.checkSenderFn(bot, ctx, imp)
+                }
+            } catch (error) {
+                console.log(error.message, error)
+            }
+        })
+
+        bot.on(message('sticker'), async ctx => {
+            try {
+                if (chatGroups.includes(ctx.chat.id)) {
+                    let unixNow = ctx.message.date
+                    let chatid = ctx.message.from.id
+                    await ctx.restrictChatMember(chatid, {
+                        until_date: unixNow + 180
+                    })
+                }
+            } catch (error) {
+                console.log(error.message, error)
+            }
+        })
+
 
         bot.launch().then(async () => {
             await bot.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
