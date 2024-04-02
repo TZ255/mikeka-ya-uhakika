@@ -500,10 +500,11 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id)) {
                     let unixNow = ctx.message.date
                     let chatid = ctx.message.from.id
+                    //cant send other things except the one listed below
                     await ctx.restrictChatMember(chatid, {
                         until_date: unixNow + 180,
                         permissions: {
-                            can_send_other_messages: false,
+                            can_send_messages: true,
                             can_send_videos: true,
                             can_send_photos: true,
                             can_send_voice_notes: true
