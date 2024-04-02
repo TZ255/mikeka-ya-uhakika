@@ -63,9 +63,9 @@ const checkSenderFn = async (bot, ctx, imp) => {
 
         let data = await verifiedList.findOne({ chatid: sender })
         let status = await ctx.getChatMember(sender)
-        if ((!data || data.paid == false) && (status.status == 'member' && caption.length > 40)) {
+        if ((!data || data.paid == false) && (status.status == 'member' && caption.length > 50)) {
             await ctx.restrictChatMember(sender, {
-                until_date: unixNow + 180
+                until_date: unixNow + 300
             })
             let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
             let txt = `<b><u>List ya watoa huduma waliothibitishwa</u></b>\n\n`
@@ -74,13 +74,10 @@ const checkSenderFn = async (bot, ctx, imp) => {
                 let username = w.username == 'unknown' ? ment : `@${w.username}`
                 txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
             }
-            await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa dk 3\n\nHuruhusiwi kutuma tangazo, picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
+            await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa dakika 5.\n\nHuruhusiwi kutuma tangazo, picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
             setTimeout(() => {
-                ctx.deleteMessage(msg_id)
-                    .catch(e => console.log(e.message))
-                ctx.reply(`<b>Wapendwa!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)</b>\nau\n<b>2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' })
-                    .catch(e => console.log(e.message, e))
-            }, 15000)
+                ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
+            }, 30000)
         }
     } catch (error) {
         console.log(error.message, error)
@@ -130,6 +127,26 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
     }
 }
 
+
+//call verifiedlist
+const watoaHuduma = async (bot, imp) => {
+    try {
+        let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
+        let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
+        for (let [i, w] of watoa.entries()) {
+            let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
+            let username = w.username == 'unknown' ? ment : `@${w.username}`
+            txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
+        }
+        await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock na nitakutoa kwenye group (hatupendi usumbufu) 😏.`, { parse_mode: 'HTML' })
+        setTimeout(() => {
+            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)</b>\nau\n<b>2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' }).catch(e => console.log(e.message, e))
+        }, 15000)
+    } catch (error) {
+        console.log(error.message, error)
+    }
+}
+
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma
 }

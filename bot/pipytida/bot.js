@@ -516,6 +516,12 @@ const PipyBot = async () => {
             }
         })
 
+        //every 15 minutes remind people
+        setInterval(()=> {
+            console.log('working')
+            otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
+        }, 60000*15)
+
 
         bot.launch().then(async () => {
             await bot.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
