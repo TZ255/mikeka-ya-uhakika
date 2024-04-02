@@ -402,7 +402,7 @@ const PipyBot = async () => {
                     }
 
                     if (ctx.message.reply_to_message && chatGroups.includes(ctx.chat.id) && admins.includes(ctx.message.from.id)) {
-                        if (txt.toLocaleLowerCase() == 'verified') {
+                        if (ctx.message.text.toLocaleLowerCase() == 'verified') {
                             //call verifying function
                             await otheFns.verifyFn(bot, ctx, imp)
                         }
