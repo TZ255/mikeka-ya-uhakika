@@ -7,7 +7,7 @@ const verifyFn = async (bot, ctx, imp) => {
         let userid = ctx.message.reply_to_message.from.id
         let fname = ctx.message.reply_to_message.from.first_name
         let username = ctx.message.reply_to_message.from.username ? ctx.message.reply_to_message.from.username : 'unknown'
-        if(ctx.message.reply_to_message.from.last_name) {
+        if (ctx.message.reply_to_message.from.last_name) {
             fname = fname + ` ${ctx.message.reply_to_message.from.last_name}`
         }
 
@@ -63,8 +63,10 @@ const checkSenderFn = async (bot, ctx, imp) => {
             }
             await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa dk 3\n\nHuruhusiwi kutuma tangazo, picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
             setTimeout(() => {
-                ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
-                ctx.reply(`<b>Wapendwa!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n• <b>Sister G (@mamyy98)</b> \nau \n<b>• Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, {parse_mode: 'HTML'})
+                ctx.deleteMessage(msg_id)
+                    .catch(e => console.log(e.message))
+                ctx.reply(`<b>Wapendwa!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n• <b>Sister G (@mamyy98)</b> \nau \n<b>• Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' })
+                    .catch(e => console.log(e.message, e))
             }, 15000)
         }
     } catch (error) {
