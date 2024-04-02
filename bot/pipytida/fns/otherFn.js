@@ -7,6 +7,9 @@ const verifyFn = async (bot, ctx, imp) => {
         let userid = ctx.message.reply_to_message.from.id
         let fname = ctx.message.reply_to_message.from.first_name
         let username = ctx.message.reply_to_message.from.username ? ctx.message.reply_to_message.from.username : 'unknown'
+        if(ctx.message.reply_to_message.from.last_name) {
+            fname = fname + ` ${ctx.message.reply_to_message.from.last_name}`
+        }
 
         let check = await verifiedList.findOne({ chatid: userid })
         if (!check) {
@@ -56,7 +59,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             for (let [i, w] of watoa.entries()) {
                 let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
                 let username = w.username == 'unknown' ? ment : `@${w.username}`
-                txt = txt + `<b>${i + 1}. ${username}</b>\n\n`
+                txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
             }
             await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa dk 3\n\nHuruhusiwi kutuma tangazo, picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
             setTimeout(() => {
