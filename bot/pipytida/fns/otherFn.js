@@ -65,7 +65,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             setTimeout(() => {
                 ctx.deleteMessage(msg_id)
                     .catch(e => console.log(e.message))
-                ctx.reply(`<b>Wapendwa!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n• <b>Sister G (@mamyy98)</b> \nau \n<b>• Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' })
+                ctx.reply(`<b>Wapendwa!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)</b>\nau\n<b>2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' })
                     .catch(e => console.log(e.message, e))
             }, 15000)
         }
