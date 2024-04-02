@@ -47,10 +47,11 @@ const checkSenderFn = async (bot, ctx, imp) => {
         let unixNow = ctx.message.date
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
+        let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
 
         let data = await verifiedList.findOne({ chatid: sender })
         let status = await ctx.getChatMember(sender)
-        if ((!data || data.paid == false) && status.status == 'member') {
+        if ((!data || data.paid == false) && (status.status == 'member' && caption.length > 40)) {
             await ctx.restrictChatMember(sender, {
                 until_date: unixNow + 180
             })

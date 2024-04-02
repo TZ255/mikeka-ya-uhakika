@@ -505,7 +505,10 @@ const PipyBot = async () => {
                     let unixNow = ctx.message.date
                     let chatid = ctx.message.from.id
                     await ctx.restrictChatMember(chatid, {
-                        until_date: unixNow + 180
+                        until_date: unixNow + 180,
+                        permissions: {
+                            can_send_other_messages: false
+                        }
                     })
                 }
             } catch (error) {
