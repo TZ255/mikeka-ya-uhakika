@@ -54,7 +54,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             await ctx.restrictChatMember(sender, {
                 until_date: unixNow + 180
             })
-            let watoa = await verifiedList.find({ paid: true })
+            let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
             let txt = `<b><u>List ya watoa huduma waliothibitishwa</u></b>\n\n`
             for (let [i, w] of watoa.entries()) {
                 let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
