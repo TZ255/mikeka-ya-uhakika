@@ -405,6 +405,9 @@ const PipyBot = async () => {
                         if (ctx.message.text.toLocaleLowerCase() == 'verified') {
                             //call verifying function
                             await otheFns.verifyFn(bot, ctx, imp)
+                        } else if (ctx.message.text.toLocaleLowerCase() == 'unverify') {
+                            //call verifying function
+                            await otheFns.UnverifyFn(bot, ctx, imp)
                         }
                     }
 
@@ -415,13 +418,6 @@ const PipyBot = async () => {
                 }
 
                 if (ctx.chat.type == 'private' || chatGroups.includes(ctx.chat.id)) {
-                    //check if admin
-                    if (admins.includes(ctx.message.from.id) && ctx.message.text.includes(' unverified')) {
-                        //unverify user
-                        let txt = ctx.message.text
-                        await otheFns.unverifyFn(bot, ctx, imp, txt)
-                    }
-
                     //create user if not on database
                     if (ctx.chat.type == 'private') {
                         await create(bot, ctx)
@@ -507,7 +503,10 @@ const PipyBot = async () => {
                     await ctx.restrictChatMember(chatid, {
                         until_date: unixNow + 180,
                         permissions: {
-                            can_send_other_messages: false
+                            can_send_other_messages: false,
+                            can_send_videos: true,
+                            can_send_photos: true,
+                            can_send_voice_notes: true
                         }
                     })
                 }

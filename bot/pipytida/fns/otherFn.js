@@ -29,14 +29,26 @@ const verifyFn = async (bot, ctx, imp) => {
     }
 }
 
-const unverifyFn = async (bot, ctx, imp, txt) => {
+const UnverifyFn = async (bot, ctx, imp) => {
     try {
-        let chatid = Number(txt.split(' unverified')[0])
-        let unv_user = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: false } }, { new: true })
-        let mention = `<a href="tg://user?id=${chatid}">${unv_user.fname}</a>`
-        await ctx.reply(`Mtoa huduma ${mention} ameondolewa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
+        let txt = ctx.message.text
+        let userid = ctx.message.reply_to_message.from.id
+        let fname = ctx.message.reply_to_message.from.first_name
+        let username = ctx.message.reply_to_message.from.username ? ctx.message.reply_to_message.from.username : 'unknown'
+        if (ctx.message.reply_to_message.from.last_name) {
+            fname = fname + ` ${ctx.message.reply_to_message.from.last_name}`
+        }
+
+        let check = await verifiedList.findOne({ chatid: userid })
+        if (!check) {
+            await verifiedList.create({ chatid: userid, fname, username, paid: false })
+        } else { await verifiedList.findOneAndUpdate({ chatid: userid }, { $set: { paid: false } }) }
+
+        let mention = `<a href="tg://user?id=${userid}">${fname}</a>`
+        await ctx.reply(`Mtoa huduma ${mention} ameondolewa kwenye list ya watoa huduma waliothibitishwa kwenye group hili. Kuwa makini unapofanya nae kazi.\n\n<b>${mention}</b> ili kuendelea kufanya kazi kwenye group hili wasiliana na admin <b>@Blackberry255</b> ili kuthibitishwa.`, { parse_mode: 'HTML' })
     } catch (error) {
         await ctx.reply(error.message)
+        console.log(error.message)
     }
 }
 
@@ -119,5 +131,5 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
 }
 
 module.exports = {
-    verifyFn, unverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn
 }
