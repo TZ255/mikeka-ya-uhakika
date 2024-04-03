@@ -155,7 +155,7 @@ const updateLocation = async (bot, ctx) => {
     try {
         let txt = ctx.message.text
         let chatid = ctx.message.reply_to_message.from.id
-        let loc = txt.toLowerCase().split('loc=')[1].trim()
+        let loc = txt.split('loc=')[1].trim()
         let user = await verifiedList.findOneAndUpdate({chatid}, {$set: {loc}}, {new: true})
         await ctx.reply(`Mtoa Huduma ${user.fname} location yake imeongezwa kuwa ${loc}`)
     } catch (error) {
