@@ -516,11 +516,14 @@ const PipyBot = async () => {
             }
         })
 
-        //every 15 minutes remind people
+        //every 30 minutes remind people
         setInterval(()=> {
-            console.log('working')
-            otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
-        }, 60000*15)
+            let _d = new Date()
+            let utcHrs = _d.getUTCHours() // +0:00
+            if(utcHrs > 4 && utcHrs < 23) {
+                otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
+            } else {console.log('Not Appropriate time for running watoa huduma')}
+        }, 60000*30)
 
 
         bot.launch().then(async () => {
