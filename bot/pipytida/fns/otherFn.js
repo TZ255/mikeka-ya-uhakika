@@ -134,9 +134,11 @@ const watoaHuduma = async (bot, imp) => {
         let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
         let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
         for (let [i, w] of watoa.entries()) {
+            let loc = w.loc ? w.loc : '---'
+            let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
             let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
             let username = w.username == 'unknown' ? ment : `@${w.username}`
-            txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
+            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📍 <b>Location: </b><i>(${loc})</i>\n📞 <b>Phone: ${phone}</b>\n\n\n`
         }
         await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock na nitakutoa kwenye group (hatupendi usumbufu) 😏.`, { parse_mode: 'HTML' })
         setTimeout(() => {
@@ -147,6 +149,33 @@ const watoaHuduma = async (bot, imp) => {
     }
 }
 
+
+//update location
+const updateLocation = async (bot, ctx) => {
+    try {
+        let txt = ctx.message.text
+        let chatid = ctx.message.reply_to_message.from.id
+        let loc = txt.toLowerCase().split('loc=')[1].trim()
+        let user = await verifiedList.findOneAndUpdate({chatid}, {$set: {loc}}, {new: true})
+        await ctx.reply(`Mtoa Huduma ${user.fname} location yake imeongezwa kuwa ${loc}`)
+    } catch (error) {
+        await ctx.reply(error.message)
+    }
+}
+
+//update Phone
+const updatePhone = async (bot, ctx) => {
+    try {
+        let txt = ctx.message.text
+        let chatid = ctx.message.reply_to_message.from.id
+        let phone = txt.toLowerCase().split('phone=')[1].trim()
+        let user = await verifiedList.findOneAndUpdate({chatid}, {$set: {phone}}, {new: true})
+        await ctx.reply(`Mtoa Huduma ${user.fname} namba yake ya simu imewekwa kuwa ${phone}`)
+    } catch (error) {
+        await ctx.reply(error.message)
+    }
+}
+
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone
 }

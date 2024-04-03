@@ -393,6 +393,34 @@ const PipyBot = async () => {
             }
         })
 
+        bot.command('mod', async ctx=> {
+            try {
+                let txt = ctx.message.text
+                let data = txt.split('=')
+                let chatid = Number(data[1])
+                let param = data[2]
+                let value = data[3]
+
+                if(param == 'loc' && admins.includes(ctx.chat.id)) {
+                    let upd = await verifiedList.findOneAndUpdate({chatid}, {$set: {loc: value}}, {new: true})
+                    await ctx.reply(`${upd.fname} location is updated to ${upd.loc}`)
+                } else if(param == 'phone' && admins.includes(ctx.chat.id)) {
+                    let upd = await verifiedList.findOneAndUpdate({chatid}, {$set: {phone: value}}, {new: true})
+                    await ctx.reply(`${upd.fname} Phone number is updated to ${upd.phone}`)
+                }
+            } catch (error) {
+                await ctx.reply(error.message)
+            }
+        })
+
+        bot.command('/watoa_huduma', async ctx=> {
+            try {
+                await otheFns.watoaHuduma(bot, imp)
+            } catch (error) {
+                await ctx.reply(error.message)
+            }
+        })
+
         bot.on(message('text'), async ctx => {
             try {
                 if (ctx.message.reply_to_message) {
@@ -408,10 +436,16 @@ const PipyBot = async () => {
                         } else if (ctx.message.text.toLocaleLowerCase() == 'unverify') {
                             //call verifying function
                             await otheFns.UnverifyFn(bot, ctx, imp)
+                        } else if (ctx.message.text.toLocaleLowerCase().includes('loc=')) {
+                            //update location
+                            await otheFns.updateLocation(bot, ctx)
+                        } else if (ctx.message.text.toLocaleLowerCase().includes('phone=')) {
+                            //update phone number
+                            await otheFns.updatePhone(bot, ctx)
                         }
                     }
 
-                    if (ctx.message.reply_to_message.photo && admins.includes(ctx.chat.id)) {
+                    if (ctx.message.reply_to_message.photo && admins.includes(ctx.chat.id) && ctx.chat.type == 'private') {
                         //if its text reply to photo
                         await otheFns.adminReplyTextToPhotoFn(bot, ctx, imp)
                     }
@@ -523,7 +557,7 @@ const PipyBot = async () => {
             if(utcHrs > 4 && utcHrs < 23) {
                 otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
             } else {console.log('Not Appropriate time for running watoa huduma')}
-        }, 60000*30)
+        }, 60000 * 30)
 
 
         bot.launch().then(async () => {
