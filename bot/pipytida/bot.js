@@ -413,7 +413,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.command('/watoa_huduma', async ctx=> {
+        bot.command('watoa_huduma', async ctx=> {
             try {
                 await otheFns.watoaHuduma(bot, imp)
             } catch (error) {
