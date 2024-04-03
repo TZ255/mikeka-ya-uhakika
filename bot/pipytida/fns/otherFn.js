@@ -138,7 +138,7 @@ const watoaHuduma = async (bot, imp) => {
             let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
             let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
             let username = w.username == 'unknown' ? ment : `@${w.username}`
-            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📍 <b>Location: </b><i>(${loc})</i>\n📞 <b>Phone: ${phone}</b>\n\n\n`
+            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>Phone: ${phone}</b>\n📍 <b>Location: </b><i>(${loc})</i>\n\n\n`
         }
         await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock na nitakutoa kwenye group (hatupendi usumbufu) 😏.`, { parse_mode: 'HTML' })
         setTimeout(() => {
