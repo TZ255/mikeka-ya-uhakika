@@ -12,6 +12,7 @@ const PipyBot = async () => {
         const tg_slips = require('./database/tg_slips')
         const vidb = require('./database/db')
         const mkekaMega = require('./database/mkeka-mega')
+        const toDeleteModel = require('./database/MsgtoDelete')
         const switchUserText = require('./fns/text-arr')
         const otheFns = require('./fns/otherFn')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
@@ -393,7 +394,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.command('mod', async ctx=> {
+        bot.command('mod', async ctx => {
             try {
                 let txt = ctx.message.text
                 let data = txt.split('=')
@@ -401,11 +402,11 @@ const PipyBot = async () => {
                 let param = data[2]
                 let value = data[3]
 
-                if(param == 'loc' && admins.includes(ctx.chat.id)) {
-                    let upd = await verifiedList.findOneAndUpdate({chatid}, {$set: {loc: value}}, {new: true})
+                if (param == 'loc' && admins.includes(ctx.chat.id)) {
+                    let upd = await verifiedList.findOneAndUpdate({ chatid }, { $set: { loc: value } }, { new: true })
                     await ctx.reply(`${upd.fname} location is updated to ${upd.loc}`)
-                } else if(param == 'phone' && admins.includes(ctx.chat.id)) {
-                    let upd = await verifiedList.findOneAndUpdate({chatid}, {$set: {phone: value}}, {new: true})
+                } else if (param == 'phone' && admins.includes(ctx.chat.id)) {
+                    let upd = await verifiedList.findOneAndUpdate({ chatid }, { $set: { phone: value } }, { new: true })
                     await ctx.reply(`${upd.fname} Phone number is updated to ${upd.phone}`)
                 }
             } catch (error) {
@@ -413,9 +414,19 @@ const PipyBot = async () => {
             }
         })
 
-        bot.command('watoa_huduma', async ctx=> {
+        bot.command('watoa_huduma', async ctx => {
             try {
                 await otheFns.watoaHuduma(bot, imp)
+            } catch (error) {
+                await ctx.reply(error.message)
+            }
+        })
+
+        bot.command('clear_group', async ctx => {
+            try {
+                if (admins.includes(ctx.chat.id)) {
+                    await otheFns.clearingGroup(bot, imp)
+                }
             } catch (error) {
                 await ctx.reply(error.message)
             }
@@ -551,12 +562,17 @@ const PipyBot = async () => {
         })
 
         //every 30 minutes remind people
-        setInterval(()=> {
+        setInterval(() => {
             let _d = new Date()
             let utcHrs = _d.getUTCHours() // +0:00
-            if(utcHrs > 4 && utcHrs < 23) {
+            if (utcHrs > 4 && utcHrs < 23) {
                 otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
-            } else {console.log('Not Appropriate time for running watoa huduma')}
+            }
+
+            //21 equal to 00 in TZ -- Clear the Group
+            if (utcHrs == 21) {
+                otheFns.clearingGroup(bot, imp)
+            }
         }, 60000 * 30)
 
 

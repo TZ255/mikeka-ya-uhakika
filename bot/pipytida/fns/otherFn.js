@@ -1,4 +1,5 @@
 const verifiedList = require('../database/verified')
+const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
 
 const verifyFn = async (bot, ctx, imp) => {
@@ -17,11 +18,13 @@ const verifyFn = async (bot, ctx, imp) => {
                 chatid: userid, fname, username, paid: true
             })
             let mention = `<a href="tg://user?id=${userid}">${ver_user.fname}</a>`
-            await ctx.reply(`Mtoa huduma ${mention} ameongezwa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
+            let msg = await ctx.reply(`Mtoa huduma ${mention} ameongezwa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
+            await toDeleteModel.create({msgid: msg.message_id, chatid: ctx.chat.id})
         } else {
             let ver_user = await verifiedList.findOneAndUpdate({ chatid: userid }, { $set: { paid: true } }, { new: true })
             let mention = `<a href="tg://user?id=${userid}">${ver_user.fname}</a>`
-            await ctx.reply(`Mtoa huduma ${mention} ameongezwa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
+            let msg = await ctx.reply(`Mtoa huduma ${mention} ameongezwa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
+            await toDeleteModel.create({msgid: msg.message_id, chatid: ctx.chat.id})
         }
     } catch (error) {
         await ctx.reply(error.message)
@@ -140,9 +143,12 @@ const watoaHuduma = async (bot, imp) => {
             let username = w.username == 'unknown' ? ment : `@${w.username}`
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>Phone: ${phone}</b>\n📍 <b>Location: </b><i>(${loc})</i>\n\n\n`
         }
-        await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock na nitakutoa kwenye group (hatupendi usumbufu) 😏.`, { parse_mode: 'HTML' })
+        let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock na nitakutoa kwenye group (hatupendi usumbufu) 😏.`, { parse_mode: 'HTML' })
+        await toDeleteModel.create({msgid: msg.message_id, chatid: msg.chat.id})
         setTimeout(() => {
-            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)</b>\nau\n<b>2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' }).catch(e => console.log(e.message, e))
+            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)</b>\nau\n<b>2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' })
+            .then((msg)=> {toDeleteModel.create({msgid: msg.message_id, chatid: msg.chat.id}).catch(e=> console.log(e.message))})
+            .catch(e => console.log(e.message, e))
         }, 15000)
     } catch (error) {
         console.log(error.message, error)
@@ -176,6 +182,21 @@ const updatePhone = async (bot, ctx) => {
     }
 }
 
+
+//clearing the group
+const clearingGroup = async (bot, imp) => {
+    try {
+        let all = await toDeleteModel.find()
+
+        for (let m of all) {
+            await bot.telegram.deleteMessage(m.chatid, m.msgid)
+            await m.deleteOne()
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup
 }
