@@ -189,8 +189,8 @@ const clearingGroup = async (bot, imp, delay) => {
         let all = await toDeleteModel.find()
 
         for (let m of all) {
-            await bot.telegram.deleteMessage(m.chatid, m.msgid)
-            await m.deleteOne()
+            await bot.telegram.deleteMessage(m.chatid, m.msgid).catch(e => console.log(e.message))
+            await m.deleteOne().catch(e => console.log(e.message))
             await delay(20) //delete 50 msgs per sec
         }
     } catch (error) {
