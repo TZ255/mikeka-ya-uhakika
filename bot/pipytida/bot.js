@@ -24,6 +24,7 @@ const PipyBot = async () => {
             prem_channel: -1001470139866,
             local_domain: 't.me/rss_shemdoe_bot?start=',
             prod_domain: 't.me/ohmychannelV2bot?start=',
+            link_chatgroup: 'https://t.me/+xrfnFIgLbTc5Y2Jk',
             shemdoe: 741815228,
             halot: 1473393723,
             sh1xbet: 5755271222,
@@ -416,7 +417,11 @@ const PipyBot = async () => {
 
         bot.command('watoa_huduma', async ctx => {
             try {
-                await otheFns.watoaHuduma(bot, imp)
+                if(chatGroups.includes(ctx.chat.id)) {
+                    await otheFns.watoaHuduma(bot, imp)
+                } else {
+                    await ctx.reply(`Command hii /watoa_huduma inatumika tu ndani ya group letu la kuchat kuona list ya Dada Poa waaminifu waliothibitishwa na uongozi wa RT Groups.\n\nBonyeza link hapa chini kuingia kwenye group letu la kuchat\n${imp.link_chatgroup}\n${imp.link_chatgroup}`)
+                }
             } catch (error) {
                 await ctx.reply(error.message)
             }
@@ -424,8 +429,8 @@ const PipyBot = async () => {
 
         bot.command('clear_group', async ctx => {
             try {
-                if (admins.includes(ctx.chat.id)) {
-                    await otheFns.clearingGroup(bot, imp)
+                if (admins.includes(ctx.chat.id) || admins.includes(ctx.message.from.id)) {
+                    await otheFns.clearingGroup(bot, imp, delay)
                 }
             } catch (error) {
                 await ctx.reply(error.message)
@@ -571,7 +576,7 @@ const PipyBot = async () => {
 
             //21 equal to 00 in TZ -- Clear the Group
             if (utcHrs == 21) {
-                otheFns.clearingGroup(bot, imp)
+                otheFns.clearingGroup(bot, imp, delay)
             }
         }, 60000 * 30)
 

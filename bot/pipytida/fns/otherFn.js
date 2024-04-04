@@ -184,13 +184,14 @@ const updatePhone = async (bot, ctx) => {
 
 
 //clearing the group
-const clearingGroup = async (bot, imp) => {
+const clearingGroup = async (bot, imp, delay) => {
     try {
         let all = await toDeleteModel.find()
 
         for (let m of all) {
             await bot.telegram.deleteMessage(m.chatid, m.msgid)
             await m.deleteOne()
+            await delay(20) //delete 50 msgs per sec
         }
     } catch (error) {
         console.log(error.message)
