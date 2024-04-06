@@ -12,6 +12,8 @@ const rtfunction = async () => {
             const videosDB = require('./database/db')
             const aliExDB = require('./database/aliexpress')
             const axios = require('axios').default
+            const OpenAI = require('openai')
+            const extractInfoOpenAi = require('./functions/openai')
 
             //Middlewares
             const call_function = require('./functions/fn')
@@ -42,12 +44,15 @@ const rtfunction = async () => {
                 matangazoDB: -1001570087172,
                 aliDB: -1001801595269,
                 aliProducts: -1001971329607,
-                _pack1: -1001943515650
+                _pack1: -1001943515650,
+                lipaPtsCh: -1002104835299
             }
 
             const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'malipo', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
 
             const zingine = ['video', 'niunge', 'video zingine', 'zingine', 'nyingine', 'zngine', 'nyngine', 'nitumie video', 'link', 'wakubwa']
+
+            const lipaTexts = ['umepokea', 'has been received']
 
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
@@ -71,7 +76,7 @@ const rtfunction = async () => {
                     if (ctx.payload && !rateLimitter.includes(ctx.chat.id)) {
                         rateLimitter.push(ctx.chat.id)
                         let pload = ctx.payload
-                        if(pload.includes('&size')) {pload = pload.split('&size')[0]}
+                        if (pload.includes('&size')) { pload = pload.split('&size')[0] }
                         let userid = ctx.chat.id
                         if (pload.includes('RTBOT-') || pload.includes('MOVIE-FILE')) {
                             let android = `https://t.me/+lcBycrCJ_9o0ZGI0`
@@ -352,9 +357,12 @@ const rtfunction = async () => {
                                 }
                             })
                         }
+                    } else if (chan_id == imp.lipaPtsCh && ctx.channelPost.reply_to_message) {
+                        //extract transactions info with chatGpt
+                        await extractInfoOpenAi.extractInfoOpenAi(bot, ctx, imp, lipaTexts)
                     }
                 } catch (err) {
-                    console.log(err.message)
+                    console.log(err.message, err)
                     await ctx.reply(err.message)
                 }
             })

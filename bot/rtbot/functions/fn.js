@@ -175,6 +175,13 @@ const addingPoints = async (ctx, chatid, points, imp) => {
         axios.post(rtAPI, data).catch(e => console.log(e.message))
         axios.post(plAPI, data).catch(e => console.log(e.message))
         axios.post(mvAPI, data).catch(e => console.log(e.message))
+
+        //check if phone and real name available
+        if(!rev.phone || !rev.fullName) {
+            await ctx.reply('❌❌ This user phone and real name is missing')
+        } else if (rev.phone && rev.fullName) {
+            await ctx.reply('✅✅ Phone and Real name of this user is available')
+        }
     } catch (error) {
         await ctx.reply(error.message)
     }
