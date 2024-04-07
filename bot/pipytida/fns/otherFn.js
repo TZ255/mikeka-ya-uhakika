@@ -68,12 +68,14 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
             await ctx.restrictChatMember(chatid, {
                 until_date: unixNow + 600,
                 permissions: {
+                    can_send_photos: false,
+                    can_send_videos: false,
                     can_send_messages: true,
                     can_send_voice_notes: true,
                     can_send_other_messages: true
                 }
             })
-            await ctx.reply(`Huyu ni mtoa huduma halali ndani ya group hili. Amepost tangazo, ataruhusiwa kupost tena tangazo lingine la picha au video baada ya dakika 10`, {reply_to_message: msgid})
+            console.log(msgid)
         }
     } catch (error) {
         console.log(error.message, error)
