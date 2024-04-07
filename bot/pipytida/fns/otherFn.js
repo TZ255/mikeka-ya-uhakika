@@ -61,8 +61,8 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
         let caption = ctx.message.caption ? ctx.message.caption : 'null'
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
-        let list = await verifiedList.findOne({chatid: userid})
-        if((list && list.paid == true) && caption.length > 50) {
+        let list = await verifiedList.findOne({ chatid: userid })
+        if ((list && list.paid == true) && caption.length > 50) {
             let unix = ctx.message.date
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             await ctx.restrictChatMember(userid, {
@@ -72,13 +72,40 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
                 },
                 until_date: unix + 600
             })
-            console.log(userid +' is muted')
+            console.log(userid + ' is muted')
             await ctx.sendChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, {parse_mode: "HTML", reply_parameters: {message_id: msgid}})
-            setTimeout(()=> {
-                ctx.deleteMessage(notf.message_id).catch(e=> console.log(e.message))
+            let notf = await ctx.reply(`<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, { parse_mode: "HTML", reply_parameters: { message_id: msgid } })
+            setTimeout(() => {
+                ctx.deleteMessage(notf.message_id).catch(e => console.log(e.message))
             }, 60000 * 3)
+        }
+    } catch (error) {
+        console.log(error.message, error)
+    }
+}
+
+//mute tangazo for 10 minutes
+const muteLongTexts = async (bot, ctx, imp, delay) => {
+    try {
+        let caption = ctx.message.text
+        let userid = ctx.message.from.id
+        let msgid = ctx.message.message_id
+        let fname = ctx.message.from.first_name
+        let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
+        let ment = `<a href="tg://user?id=${userid}">${name}</a>`
+        if (caption.length > 150) {
+            let status = await ctx.getChatMember(userid)
+            if (status.can_send_photos == false) {
+                await ctx.reply(`<b>${ment}</b> umesubirishwa kupost tangazo kwa dk 10 shoga yng, subiri dk zako 10 ziishe utapost tena`, {
+                    reply_parameters: {
+                        message_id: msgid, allow_sending_without_reply: true
+                    }, parse_mode: 'HTML'
+                })
+                setTimeout(()=> {
+                    ctx.deleteMessage(msgid).catch(e=> console.log(e.message, e))
+                }, 3000)
+            }
         }
     } catch (error) {
         console.log(error.message, error)
@@ -229,5 +256,5 @@ const clearingGroup = async (bot, imp, delay) => {
 }
 
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTexts
 }

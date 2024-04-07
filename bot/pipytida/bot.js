@@ -467,20 +467,18 @@ const PipyBot = async () => {
                     }
                 }
 
-                if (ctx.chat.type == 'private' || chatGroups.includes(ctx.chat.id)) {
-                    //create user if not on database
-                    if (ctx.chat.type == 'private') {
-                        await create(bot, ctx)
-                    }
-
-                    let userid = ctx.chat.id
-                    let txt = ctx.message.text
-                    let username = ctx.chat.first_name
-                    let mid = ctx.message.message_id
-
-                    //switch kybd, mkeka arrays, forwarding
-                    await switchUserText.switchTxt(txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay, mid)
+                //create user if not on database
+                if (ctx.chat.type == 'private') {
+                    await create(bot, ctx)
                 }
+
+                if (chatGroups.includes(ctx.chat.id)) {
+                    //check if member is restricted in our superGroups
+                    await otheFns.muteLongTexts(bot, ctx, imp, delay)
+                }
+
+                //switch kybd, mkeka arrays, forwarding
+                await switchUserText.switchTxt(call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay)
             } catch (err) {
                 console.log(err.message, err)
             }

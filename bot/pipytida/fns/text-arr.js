@@ -1,5 +1,9 @@
-const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay, rp_id) => {
+const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) => {
     try {
+        let userid = ctx.chat.id
+        let txt = ctx.message.text
+        let username = ctx.chat.first_name
+        let rp_id = ctx.message.message_id
         switch (txt) {
             case 'MKEKA 1':
                 await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rp_id,);
@@ -34,7 +38,7 @@ const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, use
                 break;
             default:
                 //check if ni mkeka anataka
-                if ( txt && mkArrs.some(m => txt.toLowerCase().includes(m))) {
+                if (txt && mkArrs.some(m => txt.toLowerCase().includes(m))) {
                     await ctx.sendChatAction('typing');
                     await delay(1000);
                     await bot.telegram.copyMessage(userid, imp.pzone, 7664);
