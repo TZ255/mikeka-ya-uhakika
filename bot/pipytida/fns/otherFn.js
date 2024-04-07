@@ -66,14 +66,12 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
         let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
         if ((data && data.paid == true) && caption.length > 50) {
             await ctx.restrictChatMember(chatid, {
-                until_date: unixNow + 600,
                 permissions: {
-                    can_send_photos: false,
-                    can_send_videos: false,
                     can_send_messages: true,
                     can_send_voice_notes: true,
                     can_send_other_messages: true
-                }
+                },
+                until_date: unixNow + 600,
             })
             console.log(msgid)
         }
