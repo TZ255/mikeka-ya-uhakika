@@ -2,23 +2,6 @@ const verifiedList = require('../database/verified')
 const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
 
-const listPermissions = {
-    can_send_messages: true,
-    can_send_audios: true,
-    can_send_documents: true,
-    can_send_photos: false,
-    can_send_videos: false,
-    can_send_video_notes: true,
-    can_send_voice_notes: true,
-    can_send_polls: true,
-    can_send_other_messages: true,
-    can_add_web_page_previews: false,
-    can_change_info: false,
-    can_invite_users: true,
-    can_pin_messages: false,
-    can_manage_topics: false
-}
-
 const verifyFn = async (bot, ctx, imp) => {
     try {
         let txt = ctx.message.text
@@ -83,11 +66,10 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
         let data = await verifiedList.findOne({ userid })
         let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
         if ((data && data.paid == true) && caption.length > 50) {
-            await ctx.restrictChatMember(userid, {
-                permissions: listPermissions,
+            await bot.telegram.restrictChatMember(chatid, userid, {
                 until_date: unixNow + 600
             })
-            console.log(`User muted for ${600/60} minutes`)
+            console.log(`User muted for ${600 / 60} minutes`)
         }
     } catch (error) {
         console.log(error.message, error)
