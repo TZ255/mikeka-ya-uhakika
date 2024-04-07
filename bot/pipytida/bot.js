@@ -529,7 +529,7 @@ const PipyBot = async () => {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
-                    await otheFns.muteVideosPhotos(bot, ctx, imp)
+                    await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -542,7 +542,7 @@ const PipyBot = async () => {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
-                    await otheFns.muteVideosPhotos(bot, ctx, imp)
+                    await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
                 }
             } catch (error) {
                 console.log(error.message, error)
