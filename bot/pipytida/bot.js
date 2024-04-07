@@ -417,7 +417,7 @@ const PipyBot = async () => {
 
         bot.command('watoa_huduma', async ctx => {
             try {
-                if(chatGroups.includes(ctx.chat.id)) {
+                if (chatGroups.includes(ctx.chat.id)) {
                     await otheFns.watoaHuduma(bot, imp)
                 } else {
                     await ctx.reply(`Command hii /watoa_huduma inatumika tu ndani ya group letu la kuchat kuona list ya Dada Poa waaminifu waliothibitishwa na uongozi wa RT Groups.\n\nBonyeza link hapa chini kuingia kwenye group letu la kuchat\n${imp.link_chatgroup}\n${imp.link_chatgroup}`)
@@ -528,7 +528,19 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
-                    await otheFns.muteVideosPhotos(bot, ctx, imp)
+                    //mute for 10 minutes
+                    if (ctx.message.caption && ctx.message.caption > 50) {
+                        let unix = ctx.message.date
+                        let userid = ctx.message.from.id
+                        await ctx.restrictChatMember(userid, {
+                            permissions: {
+                                can_send_messages: true,
+                                can_send_audios: true
+                            },
+                            until_date: unix + 600
+                        })
+                        console.log('user muted')
+                    }
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -540,7 +552,19 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
-                    await otheFns.muteVideosPhotos(bot, ctx, imp)
+                    //mute for 10 minutes
+                    if (ctx.message.caption && ctx.message.caption > 50) {
+                        let unix = ctx.message.date
+                        let userid = ctx.message.from.id
+                        await ctx.restrictChatMember(userid, {
+                            permissions: {
+                                can_send_messages: true,
+                                can_send_audios: true
+                            },
+                            until_date: unix + 600
+                        })
+                        console.log('user muted')
+                    }
                 }
             } catch (error) {
                 console.log(error.message, error)
