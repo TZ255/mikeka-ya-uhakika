@@ -96,7 +96,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
 
         let data = await verifiedList.findOne({ chatid: sender })
         let status = await ctx.getChatMember(sender)
-        if ((!data || data.paid == false) && caption.length > 50) {
+        if ((!data || data.paid == false) && caption.length > 100) {
             await ctx.restrictChatMember(sender, {
                 until_date: unixNow + 300
             })
