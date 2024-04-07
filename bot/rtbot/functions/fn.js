@@ -152,7 +152,7 @@ const addingPoints = async (ctx, chatid, points, imp) => {
 
         let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
 
-        let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: ${upuser.chatid}\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
+        let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: <code>${upuser.chatid}</code>\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
 
         if (rev.refferer == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
         else if (rev.refferer == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
@@ -177,9 +177,10 @@ const addingPoints = async (ctx, chatid, points, imp) => {
         axios.post(mvAPI, data).catch(e => console.log(e.message))
 
         //check if phone and real name available
-        if(!rev.phone || !rev.fullName) {
+        let reaCheck = await rtStarterModel.findOne({chatid})
+        if(!reaCheck.fullName) {
             await ctx.reply('❌❌ This user phone and real name is missing')
-        } else if (rev.phone && rev.fullName) {
+        } else if (reaCheck.phone) {
             await ctx.reply('✅✅ Phone and Real name of this user is available')
         }
     } catch (error) {
