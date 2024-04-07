@@ -67,6 +67,8 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
         if ((data && data.paid == true) && caption.length > 50) {
             await bot.telegram.restrictChatMember(ctx.chat.id, chatid, {
                 permissions: {
+                    can_send_videos: false,
+                    can_send_photos: false,
                     can_send_messages: true,
                     can_send_voice_notes: true,
                     can_send_other_messages: true
