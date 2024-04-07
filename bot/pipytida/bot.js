@@ -529,18 +529,7 @@ const PipyBot = async () => {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
-                    if (ctx.message.caption && ctx.message.caption > 50) {
-                        let unix = ctx.message.date
-                        let userid = ctx.message.from.id
-                        await ctx.restrictChatMember(userid, {
-                            permissions: {
-                                can_send_messages: true,
-                                can_send_audios: true
-                            },
-                            until_date: unix + 600
-                        })
-                        console.log('user muted')
-                    }
+                    await otheFns.muteVideosPhotos(bot, ctx, imp)
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -553,18 +542,7 @@ const PipyBot = async () => {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
-                    if (ctx.message.caption && ctx.message.caption > 50) {
-                        let unix = ctx.message.date
-                        let userid = ctx.message.from.id
-                        await ctx.restrictChatMember(userid, {
-                            permissions: {
-                                can_send_messages: true,
-                                can_send_audios: true
-                            },
-                            until_date: unix + 600
-                        })
-                        console.log('user muted')
-                    }
+                    await otheFns.muteVideosPhotos(bot, ctx, imp)
                 }
             } catch (error) {
                 console.log(error.message, error)

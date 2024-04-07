@@ -58,18 +58,18 @@ const UnverifyFn = async (bot, ctx, imp) => {
 //mute tangazo for 5 minutes
 const muteVideosPhotos = async (bot, ctx, imp) => {
     try {
-        let unixNow = ctx.message.date
-        let chatid = ctx.chat.id
-        let userid = ctx.message.from.id
-        let msgid = ctx.message.message_id
-        //cant send other things except the one listed below
-        let data = await verifiedList.findOne({ userid })
-        let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
-        if ((data && data.paid == true) && caption.length > 50) {
-            await bot.telegram.restrictChatMember(chatid, userid, {
-                until_date: unixNow + 600
+        let caption = ctx.message.caption ? ctx.message.caption : 'null'
+        if (caption.length > 50) {
+            let unix = ctx.message.date
+            let userid = ctx.message.from.id
+            await ctx.restrictChatMember(userid, {
+                permissions: {
+                    can_send_messages: true,
+                    can_send_audios: true
+                },
+                until_date: unix + 600
             })
-            console.log(`User muted for ${600 / 60} minutes`)
+            console.log(userid +' is muted')
         }
     } catch (error) {
         console.log(error.message, error)
