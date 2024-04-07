@@ -65,15 +65,15 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
         let data = await verifiedList.findOne({ chatid })
         let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
         if ((data && data.paid == true) && caption.length > 50) {
-            await ctx.restrictChatMember(chatid, {
+            await bot.telegram.restrictChatMember(ctx.chat.id, chatid, {
                 permissions: {
                     can_send_messages: true,
                     can_send_voice_notes: true,
                     can_send_other_messages: true
                 },
-                until_date: unixNow + 600,
+                until_date: unixNow + 600
             })
-            console.log(msgid)
+            console.log(`User muted for ${600/60} minutes`)
         }
     } catch (error) {
         console.log(error.message, error)
