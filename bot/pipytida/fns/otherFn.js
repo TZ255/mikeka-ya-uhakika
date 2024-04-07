@@ -59,9 +59,11 @@ const UnverifyFn = async (bot, ctx, imp) => {
 const muteVideosPhotos = async (bot, ctx, imp) => {
     try {
         let caption = ctx.message.caption ? ctx.message.caption : 'null'
-        if (caption.length > 50) {
+        let userid = ctx.message.from.id
+        let msgid = ctx.message.message_id
+        let list = await verifiedList.findOne({chatid: userid})
+        if((list && list.paid == true) && caption.length > 50) {
             let unix = ctx.message.date
-            let userid = ctx.message.from.id
             await ctx.restrictChatMember(userid, {
                 permissions: {
                     can_send_messages: true,
@@ -70,6 +72,7 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
                 until_date: unix + 600
             })
             console.log(userid +' is muted')
+            await ctx.reply(`<b>${list.fname}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${list.fname}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, {parse_mode: "HTML", reply_parameters: {message_id: msgid}})
         }
     } catch (error) {
         console.log(error.message, error)
