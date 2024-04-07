@@ -75,7 +75,10 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
             console.log(userid +' is muted')
             await ctx.sendChatAction('typing')
             await delay(1000)
-            await ctx.reply(`<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, {parse_mode: "HTML", reply_parameters: {message_id: msgid}})
+            let notf = await ctx.reply(`<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, {parse_mode: "HTML", reply_parameters: {message_id: msgid}})
+            setTimeout(()=> {
+                ctx.deleteMessage(notf.message_id).catch(e=> console.log(e.message))
+            }, 60000 * 3)
         }
     } catch (error) {
         console.log(error.message, error)
