@@ -528,6 +528,7 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
+                    await otheFns.muteVideosPhotos(bot, ctx, imp)
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -539,6 +540,7 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
+                    await otheFns.muteVideosPhotos(bot, ctx, imp)
                 }
             } catch (error) {
                 console.log(error.message, error)

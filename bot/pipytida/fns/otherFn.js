@@ -60,15 +60,21 @@ const muteVideosPhotos = async (bot, ctx, imp) => {
     try {
         let unixNow = ctx.message.date
         let chatid = ctx.message.from.id
+        let msgid = ctx.message.message_id
         //cant send other things except the one listed below
-        await ctx.restrictChatMember(chatid, {
-            until_date: unixNow + 600,
-            permissions: {
-                can_send_messages: true,
-                can_send_voice_notes: true,
-                can_send_other_messages: true
-            }
-        })
+        let data = await verifiedList.findOne({ chatid })
+        let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
+        if ((data && data.paid == true) && caption.length > 50) {
+            await ctx.restrictChatMember(chatid, {
+                until_date: unixNow + 600,
+                permissions: {
+                    can_send_messages: true,
+                    can_send_voice_notes: true,
+                    can_send_other_messages: true
+                }
+            })
+            await ctx.reply(`Huyu ni mtoa huduma halali ndani ya group hili. Amepost tangazo, ataruhusiwa kupost tena tangazo lingine la picha au video baada ya dakika 10`, {reply_to_message: msgid})
+        }
     } catch (error) {
         console.log(error.message, error)
     }
@@ -100,10 +106,6 @@ const checkSenderFn = async (bot, ctx, imp) => {
             setTimeout(() => {
                 ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
             }, 30000)
-        }
-        if((data && data.paid == true) && caption.length > 50) {
-            //mute 10 minutes
-            await muteVideosPhotos(bot, ctx, imp)
         }
     } catch (error) {
         console.log(error.message, error)
