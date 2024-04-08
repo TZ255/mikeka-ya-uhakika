@@ -55,14 +55,13 @@ const UnverifyFn = async (bot, ctx, imp) => {
     }
 }
 
-//mute tangazo for 5 minutes
-const muteVideosPhotos = async (bot, ctx, imp, delay) => {
+//reusable restriction
+const reusableRestriction = async (ctx, caption, charsNum, delay) => {
     try {
-        let caption = ctx.message.caption ? ctx.message.caption : 'null'
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
-        let list = await verifiedList.findOne({ chatid: userid })
-        if ((list && list.paid == true) && caption.length > 50) {
+        let list = await verifiedList.findOne({ chatid: userid})
+        if ((list && list.paid == true) && caption.length > charsNum) {
             let unix = ctx.message.date
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             await ctx.restrictChatMember(userid, {
@@ -80,6 +79,14 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
                 ctx.deleteMessage(notf.message_id).catch(e => console.log(e.message))
             }, 60000 * 3)
         }
+    } catch (error) { console.log(error.message, error) }
+}
+
+//mute tangazo for 5 minutes
+const muteVideosPhotos = async (bot, ctx, imp, delay) => {
+    try {
+        let caption = ctx.message.caption ? ctx.message.caption : 'null'
+        await reusableRestriction(ctx, caption, 50, delay)
     } catch (error) {
         console.log(error.message, error)
     }
@@ -102,9 +109,12 @@ const muteLongTexts = async (bot, ctx, imp, delay) => {
                         message_id: msgid, allow_sending_without_reply: true
                     }, parse_mode: 'HTML'
                 })
-                setTimeout(()=> {
-                    ctx.deleteMessage(msgid).catch(e=> console.log(e.message, e))
+                setTimeout(() => {
+                    ctx.deleteMessage(msgid).catch(e => console.log(e.message, e))
                 }, 3000)
+            } else if(status.can_send_photos == true) {
+                //call to check if is verified member, allow and mute
+                await reusableRestriction(ctx, caption, 180, delay)
             }
         }
     } catch (error) {
