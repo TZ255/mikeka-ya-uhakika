@@ -72,7 +72,7 @@ const PipyBot = async () => {
             resize_keyboard: true
         }
 
-        const admins = [imp.halot, imp.shemdoe, imp.muvikap2, imp.blackberry]
+        const admins = [imp.halot, imp.shemdoe, imp.blackberry, imp.xbongo]
         const chatGroups = [imp.r_chatting, imp.r_testing]
 
         //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
@@ -523,7 +523,7 @@ const PipyBot = async () => {
                         parse_mode: 'HTML'
                     })
                 }
-                if (chatGroups.includes(ctx.chat.id)) {
+                if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
@@ -536,7 +536,7 @@ const PipyBot = async () => {
 
         bot.on(message('video'), async ctx => {
             try {
-                if (chatGroups.includes(ctx.chat.id)) {
+                if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
