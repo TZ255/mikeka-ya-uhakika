@@ -11,7 +11,9 @@ const examples = {
 const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
     try {
         let txt = ctx.channelPost.reply_to_message.text
+        let userTrans = ctx.channelPost.reply_to_message.message_id
         let chatid = Number(ctx.channelPost.text)
+        let msgid = ctx.channelPost.message_id
         for (let t of lipaTexts) {
             if (txt.toLowerCase().includes(t)) {
                 let muamala = txt.split('Message:')[1]
@@ -30,9 +32,15 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                     let data = JSON.parse(chatCompletion.choices[0].message.content)
                     if (data.ok == true) {
                         let upd = await rtStarterModel.findOneAndUpdate({chatid}, {$set: {fullName: data.name, phone: data.phone}}, {new: true})
-                        await ctx.reply(`User updated with the following information:\n\nFullname: ${upd.fullName}\nChatid: ${upd.chatid}\nPhone: ${upd.phone}`)
+                        await ctx.reply(`User updated with the following information:\n\nFullname: ${upd.fullName}\nChatid: <code>${upd.chatid}</code>\nPhone: ${upd.phone}`, {
+                            parse_mode: 'HTML', reply_parameters: {message_id: userTrans}
+                        })
+                        await ctx.deleteMessage(msgid)
                     } else {
-                        await ctx.reply('Some information is not found')
+                        await ctx.reply('Some information is not found', {
+                            reply_parameters: {message_id: userTrans}
+                        })
+                        await ctx.deleteMessage(msgid)
                     }
                 }
                 main()

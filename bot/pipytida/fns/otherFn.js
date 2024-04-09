@@ -284,8 +284,10 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 await ctx.reply(`${updPhone.fname} Phone number is updated to ${updPhone.phone}`);
                 break;
             case 'until':
-                let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value } }, { new: true });
-                await ctx.reply(`${updUntil.fname} Until is updated to ${updUntil.until}`);
+                let date = new Date(value)
+                let unix = date.getTime() / 1000
+                let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value, unix} }, { new: true });
+                await ctx.reply(`${updUntil.fname} Until is updated to ${unix} (${updUntil.until})`);
                 break;
             case 'paid':
                 if (value == 'false') {
@@ -307,7 +309,7 @@ const modFunction = async (bot, ctx, imp, delay) => {
 //list yangu ya watoa huduma
 const listYangu = async (ctx) => {
     try {
-        let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
+        let watoa = await verifiedList.find({ paid: true }).sort('-unix')
         let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
         for (let [i, w] of watoa.entries()) {
             let until = w.until ? `<b>🚮 Expire: </b>${w.until}` : `<b>🚮 Expire:</b> not set`
@@ -315,7 +317,7 @@ const listYangu = async (ctx) => {
             let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
             let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
             let username = w.username == 'unknown' ? ment : `@${w.username}`
-            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>Phone: ${phone}</b>\n📍 <b>Location: </b><i>${loc}</i>\n${until}\n\n\n`
+            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n⚠ <b>Paid:</b> ${w.paid}\n${until}\n\n\n`
         }
         await ctx.reply(txt, { parse_mode: 'HTML' })
     } catch (error) {
