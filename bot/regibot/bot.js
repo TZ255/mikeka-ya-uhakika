@@ -117,7 +117,7 @@ const reginaBot = async () => {
                 }
 
             } catch (err) {
-                console.log(err.message)
+                console.log(err.message, err)
             }
         })
 
@@ -411,7 +411,7 @@ const reginaBot = async () => {
                 await ctx.deleteMessage(org_msg_id)
                 await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
             } catch (err) {
-                console.log(err.message)
+                console.log(err.message, err)
             }
 
         })
@@ -603,7 +603,7 @@ const reginaBot = async () => {
                 await delay(1000)
                 await bot.telegram.sendMessage(userid, `Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML', reply_markup: defaultReplyMkp })
             } catch (err) {
-                console.log(err.message)
+                console.log(err.message, err)
                 await bot.telegram.sendMessage(imp.shemdoe, `(${ctx.chat.id}) ` + err.message)
                     .catch(e => console.log(e.message))
             }

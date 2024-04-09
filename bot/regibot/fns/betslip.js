@@ -61,7 +61,7 @@ module.exports = (bot, imp) => {
                 await ctx.deleteMessage(mid)
             }
         } catch (error) {
-            console.log(error.message)
+            console.log(error.message, error)
         }
     })
 

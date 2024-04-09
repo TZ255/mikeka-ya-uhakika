@@ -65,7 +65,7 @@ const rtfunction = async () => {
             bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
             bot.catch((err, ctx) => {
-                console.log(err.message)
+                console.log(err.message, err)
             })
 
             bot.start(async ctx => {
@@ -135,7 +135,7 @@ const rtfunction = async () => {
                     }
 
                 } catch (err) {
-                    console.log(err.message)
+                    console.log(err.message, err)
                 }
             })
 
@@ -405,7 +405,7 @@ const rtfunction = async () => {
                         await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 37)
                     }
                 } catch (err) {
-                    console.log(err.message)
+                    console.log(err.message, err)
                 }
             })
 
