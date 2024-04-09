@@ -112,6 +112,7 @@ const muteLongTexts = async (bot, ctx, imp, delay) => {
                 }, 3000)
             } else {
                 //call to check if is verified member, allow and mute
+                console.log(status)
                 await reusableRestriction(ctx, caption, 180, delay)
             }
         }
