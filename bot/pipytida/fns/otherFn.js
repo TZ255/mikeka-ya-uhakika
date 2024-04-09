@@ -60,7 +60,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
     try {
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
-        let list = await verifiedList.findOne({ chatid: userid})
+        let list = await verifiedList.findOne({ chatid: userid })
         if ((list && list.paid == true) && caption.length > charsNum) {
             let unix = ctx.message.date
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
@@ -75,7 +75,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             await ctx.sendChatAction('typing')
             await delay(1000)
             let notf = await ctx.reply(`<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, { parse_mode: "HTML", reply_parameters: { message_id: msgid } })
-            await toDeleteModel.create({chatid: ctx.chat.id, msgid: notf.message_id})
+            await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
         }
     } catch (error) { console.log(error.message, error) }
 }
@@ -102,7 +102,7 @@ const muteLongTexts = async (bot, ctx, imp, delay) => {
         if (caption.length > 150) {
             let status = await ctx.getChatMember(userid)
             if (status.can_send_photos == false) {
-                await ctx.reply(`<b>${ment}</b> umesubirishwa kupost tangazo kwa dk 10 shoga yng, subiri dk zako 10 ziishe utapost tena`, {
+                await ctx.reply(`<b>${ment}</b> umesubirishwa kupost tangazo kwa dk 10, subiri dk zako 10 ziishe utapost tena`, {
                     reply_parameters: {
                         message_id: msgid, allow_sending_without_reply: true
                     }, parse_mode: 'HTML'
@@ -110,7 +110,7 @@ const muteLongTexts = async (bot, ctx, imp, delay) => {
                 setTimeout(() => {
                     ctx.deleteMessage(msgid).catch(e => console.log(e.message, e))
                 }, 3000)
-            } else if(status.can_send_photos == true) {
+            } else {
                 //call to check if is verified member, allow and mute
                 await reusableRestriction(ctx, caption, 180, delay)
             }

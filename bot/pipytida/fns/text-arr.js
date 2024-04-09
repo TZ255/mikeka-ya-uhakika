@@ -44,7 +44,7 @@ const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) =
                     await bot.telegram.copyMessage(userid, imp.pzone, 7664);
                 } else {
                     if (ctx.chat.type == 'private')
-                        await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true });
+                        await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${rp_id}`, { parse_mode: 'HTML', disable_notification: true });
                 }
         }
     } catch (error) {
