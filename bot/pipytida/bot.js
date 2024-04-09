@@ -398,18 +398,8 @@ const PipyBot = async () => {
 
         bot.command('mod', async ctx => {
             try {
-                let txt = ctx.message.text
-                let data = txt.split('=')
-                let chatid = Number(data[1])
-                let param = data[2]
-                let value = data[3]
-
-                if (param == 'loc' && admins.includes(ctx.chat.id)) {
-                    let upd = await verifiedList.findOneAndUpdate({ chatid }, { $set: { loc: value } }, { new: true })
-                    await ctx.reply(`${upd.fname} location is updated to ${upd.loc}`)
-                } else if (param == 'phone' && admins.includes(ctx.chat.id)) {
-                    let upd = await verifiedList.findOneAndUpdate({ chatid }, { $set: { phone: value } }, { new: true })
-                    await ctx.reply(`${upd.fname} Phone number is updated to ${upd.phone}`)
+                if (admins.includes(ctx.chat.id)) {
+                    await otheFns.modFunction(bot, ctx, imp, delay)
                 }
             } catch (error) {
                 await ctx.reply(error.message)
@@ -418,11 +408,18 @@ const PipyBot = async () => {
 
         bot.command('watoa_huduma', async ctx => {
             try {
-                if (chatGroups.includes(ctx.chat.id)) {
-                    await otheFns.watoaHuduma(bot, imp)
+                //angalia list mwenyewe
+                if (admins.includes(ctx.chat.id)) {
+                    await otheFns.listYangu(ctx)
                 } else {
-                    await ctx.reply(`Command hii /watoa_huduma inatumika tu ndani ya group letu la kuchat kuona list ya Dada Poa waaminifu waliothibitishwa na uongozi wa RT Groups.\n\nBonyeza link hapa chini kuingia kwenye group letu la kuchat\n${imp.link_chatgroup}\n${imp.link_chatgroup}`)
+                    //kama ni kwenye group angalia list vinginevyo elekeza
+                    if (chatGroups.includes(ctx.chat.id)) {
+                        await otheFns.watoaHuduma(bot, imp)
+                    } else {
+                        await ctx.reply(`Command hii /watoa_huduma inatumika tu ndani ya group letu la kuchat kuona list ya Dada Poa waaminifu waliothibitishwa na uongozi wa RT Groups.\n\nBonyeza link hapa chini kuingia kwenye group letu la kuchat\n${imp.link_chatgroup}\n${imp.link_chatgroup}`)
+                    }
                 }
+
             } catch (error) {
                 await ctx.reply(error.message)
             }

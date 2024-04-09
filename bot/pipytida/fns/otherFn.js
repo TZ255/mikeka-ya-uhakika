@@ -144,7 +144,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
                 txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
             }
             let mambo = await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa dakika 5.\n\nHuruhusiwi kutuma tangazo la picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
-            await toDeleteModel.create({chatid: ctx.chat.id, msgid: mambo.message_id})
+            await toDeleteModel.create({ chatid: ctx.chat.id, msgid: mambo.message_id })
             setTimeout(() => {
                 ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
             }, 30000)
@@ -265,6 +265,64 @@ const clearingGroup = async (bot, imp, delay) => {
     }
 }
 
+//modify user
+const modFunction = async (bot, ctx, imp, delay) => {
+    try {
+        let txt = ctx.message.text
+        let data = txt.split('=')
+        let chatid = Number(data[1])
+        let param = data[2]
+        let value = data[3]
+
+        switch (param) {
+            case 'loc':
+                let updLoc = await verifiedList.findOneAndUpdate({ chatid }, { $set: { loc: value } }, { new: true });
+                await ctx.reply(`${updLoc.fname} location is updated to ${updLoc.loc}`);
+                break;
+            case 'phone':
+                let updPhone = await verifiedList.findOneAndUpdate({ chatid }, { $set: { phone: value } }, { new: true });
+                await ctx.reply(`${updPhone.fname} Phone number is updated to ${updPhone.phone}`);
+                break;
+            case 'until':
+                let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value } }, { new: true });
+                await ctx.reply(`${updUntil.fname} Until is updated to ${updUntil.until}`);
+                break;
+            case 'paid':
+                if (value == 'false') {
+                    let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: false } }, { new: true });
+                    await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
+                } else if (value == 'true') {
+                    let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: true } }, { new: true });
+                    await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
+                }
+                break;
+            default:
+                await ctx.reply('Nimeshindwa kutambua param yako')
+        }
+    } catch (error) {
+        await ctx.reply(error.message)
+    }
+}
+
+//list yangu ya watoa huduma
+const listYangu = async (ctx) => {
+    try {
+        let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
+        let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
+        for (let [i, w] of watoa.entries()) {
+            let until = w.until ? `<b>🚮 Expire: </b>${w.until}` : `<b>🚮 Expire:</b> not set`
+            let loc = w.loc ? w.loc : '---'
+            let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
+            let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
+            let username = w.username == 'unknown' ? ment : `@${w.username}`
+            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>Phone: ${phone}</b>\n📍 <b>Location: </b><i>${loc}</i>\n${until}\n\n\n`
+        }
+        await ctx.reply(txt, { parse_mode: 'HTML' })
+    } catch (error) {
+        await ctx.reply(error.message)
+    }
+}
+
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTexts
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTexts, modFunction, listYangu
 }
