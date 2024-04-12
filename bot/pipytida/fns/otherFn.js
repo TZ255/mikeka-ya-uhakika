@@ -125,6 +125,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
     try {
         let msg_id = ctx.message.message_id
         let sender = ctx.message.from.id
+        let username = ctx.message.from.username ? ctx.message.from.username : 'unknown'
         let unixNow = ctx.message.date
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
@@ -148,6 +149,12 @@ const checkSenderFn = async (bot, ctx, imp) => {
             setTimeout(() => {
                 ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
             }, 30000)
+        } else if (data && data.paid == true) {
+            //check if data are correct
+            if(data.fname != name) {
+                await data.updateOne({$set: {fname: name, username}})
+                await ctx.reply(`Mtoa huduma <b>${data.fname}</b> amebadili jina kuwa ${name}.`)
+            }
         }
     } catch (error) {
         console.log(error.message, error)
