@@ -153,7 +153,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             //check if data are correct
             if(data.fname != name) {
                 await data.updateOne({$set: {fname: name, username}})
-                await ctx.reply(`Mtoa huduma <b>${data.fname}</b> amebadili jina kuwa ${name}.`)
+                await ctx.reply(`Mtoa huduma <b>${data.fname}</b> amebadili jina kuwa ${name}.`, {parse_mode: 'HTML'})
             }
         }
     } catch (error) {
