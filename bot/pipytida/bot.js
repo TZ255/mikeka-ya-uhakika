@@ -270,7 +270,6 @@ const PipyBot = async () => {
                     .catch((e) => console.log(e.message))
                 console.log(err.message, err)
             }
-
         })
 
         bot.command('site', async ctx => {
