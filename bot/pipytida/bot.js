@@ -241,8 +241,13 @@ const PipyBot = async () => {
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
             try {
-                let rpid = ctx.message.message_id
-                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rpid)
+                if (ctx.chat.type == 'private') {
+                    let rpid = ctx.message.message_id
+                    await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rpid)
+                } else {
+                    //elekeza dm
+                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
+                }
             } catch (err) {
                 console.log(err)
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -252,8 +257,13 @@ const PipyBot = async () => {
 
         bot.command('mkeka2', async ctx => {
             try {
-                let rpid = ctx.message.message_id
-                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rpid)
+                if (ctx.chat.type == 'private') {
+                    let rpid = ctx.message.message_id
+                    await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rpid)
+                } else {
+                    //elekeza dm
+                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
+                }
             } catch (err) {
                 console.log(err)
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -263,8 +273,13 @@ const PipyBot = async () => {
 
         bot.command('mkeka3', async ctx => {
             try {
-                let rpid = ctx.message.message_id
-                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
+                if (ctx.chat.type == 'private') {
+                    let rpid = ctx.message.message_id
+                    await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
+                } else {
+                    //elekeza dm
+                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
+                }
             } catch (err) {
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
                     .catch((e) => console.log(e.message))
