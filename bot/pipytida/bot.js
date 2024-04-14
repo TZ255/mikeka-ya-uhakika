@@ -273,19 +273,25 @@ const PipyBot = async () => {
         })
 
         bot.command('site', async ctx => {
-            await ctx.reply(`Hello!, ukiona kimya tembelea site yangu ya mikeka \nhttps://mkekawaleo.com`, {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{ text: 'Fungua Hapa', url: 'http://mkekawaleo.com' }]
-                    ]
-                }
-            })
-                .catch((err) => console.log(err.message))
+            try {
+                await ctx.reply(`Hello!, ukiona kimya tembelea site yangu ya mikeka \nhttps://mkekawaleo.com`, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: 'Fungua Hapa', url: 'http://mkekawaleo.com' }]
+                        ]
+                    },
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
+            } catch (error) {
+                console.log(error.message, error)
+            }
         })
 
         bot.command('kujisajili', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595)
+                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595, {
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
             } catch (err) {
                 console.log(err.message)
             }
@@ -293,7 +299,9 @@ const PipyBot = async () => {
 
         bot.command('kujisajili_bw', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
+                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99, {
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
             } catch (err) {
                 console.log(err.message)
             }
@@ -301,7 +309,9 @@ const PipyBot = async () => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
+                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97, {
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
             } catch (err) {
                 console.log(err.message)
             }
@@ -309,7 +319,9 @@ const PipyBot = async () => {
 
         bot.command('kudeposit', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596)
+                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596, {
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
             } catch (err) {
                 console.log(err.message)
             }
@@ -331,7 +343,9 @@ const PipyBot = async () => {
 
         bot.command(['jisajili_m', 'deposit_m'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
+                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652, {
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
             } catch (err) {
                 console.log(err.message)
             }
@@ -339,7 +353,9 @@ const PipyBot = async () => {
 
         bot.command('betbuilder', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
+                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655, {
+                    reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
+                })
             } catch (err) {
                 console.log(err.message)
             }

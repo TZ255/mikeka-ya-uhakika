@@ -122,7 +122,8 @@ const supatips = async (ctx, bot, delay, imp) => {
                         { text: '⭐⭐⭐ Fungua SupaTips ⭐⭐⭐', url }
                     ]
                 ]
-            }
+            },
+            reply_parameters: {message_id: ctx.message.message_id}
         })
     } catch (error) {
         console.log(error.message)
