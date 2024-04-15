@@ -42,11 +42,6 @@ const UnverifyFn = async (bot, ctx, imp) => {
             fname = fname + ` ${ctx.message.reply_to_message.from.last_name}`
         }
 
-        let check = await verifiedList.findOne({ chatid: userid })
-        if (!check) {
-            await verifiedList.create({ chatid: userid, fname, username, paid: false })
-        } else { await verifiedList.findOneAndUpdate({ chatid: userid }, { $set: { paid: false } }) }
-
         let mention = `<a href="tg://user?id=${userid}">${fname}</a>`
         await ctx.reply(`Mtoa huduma ${mention} ameondolewa kwenye list ya watoa huduma waliothibitishwa kwenye group hili. Kuwa makini unapofanya nae kazi.\n\n<b>${mention}</b> ili kuendelea kufanya kazi kwenye group hili wasiliana na admin <b>@Blackberry255</b> ili kuthibitishwa.`, { parse_mode: 'HTML' })
     } catch (error) {
@@ -321,10 +316,11 @@ const listYangu = async (ctx) => {
         for (let [i, w] of watoa.entries()) {
             let until = w.until ? `<b>🚮 Expire: </b>${w.until}` : `<b>🚮 Expire:</b> not set`
             let loc = w.loc ? w.loc : '---'
+            let id = <code>${w.chatid}</code>
             let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
             let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
             let username = w.username == 'unknown' ? ment : `@${w.username}`
-            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n⚠ <b>Paid:</b> ${w.paid}\n${until}\n\n\n`
+            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n🔍 Chatid: ${id}\n⚠ <b>Paid:</b> ${w.paid}\n${until}\n\n\n`
         }
         await ctx.reply(txt, { parse_mode: 'HTML' })
     } catch (error) {
