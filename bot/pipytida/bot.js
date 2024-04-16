@@ -58,6 +58,11 @@ const PipyBot = async () => {
             }
         }
 
+        //catching any error
+        bot.catch((err, ctx) => {
+            console.log(`(Pipy) ${err.message} at ${ctx.updateType}`)
+        })
+
         //deleting pending updates
         bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
@@ -80,6 +85,8 @@ const PipyBot = async () => {
         const chatGroups = [imp.r_chatting, imp.r_testing]
 
         //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+
+
 
         bot.start(async ctx => {
             try {
