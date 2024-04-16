@@ -146,9 +146,9 @@ const checkSenderFn = async (bot, ctx, imp) => {
             }, 30000)
         } else if (data && data.paid == true) {
             //check if data are correct
-            if(data.fname != name) {
-                await data.updateOne({$set: {fname: name, username}})
-                await ctx.reply(`Mtoa huduma <b>${data.fname}</b> amebadili jina kuwa ${name}.`, {parse_mode: 'HTML'})
+            if (data.fname != name) {
+                await data.updateOne({ $set: { fname: name, username } })
+                await ctx.reply(`Mtoa huduma <b>${data.fname}</b> amebadili jina kuwa ${name}.`, { parse_mode: 'HTML' })
             }
         }
     } catch (error) {
@@ -285,10 +285,14 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 let updPhone = await verifiedList.findOneAndUpdate({ chatid }, { $set: { phone: value } }, { new: true });
                 await ctx.reply(`${updPhone.fname} Phone number is updated to ${updPhone.phone}`);
                 break;
+            case 'id':
+                let updID = await verifiedList.findOneAndUpdate({ chatid }, { $set: { chatid: Number(value) } }, { new: true });
+                await ctx.reply(`${updID.fname} ID is updated to to ${updID.chatid}`);
+                break;
             case 'until':
                 let date = new Date(value)
                 let unix = date.getTime() / 1000
-                let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value, unix} }, { new: true });
+                let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value, unix } }, { new: true });
                 await ctx.reply(`${updUntil.fname} Until is updated to ${unix} (${updUntil.until})`);
                 break;
             case 'paid':
