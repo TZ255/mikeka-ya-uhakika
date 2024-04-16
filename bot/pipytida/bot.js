@@ -58,6 +58,9 @@ const PipyBot = async () => {
             }
         }
 
+        //deleting pending updates
+        bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
