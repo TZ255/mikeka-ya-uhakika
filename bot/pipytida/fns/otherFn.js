@@ -316,7 +316,7 @@ const listYangu = async (ctx) => {
         for (let [i, w] of watoa.entries()) {
             let until = w.until ? `<b>🚮 Expire: </b>${w.until}` : `<b>🚮 Expire:</b> not set`
             let loc = w.loc ? w.loc : '---'
-            let id = <code>${w.chatid}</code>
+            let id = `<code>${w.chatid}</code>`
             let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
             let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
             let username = w.username == 'unknown' ? ment : `@${w.username}`

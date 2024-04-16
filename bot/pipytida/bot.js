@@ -623,13 +623,7 @@ const PipyBot = async () => {
         }, 60000 * 30)
 
 
-        bot.launch().then(async () => {
-            await bot.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
-        })
-            .catch(async e => {
-                console.log(e.message + ` \n${e}`)
-                await bot.telegram.sendMessage(imp.shemdoe, e.message)
-            })
+        bot.launch().catch(e=> console.log(e.message))
     } catch (error) {
         console.log(error.message, error)
     }
