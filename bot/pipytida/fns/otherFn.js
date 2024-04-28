@@ -130,7 +130,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
         let status = await ctx.getChatMember(sender)
         if ((!data || data.paid == false) && caption.length > 100) {
             await ctx.restrictChatMember(sender, {
-                until_date: unixNow + 300
+                until_date: unixNow + 21600
             })
             let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
             let txt = `<b><u>List ya watoa huduma waliothibitishwa</u></b>\n\n`
@@ -139,7 +139,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
                 let username = w.username == 'unknown' ? ment : `@${w.username}`
                 txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
             }
-            let mambo = await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa dakika 5.\n\nHuruhusiwi kutuma tangazo la picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
+            let mambo = await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa masaa 6.\n\nHuruhusiwi kutuma tangazo la picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
             await toDeleteModel.create({ chatid: ctx.chat.id, msgid: mambo.message_id })
             setTimeout(() => {
                 ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
