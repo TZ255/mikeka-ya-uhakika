@@ -42,6 +42,7 @@ module.exports = (bot) => {
                         min = '59'
                     }
                     let time = `${actual_time}:${min}`
+                    time.trim()
 
                     let siku = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
                     let nano = nanoid(2)
@@ -116,6 +117,7 @@ module.exports = (bot) => {
                         let hrs = Number(time_arr[0])
                         let min = time_arr[1]
                         let time = `${hrs + 2}:${min}`
+                        time.trim()
                         let nano = nanoid(4)
 
                         let league = $('td:nth-child(2)', el).text()
@@ -191,6 +193,7 @@ module.exports = (bot) => {
                     }
                     let min = time_arr[1]
                     let time = `${actual_time}:${min}`
+                    time.trim()
 
                     let nano = nanoid(4)
 
