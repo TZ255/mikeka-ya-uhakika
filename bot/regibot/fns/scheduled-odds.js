@@ -10,7 +10,7 @@ const tg_slips = require('../database/tg_slips')
 
 const checkOdds = async (bot, imp, tablehusika, siku) => {
     try {
-        let sup_url = `https://www.supatips.com/today-predictions`
+        let sup_url = `https://www.supatips.com/`
 
         let html = await axios.get(sup_url)
         let $ = cheerio.load(html.data)
@@ -81,7 +81,7 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
 
 const checkMatokeo = async (bot, imp, tablehusika, siku) => {
     try {
-        let sup_url = `https://www.supatips.com/today-predictions`
+        let sup_url = `https://www.supatips.com/`
 
         let html = await axios.get(sup_url)
         let $ = cheerio.load(html.data)

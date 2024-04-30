@@ -20,7 +20,7 @@ module.exports = (bot) => {
     bot.command('supaleo', async ctx => {
         try {
             await bin_supatips_Model.deleteMany({})
-            let sup_url = `https://www.supatips.com/today-predictions`
+            let sup_url = `https://www.supatips.com/`
 
             let html = await axios.get(sup_url)
             let $ = cheerio.load(html.data)
@@ -96,7 +96,7 @@ module.exports = (bot) => {
     bot.command('supakesho', async ctx => {
         try {
             await bin_supatips_Model.deleteMany({})
-            let sup_url = `https://www.supatips.com/today-predictions`
+            let sup_url = `https://www.supatips.com/`
 
             let html = await axios.get(sup_url)
             let $ = cheerio.load(html.data)
@@ -168,7 +168,7 @@ module.exports = (bot) => {
     bot.command('supajana', async ctx => {
         try {
             await bin_supatips_Model.deleteMany({})
-            let sup_url = `https://www.supatips.com/today-predictions`
+            let sup_url = `https://www.supatips.com/`
 
             let html = await axios.get(sup_url)
             let $ = cheerio.load(html.data)
