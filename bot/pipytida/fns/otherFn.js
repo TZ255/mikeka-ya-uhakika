@@ -65,7 +65,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
                     can_send_audios: true
                 },
                 until_date: unix + 600
-            })
+            }).catch(e => console.log(e.message))
             console.log(userid + ' is muted')
             await ctx.sendChatAction('typing')
             await delay(1000)
