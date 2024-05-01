@@ -41,6 +41,7 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                         actual_time = '0' + actual_time
                     }
                     let time = `${actual_time}:${min}`
+                    time.trim()
                     let nano = nanoid(4)
 
                     let league = $('td:nth-child(2)', el).text()
