@@ -29,7 +29,7 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
             await supatips_Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
                 if (i > 1) {
-                    let time_data = $('td:nth-child(1)', el).text()
+                    let time_data = $('td:nth-child(1)', el).text().trim()
                     let time_arr = time_data.split(':')
                     let hrs = Number(time_arr[0])
                     let min = time_arr[1]
@@ -41,7 +41,6 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                         actual_time = '0' + actual_time
                     }
                     let time = `${actual_time}:${min}`
-                    time.trim()
                     let nano = nanoid(4)
 
                     let league = $('td:nth-child(2)', el).text()
@@ -92,10 +91,10 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
 
         tday_table.each(async (i, el) => {
             if (i > 1) {
-                let time_data = $('td:nth-child(1)', el).text()
+                let time_data = $('td:nth-child(1)', el).text().trim()
                 let time_arr = time_data.split(':')
                 let hrs = Number(time_arr[0])
-                let min = time_arr[1]
+                let min = time_arr[1].trim()
                 let actual_time = hrs + 2
                 if (actual_time >= 24) {
                     actual_time = `23`
