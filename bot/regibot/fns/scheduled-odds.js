@@ -25,10 +25,10 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
         let tday_table = $(`${tablehusika} table tbody`)
 
         //compare length
-        if (ourDb.length < (tday_table.length - 2)) {
+        if (ourDb.length < (tday_table.length)) {
             await supatips_Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                if (i > 1) {
+                if (i >= 0 ) {
                     let time_data = $('td:nth-child(1)', el).text().trim()
                     let time_arr = time_data.split(':')
                     let hrs = Number(time_arr[0])
