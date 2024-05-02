@@ -146,9 +146,10 @@ const checkSenderFn = async (bot, ctx, imp) => {
             }, 30000)
         } else if (data && data.paid == true) {
             //check if data are correct
-            if (data.fname != name) {
+            if (data.fname != name || data.username != username) {
+                let _info = `Taarifa za Mtoa huduma ${data.fname} zimeboreshwa, amebadili jina kuwa ${name} na username kuwa ${username}.`
                 await data.updateOne({ $set: { fname: name, username } })
-                await ctx.reply(`Mtoa huduma <b>${data.fname}</b> amebadili jina kuwa ${name}.`, { parse_mode: 'HTML' })
+                await bot.telegram.sendMessage(imp.blackberry, _info)
             }
         }
     } catch (error) {
