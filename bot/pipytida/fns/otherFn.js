@@ -216,7 +216,7 @@ const watoaHuduma = async (bot, imp) => {
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock na nitakutoa kwenye group (hatupendi usumbufu) 😏.`, { parse_mode: 'HTML' })
         await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
         setTimeout(() => {
-            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Black Berry (@Blackberry255)</b>\nau\n<b>2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani 😁`, { parse_mode: 'HTML' })
+            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Black Berry (@Blackberry255)\n2. Sister G (@mamyy98)\n3. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani.\n\n\n<b>❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni dalali au mtoa huduma wa group hili. Kuwasiliana na dalali au mtoa huduma aliethibitishwa ndani ya group hili bonyeza jina lake kwenye list hapo juu.`, { parse_mode: 'HTML' })
                 .then((msg) => { toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id }).catch(e => console.log(e.message)) })
                 .catch(e => console.log(e.message, e))
         }, 15000)
