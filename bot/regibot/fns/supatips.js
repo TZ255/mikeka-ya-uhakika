@@ -20,7 +20,7 @@ module.exports = (bot) => {
     bot.command('supaleo', async ctx => {
         try {
             await bin_supatips_Model.deleteMany({})
-            let sup_url = `https://www.supatips.com/`
+            let sup_url = `https://www.supatips.com/today-predictions`
 
             let html = await axios.get(sup_url)
             let $ = cheerio.load(html.data)
@@ -31,7 +31,7 @@ module.exports = (bot) => {
             let tday_table = $('#nav-profile table tbody')
             if (tday_table.length > 0) { await bin_supatips_Model.deleteMany({}) }
             tday_table.each(async (i, el) => {
-                if (i > 1) {
+                if (i >= 0) {
                     let time_data = $('td:nth-child(1)', el).text()
                     let time_arr = time_data.split(':')
                     let hrs = Number(time_arr[0])
@@ -65,9 +65,12 @@ module.exports = (bot) => {
                         nanoArr = nanoArr + `${nano}+`
                     }
 
-                    await bin_supatips_Model.create({
-                        time, league, match, tip, siku, nano, matokeo
-                    })
+                    if (match.length > 5) {
+                        await bin_supatips_Model.create({
+                            time, league, match, tip, siku, nano, matokeo
+                        })
+                    }
+
                 }
 
             })
@@ -97,7 +100,7 @@ module.exports = (bot) => {
     bot.command('supakesho', async ctx => {
         try {
             await bin_supatips_Model.deleteMany({})
-            let sup_url = `https://www.supatips.com/`
+            let sup_url = `https://www.supatips.com/today-predictions`
 
             let html = await axios.get(sup_url)
             let $ = cheerio.load(html.data)
@@ -111,7 +114,7 @@ module.exports = (bot) => {
             if (tday_table.length >= 1) {
                 await bin_supatips_Model.deleteMany({})
                 tday_table.each(async (i, el) => {
-                    if (i > 1) {
+                    if (i >= 0) {
                         let time_data = $('td:nth-child(1)', el).text()
                         let time_arr = time_data.split(':')
                         let hrs = Number(time_arr[0])
@@ -138,9 +141,11 @@ module.exports = (bot) => {
                             nanoArr = nanoArr + `${nano}+`
                         }
 
-                        await bin_supatips_Model.create({
-                            time, league, match, tip, siku, nano, matokeo
-                        })
+                        if (match.length > 5) {
+                            await bin_supatips_Model.create({
+                                time, league, match, tip, siku, nano, matokeo
+                            })
+                        }
                     }
 
                 })
