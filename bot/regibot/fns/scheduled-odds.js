@@ -28,7 +28,7 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
         if (ourDb.length < (tday_table.length)) {
             await supatips_Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                if (i >= 0 ) {
+                if (i >= 0) {
                     let time_data = $('td:nth-child(1)', el).text().trim()
                     let time_arr = time_data.split(':')
                     let hrs = Number(time_arr[0])
@@ -61,10 +61,12 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                         nanoArr = nanoArr + `${nano}+`
                     }
 
-                    //add to database
-                    await supatips_Model.create({
-                        matokeo, time, siku, league, match, tip, nano
-                    })
+                    //check if we have match the add to database
+                    if (match.length > 5) {
+                        await supatips_Model.create({
+                            matokeo, time, siku, league, match, tip, nano
+                        })
+                    }
                 }
             })
 
