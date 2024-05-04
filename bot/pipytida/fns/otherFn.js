@@ -56,7 +56,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
         let list = await verifiedList.findOne({ chatid: userid })
-        if ((list && list.paid == true) && caption.length > charsNum) {
+        if ((list && list.paid && list.role == 'dada') && caption.length > charsNum) {
             let unix = ctx.message.date
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             await ctx.restrictChatMember(userid, {
