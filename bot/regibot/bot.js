@@ -780,6 +780,8 @@ const reginaBot = async () => {
 
             switch (time2check) {
                 case '03:10':
+                case '03:30':
+                case '04:10':
                 case '06:00':
                 case '08:00':
                 case '09:00':
