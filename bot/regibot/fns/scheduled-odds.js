@@ -46,15 +46,10 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                     let league = $('td:nth-child(2)', el).text()
                     let match = $('td:nth-child(3)', el).text()
                     match = match.replace(/ vs /g, ' - ')
-
                     let tip = $('td:nth-child(4)', el).text()
-                    let matokeo = $('td:nth-child(5)', el).text()
-                    if (matokeo.length < 2) {
-                        matokeo = '-:-'
-                    }
 
                     //create text
-                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
+                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip}</b>\n\n`
                     if (i == tday_table.length - 1) {
                         nanoArr = nanoArr + `${nano}`
                     } else {
@@ -64,7 +59,7 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                     //check if we have match the add to database
                     if (match.length > 5) {
                         await supatips_Model.create({
-                            matokeo, time, siku, league, match, tip, nano
+                            time, siku, league, match, tip, nano
                         })
                     }
                 }

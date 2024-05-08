@@ -16,6 +16,7 @@ const reginaBot = async () => {
         const mkekaMega = require('./database/mkeka-mega')
         const graphDB = require('./database/graph-tips')
         const waombajiModel = require('./database/waombaji')
+        const supatips_Model = require('./database/supatips')
 
 
         const call_supatips_function = require('./fns/supatips')
@@ -547,13 +548,11 @@ const reginaBot = async () => {
         })
 
         bot.command('send', async ctx => {
-            let txt = ctx.message.text
-            if (ctx.chat.id == imp.shemdoe || ctx.chat.id == imp.halot) {
-                let chatid = txt.split('=')[1]
-                let ujumbe = txt.split('=')[2]
-
-                await bot.telegram.sendMessage(chatid, ujumbe)
-                    .catch((err) => console.log(err))
+            try {
+                let all = await supatips_Model.updateMany({siku: "09/05/2024"}, {$set: {matokeo: "-:-"}})
+                console.log('done')
+            } catch (error) {
+                console.log(error.message)
             }
         })
 

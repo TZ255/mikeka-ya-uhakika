@@ -50,15 +50,10 @@ module.exports = (bot) => {
                     let league = $('td:nth-child(2)', el).text()
                     let match = $('td:nth-child(3)', el).text()
                     match = match.replace(/ vs /g, ' - ')
-
                     let tip = $('td:nth-child(4)', el).text()
-                    let matokeo = $('td:nth-child(5)', el).text()
-                    if (matokeo.length < 2) {
-                        matokeo = '-:-'
-                    }
 
                     //create text
-                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
+                    text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip}</b>\n\n`
                     if (i == tday_table.length - 1) {
                         nanoArr = nanoArr + `${nano}`
                     } else {
@@ -67,7 +62,7 @@ module.exports = (bot) => {
 
                     if (match.length > 5) {
                         await bin_supatips_Model.create({
-                            time, league, match, tip, siku, nano, matokeo
+                            time, league, match, tip, siku, nano
                         })
                     }
 
