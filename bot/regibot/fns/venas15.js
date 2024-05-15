@@ -11,6 +11,7 @@ const tg_slips = require('../database/tg_slips')
 const checkOdds = async (bot, imp) => {
     try {
         let today = new Date();
+        today.setHours(today.getUTCHours() + 3)
         let yyyy = today.getFullYear();
         let mm = String(today.getMonth() + 1).padStart(2, '0');
         let dd = String(today.getDate()).padStart(2, '0');
@@ -67,6 +68,67 @@ const checkOdds = async (bot, imp) => {
     }
 }
 
+const checkTomorrowOdds = async (bot, imp) => {
+    try {
+        let today = new Date();
+        today.setHours(today.getUTCHours() + 3)
+        today.setDate(today.getDate() + 1)
+        let yyyy = today.getFullYear();
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let dd = String(today.getDate()).padStart(2, '0');
+        let tdate = `${yyyy}-${mm}-${dd}`;
+        let siku = `${dd}/${mm}/${yyyy}`;
+
+        let sup_url = `https://venasbet.com/over_1_5_goals?dt=${tdate}`
+
+        let html = await axios.get(sup_url)
+        let $ = cheerio.load(html.data)
+
+        //check our odds length
+        let ourDb = await venas15Model.find({ siku })
+
+        //fetch venas15 table
+        let tday_table = $(`#home table tbody tr`)
+
+        //compare length
+        if (tday_table && ourDb.length < tday_table.length) {
+            await venas15Model.deleteMany({ siku })
+            tday_table.each(async (i, el) => {
+                let time_data = $('td:nth-child(1)', el).text().trim()
+                let time_arr = time_data.split(':')
+                let hrs = Number(time_arr[0])
+                let min = time_arr[1]
+                let actual_time = hrs + 2
+                if (actual_time >= 24) {
+                    actual_time = `23`
+                    min = '59'
+                }
+                String(actual_time).padStart(2, '0')
+                let time = `${actual_time}:${min}`
+                let nano = nanoid(4)
+
+                let league = $('td:nth-child(2)', el).text().trim()
+                let match = $('td:nth-child(3)', el).text().trim()
+                match = match.replace(/\n/g, '').replace(' VS', ' - ')
+                let tip = $('td:nth-child(4)', el).text().trim()
+
+                //check if we have match the add to database
+                if (match.length > 5) {
+                    await venas15Model.create({
+                        time, siku, league, match, tip, nano
+                    })
+                }
+            })
+            await bot.telegram.sendMessage(imp.shemdoe, `Venas15 tomorrow found and created`)
+        } else {
+            await bot.telegram.sendMessage(imp.shemdoe, `Venas15 - nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
+        }
+    } catch (err) {
+        console.error(err)
+        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+    }
+}
+
 const checkMatokeoJana = async (bot, imp) => {
     try {
         let today = new Date();
@@ -108,5 +170,5 @@ const checkMatokeoJana = async (bot, imp) => {
 
 
 module.exports = {
-    checkOdds, checkMatokeoJana
+    checkOdds, checkTomorrowOdds, checkMatokeoJana
 }

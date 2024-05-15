@@ -829,6 +829,11 @@ const reginaBot = async () => {
                 case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '09:02':
                     call_venas15_fn.checkOdds(bot, imp)
                     break;
+
+                //venas15 odds
+                case '15:12': case '16:12': case '17:12': case '18:12': case '19:02': case '20:02': case '21:02': case '22:02': case '23:12':
+                    call_venas15_fn.checkTomorrowOdds(bot, imp)
+                    break;
             }
         }, 59 * 1000)
 
