@@ -836,7 +836,7 @@ const reginaBot = async () => {
                     break;
 
                 //venas15 matokeo
-                case '03:13': case '05:13': case '07:13': case '08:13': case '19:02': case '20:02': case '21:02': case '22:02': case '23:12':
+                case '03:13': case '05:13': case '07:13': case '08:13': case '09:13': case '11:03':
                     call_venas15_fn.checkMatokeoJana(bot, imp)
                     break;
             }
