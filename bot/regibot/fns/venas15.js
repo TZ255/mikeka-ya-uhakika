@@ -10,16 +10,12 @@ const tg_slips = require('../database/tg_slips')
 
 const checkOdds = async (bot, imp) => {
     try {
-        let today = new Date();
-        today.setHours(today.getUTCHours() + 3)
-        let yyyy = today.getFullYear();
-        let mm = String(today.getMonth() + 1).padStart(2, '0');
-        let dd = String(today.getDate()).padStart(2, '0');
-        let tdate = `${yyyy}-${mm}-${dd}`;
-        let siku = `${dd}/${mm}/${yyyy}`;
+        //today date in yyyy-mm-dd +3
+        let tdate = new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Nairobi' })
+        //today date in dd/mm/yy +3
+        let siku = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
         let sup_url = `https://venasbet.com/over_1_5_goals?dt=${tdate}`
-
         let html = await axios.get(sup_url)
         let $ = cheerio.load(html.data)
 
@@ -70,14 +66,13 @@ const checkOdds = async (bot, imp) => {
 
 const checkTomorrowOdds = async (bot, imp) => {
     try {
-        let today = new Date();
-        today.setHours(today.getUTCHours() + 3)
-        today.setDate(today.getDate() + 1)
-        let yyyy = today.getFullYear();
-        let mm = String(today.getMonth() + 1).padStart(2, '0');
-        let dd = String(today.getDate()).padStart(2, '0');
-        let tdate = `${yyyy}-${mm}-${dd}`;
-        let siku = `${dd}/${mm}/${yyyy}`;
+        let tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1)
+
+        //tomorrow date in yyyy-mm-dd +3
+        let tdate = tomorrow.toLocaleDateString('en-CA', { timeZone: 'Africa/Nairobi' })
+        //tomorrow date in dd/mm/yy +3
+        let siku = tomorrow.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
         let sup_url = `https://venasbet.com/over_1_5_goals?dt=${tdate}`
 
@@ -131,14 +126,12 @@ const checkTomorrowOdds = async (bot, imp) => {
 const checkMatokeoJana = async (bot, imp) => {
     try {
         let today = new Date();
-        today.setHours(today.getUTCHours() + 3)
         today.setDate(today.getDate() - 1);
 
-        let yyyy = today.getFullYear();
-        let mm = String(today.getMonth() + 1).padStart(2, '0');
-        let dd = String(today.getDate()).padStart(2, '0');
-        let ydate = `${yyyy}-${mm}-${dd}`;
-        let siku = `${dd}/${mm}/${yyyy}`;
+        //today date in yyyy-mm-dd +3
+        let ydate = today.toLocaleDateString('en-CA', { timeZone: 'Africa/Nairobi' })
+        //today date in dd/mm/yy +3
+        let siku = today.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
         let sup_url = `https://venasbet.com/over_1_5_goals?dt=${ydate}`
 
@@ -156,7 +149,10 @@ const checkMatokeoJana = async (bot, imp) => {
                 match = match.replace(/\n/g, '').replace(' VS', ' - ')
                 let matokeo = $('td:nth-child(4)', el).text().trim()
                 //update table
-                await venas15Model.findOneAndUpdate({match, siku}, {$set: {matokeo}})
+                let data = await venas15Model.findOne({ match, siku })
+                if (data && data.matokeo == '-:-') {
+                    await data.updateOne({ $set: { matokeo } })
+                }
             })
         } else {
             await bot.telegram.sendMessage(imp.shemdoe, `Venas15 - no yesterday results`)
