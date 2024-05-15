@@ -25,7 +25,7 @@ const reginaBot = async () => {
         const call_oncallbackquery_function = require('./fns/oncallbackquery')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
         const call_scheduled_checker_fn = require('./fns/scheduled-odds')
-        const call_famescheduled_fn = require('./fns/fame-scheduled')
+        const call_venas15_fn = require('./fns/venas15')
 
         const imp = {
             replyDb: -1001608248942,
@@ -823,6 +823,11 @@ const reginaBot = async () => {
                 case '23:07':
                 case '23:57':
                     call_famescheduled_fn.famecheckOdds(bot, imp, '#pills-contact', trhKesho)
+                    break;
+
+                //venas15 odds
+                case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '09:02':
+                    call_venas15_fn.checkOdds(bot, imp)
                     break;
             }
         }, 59 * 1000)
