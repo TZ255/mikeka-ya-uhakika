@@ -98,12 +98,11 @@ const checkTomorrowOdds = async (bot, imp) => {
                 let time_arr = time_data.split(':')
                 let hrs = Number(time_arr[0])
                 let min = time_arr[1]
-                let actual_time = hrs + 2
+                let actual_time = String(hrs + 2).padStart(2, '0')
                 if (actual_time >= 24) {
                     actual_time = `23`
                     min = '59'
                 }
-                String(actual_time).padStart(2, '0')
                 let time = `${actual_time}:${min}`
                 let nano = nanoid(4)
 
@@ -132,6 +131,7 @@ const checkTomorrowOdds = async (bot, imp) => {
 const checkMatokeoJana = async (bot, imp) => {
     try {
         let today = new Date();
+        today.setHours(today.getUTCHours() + 3)
         today.setDate(today.getDate() - 1);
 
         let yyyy = today.getFullYear();
