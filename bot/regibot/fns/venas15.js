@@ -143,7 +143,6 @@ const checkMatokeoJana = async (bot, imp) => {
 
         //compare length
         if (yday_table && yday_table.length > 1) {
-            await venas15Model.deleteMany({ siku })
             yday_table.each(async (i, el) => {
                 let match = $('td:nth-child(2)', el).text().trim()
                 match = match.replace(/\n/g, '').replace(' VS', ' - ')
