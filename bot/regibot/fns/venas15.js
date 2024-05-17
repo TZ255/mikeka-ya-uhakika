@@ -149,7 +149,7 @@ const checkMatokeoJana = async (bot, imp) => {
                 let matokeo = $('td:nth-child(4)', el).text().trim()
                 //update table
                 let data = await venas15Model.findOne({ match, siku })
-                if (data && data.matokeo == '-:-') {
+                if (data && (data.matokeo == '-:-' || data.matokeo == ':') && matokeo != ':') {
                     await data.updateOne({ $set: { matokeo } })
                 }
             })
