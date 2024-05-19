@@ -20,6 +20,10 @@ const vrfySchema = new Schema({
     role: {
         type: String,
         default: 'dada'
+    },
+    again: {
+        type: Number,
+        default: 173
     }
 }, {strict: false, timestamps: true })
 

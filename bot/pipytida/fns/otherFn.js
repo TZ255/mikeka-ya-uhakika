@@ -67,9 +67,18 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
                 until_date: unix + 600
             }).catch(e => console.log(e.message))
             console.log(userid + ' is muted')
+            await list.updateOne({$set: {again: until_date}})
             await ctx.sendChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊\n\n<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10`, { parse_mode: "HTML", reply_parameters: { message_id: msgid } })
+            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊 Bonyeza button hapa chini kuwasiliana nae.`, { 
+                parse_mode: "HTML", 
+                reply_parameters: { message_id: msgid },
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: `📩 Zama Inbox 📩`, url: `tg://user?id=${userid}`}]
+                    ]
+                }
+            })
             await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
         }
     } catch (error) { console.log(error.message, error) }
@@ -88,15 +97,17 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
 //mute tangazo for 10 minutes
 const muteLongTexts = async (bot, ctx, imp, delay) => {
     try {
-        let caption = ctx.message.text
+        let caption = ctx.message.text ? ctx.message.text : ctx.message.caption ? ctx.message.caption : 'no caption'
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
         let ment = `<a href="tg://user?id=${userid}">${name}</a>`
         if (caption.length > 150) {
+            let unix = ctx.message.date
             let status = await ctx.getChatMember(userid)
-            if (status.can_send_photos == false) {
+            let verified = await verifiedList.findOne({chatid: userid})
+            if (status.can_send_photos == false || (verified?.again && verified.again > unix)) {
                 await ctx.reply(`<b>${ment}</b> umesubirishwa kupost tangazo kwa dk 10, subiri dk zako 10 ziishe utapost tena`, {
                     reply_parameters: {
                         message_id: msgid, allow_sending_without_reply: true

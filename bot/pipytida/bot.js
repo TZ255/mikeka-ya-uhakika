@@ -568,6 +568,8 @@ const PipyBot = async () => {
                     await otheFns.checkSenderFn(bot, ctx, imp)
                     //mute for 10 minutes
                     await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
+                    //check if member is restricted in our superGroups
+                    await otheFns.muteLongTexts(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 console.log(err.message, err)
