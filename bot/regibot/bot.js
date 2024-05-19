@@ -26,6 +26,7 @@ const reginaBot = async () => {
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
         const call_scheduled_checker_fn = require('./fns/scheduled-odds')
         const call_venas15_fn = require('./fns/venas15')
+        const call_venas25_fn = require('./fns/venas25')
 
         const imp = {
             replyDb: -1001608248942,
@@ -825,19 +826,22 @@ const reginaBot = async () => {
                     call_famescheduled_fn.famecheckOdds(bot, imp, '#pills-contact', trhKesho)
                     break;
 
-                //venas15 odds
+                //venas 1.5 & 2.5 odds
                 case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '09:02':
                     call_venas15_fn.checkOdds(bot, imp)
+                    call_venas25_fn.checkOdds(bot, imp)
                     break;
 
-                //venas15 odds
+                //venas 1.5 & 2.5 odds
                 case '15:12': case '16:12': case '17:12': case '18:12': case '19:02': case '20:02': case '21:02': case '22:02': case '23:12':
                     call_venas15_fn.checkTomorrowOdds(bot, imp)
+                    call_venas25_fn.checkTomorrowOdds(bot, imp)
                     break;
 
-                //venas15 matokeo
+                //venas 1.5 & 2.5 matokeo
                 case '03:13': case '05:13': case '07:13': case '08:13': case '09:13': case '11:03':
                     call_venas15_fn.checkMatokeoJana(bot, imp)
+                    call_venas25_fn.checkMatokeoJana(bot, imp)
                     break;
             }
         }, 59 * 1000)
