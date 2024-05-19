@@ -514,7 +514,7 @@ const PipyBot = async () => {
 
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check if member is restricted in our superGroups
-                    await otheFns.muteLongTexts(bot, ctx, imp, delay)
+                    await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
                 }
 
                 //switch kybd, mkeka arrays, forwarding
@@ -566,10 +566,8 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
-                    //check if member is restricted in our superGroups
-                    await otheFns.muteLongTexts(bot, ctx, imp, delay)
-                    //mute for 10 minutes
-                    await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
+                    //check if restricted, if not mute 10 minutes
+                    await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -581,10 +579,8 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
-                    //check if member is restricted in our superGroups
-                    await otheFns.muteLongTexts(bot, ctx, imp, delay)
-                    //mute for 10 minutes
-                    await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
+                    //check if restricted, if not mute 10 minutes
+                    await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
                 }
             } catch (error) {
                 console.log(error.message, error)

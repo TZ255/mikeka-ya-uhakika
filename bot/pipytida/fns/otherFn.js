@@ -71,7 +71,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             await list.updateOne({$set: {again: until_date}})
             await ctx.sendChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Mteja pesa yako hapa ipo salama 😊 Bonyeza button hapa chini kuwasiliana nae.`, { 
+            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Bonyeza button hapa chini kuwasiliana nae.`, { 
                 parse_mode: "HTML", 
                 reply_parameters: { message_id: msgid },
                 reply_markup: {
@@ -96,7 +96,7 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
 }
 
 //mute tangazo for 10 minutes
-const muteLongTexts = async (bot, ctx, imp, delay) => {
+const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
     try {
         let caption = ctx.message.text ? ctx.message.text : ctx.message.caption ? ctx.message.caption : 'no caption'
         let userid = ctx.message.from.id
@@ -104,7 +104,7 @@ const muteLongTexts = async (bot, ctx, imp, delay) => {
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
         let ment = `<a href="tg://user?id=${userid}">${name}</a>`
-        if (caption.length > 150) {
+        if (caption.length >= 180) {
             let unix = ctx.message.date
             let status = await ctx.getChatMember(userid)
             let verified = await verifiedList.findOne({chatid: userid})
@@ -346,5 +346,5 @@ const listYangu = async (ctx) => {
 }
 
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTexts, modFunction, listYangu
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu
 }
