@@ -566,10 +566,10 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
-                    //mute for 10 minutes
-                    await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
                     //check if member is restricted in our superGroups
                     await otheFns.muteLongTexts(bot, ctx, imp, delay)
+                    //mute for 10 minutes
+                    await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -581,6 +581,8 @@ const PipyBot = async () => {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified
                     await otheFns.checkSenderFn(bot, ctx, imp)
+                    //check if member is restricted in our superGroups
+                    await otheFns.muteLongTexts(bot, ctx, imp, delay)
                     //mute for 10 minutes
                     await otheFns.muteVideosPhotos(bot, ctx, imp, delay)
                 }
