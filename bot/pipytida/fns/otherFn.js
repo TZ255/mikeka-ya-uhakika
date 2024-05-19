@@ -58,13 +58,14 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
         let list = await verifiedList.findOne({ chatid: userid })
         if ((list && list.paid && list.role == 'dada') && caption.length > charsNum) {
             let unix = ctx.message.date
+            let until_date = unix + 600
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             await ctx.restrictChatMember(userid, {
                 permissions: {
                     can_send_messages: true,
                     can_send_audios: true
                 },
-                until_date: unix + 600
+                until_date
             }).catch(e => console.log(e.message))
             console.log(userid + ' is muted')
             await list.updateOne({$set: {again: until_date}})
