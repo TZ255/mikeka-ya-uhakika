@@ -221,45 +221,35 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
     await ctx.deleteMessage(cbmid)
 }
 
-const deleteMessages = async () => {
+const deteleMessages = async (delay) => {
     try {
-        let all = await toDeleteMsgs.find();
+        let all = await toDeleteMsgs.find()
+        let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/deleteMessage`
+        let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/deleteMessage`
+        let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/deleteMessage`
 
-        const apiMap = {
-            muvikabot: `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/deleteMessage`,
-            pilau_bot: `https://api.telegram.org/bot${process.env.PL_TOKEN}/deleteMessage`,
-            rahatupu_tzbot: `https://api.telegram.org/bot${process.env.RT_TOKEN}/deleteMessage`
-        };
+        for (let el of all) {
+            let {userid, msgid, bot} = el
+            let data = { chat_id: userid, message_id: msgid }
 
-        const deleteTasks = all.map((el, i) => {
-            const { userid, msgid, bot } = el;
-            const data = { chat_id: userid, message_id: msgid };
-            const apiUrl = apiMap[bot];
-
-            if (!apiUrl) {
-                console.log(`No API URL found for bot: ${bot}`);
-                return Promise.resolve();
+            if(bot == 'muvikabot') {
+                await axios.post(mvAPI, data).catch(e=> console.log(`${bot} delete failed: ${e.message}`))
+                await el.deleteOne()
+                await delay(11) //delete 91 message per seconds
+            } else if(bot == 'pilau_bot') {
+                await axios.post(plAPI, data).catch(e=> console.log(`${bot} delete failed: ${e.message}`))
+                await el.deleteOne()
+                await delay(11) //delete 91 message per seconds
+            } else if(bot == 'rahatupu_tzbot') {
+                await axios.post(rtAPI, data).catch(e=> console.log(`${bot} delete failed: ${e.message}`))
+                await el.deleteOne()
+                await delay(11) //delete 91 message per seconds
             }
-
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    axios.post(apiUrl, data)
-                        .then(() => el.deleteOne())
-                        .then(resolve)
-                        .catch(e => {
-                            console.log(`Error deleting message for bot ${bot}: ${e.message}`);
-                            resolve();  // Resolve to continue with other deletions even if one fails
-                        });
-                }, 20 * i);
-            });
-        });
-
-        //Handles all deletion tasks concurrently while ensuring that the execution continues even if some requests fail.
-        await Promise.all(deleteTasks);
+        }
     } catch (error) {
-        console.log(`Error in deleteMessages function: ${error.message}`);
+        console.log(error.message)
     }
-};
+}
 
 module.exports = {
     createUser,
@@ -268,5 +258,5 @@ module.exports = {
     mtandaoCallBack,
     rudiNyumaReply,
     addingPoints,
-    deleteMessages
+    deteleMessages
 }

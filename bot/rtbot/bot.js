@@ -56,6 +56,9 @@ const rtfunction = async () => {
 
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
+            //delaying
+            const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
             const rateLimitter = []
             setInterval(() => { 
                 rateLimitter.length = 0
@@ -65,12 +68,9 @@ const rtfunction = async () => {
                 let time = d.getHours()
                 let mins = d.getMinutes()
                 if(time == 20 && mins == 59) {
-                    call_function.deleteMessages()
+                    call_function.deteleMessages(delay)
                 }
             }, 20000)
-
-            //delaying
-            const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
             bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
