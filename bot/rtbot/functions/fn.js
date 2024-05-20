@@ -1,4 +1,5 @@
 const rtStarterModel = require('../database/chats')
+const toDeleteMsgs = require('../database/todelete')
 const binModel = require('../database/rtbin')
 const axios = require('axios').default
 
@@ -177,8 +178,8 @@ const addingPoints = async (ctx, chatid, points, imp) => {
         axios.post(mvAPI, data).catch(e => console.log(e.message))
 
         //check if phone and real name available
-        let reaCheck = await rtStarterModel.findOne({chatid})
-        if(!reaCheck.fullName) {
+        let reaCheck = await rtStarterModel.findOne({ chatid })
+        if (!reaCheck.fullName) {
             await ctx.reply('❌❌ This user phone and real name is missing')
         } else if (reaCheck.phone) {
             await ctx.reply('✅✅ Phone and Real name of this user is available')
@@ -189,7 +190,7 @@ const addingPoints = async (ctx, chatid, points, imp) => {
 }
 
 const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    await bot.telegram.copyMessage(chatid, imp.matangazoDB, msgid, {
+    let info = await bot.telegram.copyMessage(chatid, imp.matangazoDB, msgid, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -201,6 +202,8 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
             ]
         }
     })
+    let botname = ctx.botInfo.username
+    await toDeleteMsgs.create({ userid: chatid, bot: botname, msgid: info.message_id })
     await ctx.deleteMessage(cbmid)
 }
 
@@ -218,11 +221,52 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
     await ctx.deleteMessage(cbmid)
 }
 
+const deleteMessages = async () => {
+    try {
+        let all = await toDeleteMsgs.find();
+
+        const apiMap = {
+            muvikabot: `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/deleteMessage`,
+            pilau_bot: `https://api.telegram.org/bot${process.env.PL_TOKEN}/deleteMessage`,
+            rahatupu_tzbot: `https://api.telegram.org/bot${process.env.RT_TOKEN}/deleteMessage`
+        };
+
+        const deleteTasks = all.map((el, i) => {
+            const { userid, msgid, bot } = el;
+            const data = { chat_id: userid, message_id: msgid };
+            const apiUrl = apiMap[bot];
+
+            if (!apiUrl) {
+                console.log(`No API URL found for bot: ${bot}`);
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    axios.post(apiUrl, data)
+                        .then(() => el.deleteOne())
+                        .then(resolve)
+                        .catch(e => {
+                            console.log(`Error deleting message for bot ${bot}: ${e.message}`);
+                            resolve();  // Resolve to continue with other deletions even if one fails
+                        });
+                }, 20 * i);
+            });
+        });
+
+        //Handles all deletion tasks concurrently while ensuring that the execution continues even if some requests fail.
+        await Promise.all(deleteTasks);
+    } catch (error) {
+        console.log(`Error in deleteMessages function: ${error.message}`);
+    }
+};
+
 module.exports = {
     createUser,
     sendPaidVideo,
     payingInfo,
     mtandaoCallBack,
     rudiNyumaReply,
-    addingPoints
+    addingPoints,
+    deleteMessages
 }

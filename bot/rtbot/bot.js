@@ -57,7 +57,17 @@ const rtfunction = async () => {
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
             const rateLimitter = []
-            setInterval(() => { rateLimitter.length = 0 }, 20000)
+            setInterval(() => { 
+                rateLimitter.length = 0
+
+                //deleting messages
+                let d = new Date()
+                let time = d.getHours()
+                let mins = d.getMinutes()
+                if(time == 20 && mins == 59) {
+                    call_function.deleteMessages()
+                }
+            }, 20000)
 
             //delaying
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
