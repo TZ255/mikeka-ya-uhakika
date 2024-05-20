@@ -346,6 +346,24 @@ const DayoBot = async () => {
             }
         })
 
+        bot.command('mimi', async ctx => {
+            try {
+                let txt = "Angalia hapa mikeka ya leo"
+                let mk = `https://dramastore.net/download/episode/664b0ba83991908776d1303a/1101685785`
+                await ctx.reply(txt, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                {'text': 'Mkeka wa Leo', web_app: {url: mk}}
+                            ]
+                        ]
+                    }
+                })
+            } catch (error) {
+                console.error(error)
+            }
+        })
+
         bot.command('setbtn', async ctx=> {
             try {
                 await bot.telegram.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
