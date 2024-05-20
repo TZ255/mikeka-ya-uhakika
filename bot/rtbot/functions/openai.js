@@ -2,10 +2,11 @@ const OpenAI = require('openai')
 const rtStarterModel = require('../database/chats')
 
 const examples = {
-    ex1: `Umepokea Tsh1,000.00, 747900466 Jol gombania. Salio jipya ni Tsh26,684.00. Muamala No. MI240406.1141.Q03294\n\nThe answer i need here is: {"ok": true, "name": "JOL GOMBANIA", "phone": "+255747900466", "trans_id": "MI240406.1141.Q03294", "amount": 1000}`,
-    ex2: `Umepokea Tsh1,500.00, SHEMDOE SELE, 255756545654. Salio jipya ni Tsh26,684.00. Muamala No. MI240407.1141.Q03294\n\nThe answer i need here is: {"ok": true, "name": "SHEMDOE SELE", "phone": "+255756545654", "trans_id": "MI240407.1141.Q03294", "amount": 1500}`,
+    ex5: `Umepokea Tsh1,000.00, 747900466 Jol gombania. Salio jipya ni Tsh26,684.00. Muamala No. MI240406.1141.Q03294\n\nThe answer i need here is: {"ok": true, "name": "JOL GOMBANIA", "phone": "+255747900466", "trans_id": "MI240406.1141.Q03294", "amount": 1000}`,
+    ex4: `Umepokea Tsh1,500.00, SHEMDOE SELE, 255756545654. Salio jipya ni Tsh26,684.00. Muamala No. MI240407.1141.Q03294\n\nThe answer i need here is: {"ok": true, "name": "SHEMDOE SELE", "phone": "+255756545654", "trans_id": "MI240407.1141.Q03294", "amount": 1500}`,
     ex3: `Umepokea Tsh1,500.00, NAOMY MAJII, 0756545654. Salio jipya ni Tsh26,684.00. Muamala No {referenceNum}. ID: MI240407.1141.Q03294\n\nThe answer i need here is: {"ok": true, "name": "NAOMY MAJII", "phone": "+255756545654", "trans_id": "MI240407.1141.Q03294", "amount": 1500}`,
-    ex4: `BD56CR24PX8 Confirmed. On 5/4/24 at 6:06 PM Tsh5,000.00 Tsh. has been received from 255718624061 - WARDA KITEMO.Your balance is Tsh50,000.00 Tsh.\n\nThe answer i need here is: {"ok": true, "name": "WARDA KITEMO", "phone": "+255718624061", "trans_id": "BD56CR24PX8", "amount": 5000}`
+    ex2: `BD56CR24PX8 Confirmed. On 5/4/24 at 6:06 PM Tsh5,000.00 Tsh. has been received from 255718624061 - WARDA KITEMO.Your balance is Tsh50,000.00 Tsh.\n\nThe answer i need here is: {"ok": true, "name": "WARDA KITEMO", "phone": "+255718624061", "trans_id": "BD56CR24PX8", "amount": 5000}`,
+    ex1: `BEK0D83QOS8 Confirmed. Tsh1,000.00 received from 255757360593 - JEREMIAH JAMES ALBERT on 20/5/24 at 4:53 PM.New Pochi PAULO KIMARIO-RT WAKUBWA SHOWS - MOVIES balance is Tsh3,000.00.\n\nThe answer i need here is: {"ok": true, "name": "JEREMIAH JAMES ALBERT", "phone": "+255757360593", "trans_id": "BEK0D83QOS8", "amount": 1000}`
 }
 
 const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
@@ -17,7 +18,7 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
         for (let t of lipaTexts) {
             if (txt.toLowerCase().includes(t)) {
                 let muamala = txt.split('Message:')[1]
-                let command = `"${muamala}"\n\nPlease extract the name, phone number, amount and transaction id from this message. If the phone number is missing the country code, please add the Tanzania country code (+255). I need response in json format only and I dont want explanation, in this json if you succeed extract all information please add a property "ok: true" if some of the information is missing add a property "ok: false" \n\nUse the following example to see the final answer that I need\n\nExample 1: ${examples.ex1}\n\nExample 2: ${examples.ex2}\n\nExample 3: ${examples.ex3}\n\nExample 4: ${examples.ex4}`
+                let command = `"${muamala}"\n\nPlease extract the name, phone number, amount and transaction id from this message. If the phone number is missing the country code, please add the Tanzania country code (+255). I need response in json format only and I dont want explanation, in this json if you succeed extract all information please add a property "ok: true" if some of the information is missing add a property "ok: false" \n\nUse the following example to see the final answer that I need\n\nExample 1: ${examples.ex1}\n\nExample 2: ${examples.ex2}\n\nExample 3: ${examples.ex3}\n\nExample 4: ${examples.ex4}\n\nExample 5: ${examples.ex5}`
 
                 const openai = new OpenAI({
                     apiKey: process.env.openAIKey,

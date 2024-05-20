@@ -52,7 +52,7 @@ const rtfunction = async () => {
 
             const zingine = ['video', 'niunge', 'video zingine', 'zingine', 'nyingine', 'zngine', 'nyngine', 'nitumie video', 'link', 'wakubwa']
 
-            const lipaTexts = ['umepokea', 'has been received']
+            const lipaTexts = ['umepokea', 'has been received', 'confirmed', 'received from', 'imethibitishwa']
 
             const admins = [imp.halot, imp.shemdoe, imp.rtmalipo]
 
