@@ -45,8 +45,8 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                     }
                 }
                 main()
+                break;
             }
-            break;
         }
     } catch (error) {
         await ctx.reply(error.message)
