@@ -810,8 +810,7 @@ const reginaBot = async () => {
                     call_famescheduled_fn.famecheckMatokeo(bot, imp, '#pills-home', trhJana)
                     break;
 
-                case '06:17':
-                case '09:17':
+                case '03:07': case '04:07': case '05:07': case '06:17': case '09:17':
                     call_famescheduled_fn.famecheckOdds(bot, imp, '#pills-profile', trhLeo)
                     break;
 
