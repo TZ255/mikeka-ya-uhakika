@@ -90,11 +90,11 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             let until_date = unix + 1800 //30 mins
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
-            console.log(userid + ' is muted')
+            let loc = list.loc ? ` Anapatikana <b>${list.loc}</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
             await ctx.sendChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena <b>${muda}</b>\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Bonyeza button hapa chini kuwasiliana nae.`, {
+            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena <b>${muda}</b>\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili.${loc} \nBonyeza button hapa chini kuwasiliana nae.`, {
                 parse_mode: "HTML",
                 reply_parameters: { message_id: msgid },
                 reply_markup: {
