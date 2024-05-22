@@ -564,9 +564,10 @@ const PipyBot = async () => {
                     })
                 }
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
-                    //check if is verified
-                    await otheFns.checkSenderFn(bot, ctx, imp)
-                    //check if restricted, if not mute 10 minutes
+                    //check if is verified (only applicable if all users are allowed to post)
+                    // await otheFns.checkSenderFn(bot, ctx, imp)
+
+                    //check if restricted, if not mute 30 minutes
                     await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
                 }
             } catch (err) {
@@ -577,9 +578,10 @@ const PipyBot = async () => {
         bot.on(message('video'), async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
-                    //check sender if is verified
-                    await otheFns.checkSenderFn(bot, ctx, imp)
-                    //check if restricted, if not mute 10 minutes
+                    //check sender if is verified (only applicable if all users are allowed to post)
+                    //await otheFns.checkSenderFn(bot, ctx, imp)
+
+                    //check if restricted, if not mute 30 minutes
                     await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
                 }
             } catch (error) {
@@ -608,7 +610,7 @@ const PipyBot = async () => {
             }
         })
 
-        //every 30 minutes remind people
+        //every  1 hour remind people
         setInterval(() => {
             let _d = new Date()
             let utcHrs = _d.getUTCHours() // +0:00
@@ -620,7 +622,7 @@ const PipyBot = async () => {
             if (utcHrs == 21) {
                 otheFns.clearingGroup(bot, imp, delay)
             }
-        }, 60000 * 30)
+        }, 60000 * 60)
 
 
         bot.launch().catch(e=> console.log(e.message))
