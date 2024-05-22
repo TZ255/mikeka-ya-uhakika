@@ -589,6 +589,20 @@ const PipyBot = async () => {
             }
         })
 
+        bot.on(message('animation'), async ctx => {
+            try {
+                if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
+                    //check sender if is verified (only applicable if all users are allowed to post)
+                    //await otheFns.checkSenderFn(bot, ctx, imp)
+
+                    //check if restricted, if not mute 30 minutes
+                    await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
+                }
+            } catch (error) {
+                console.log(error.message, error)
+            }
+        })
+
         bot.on(message('sticker'), async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
