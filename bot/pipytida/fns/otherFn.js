@@ -68,15 +68,15 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
                 until_date
             }).catch(e => console.log(e.message))
             console.log(userid + ' is muted')
-            await list.updateOne({$set: {again: until_date}})
+            await list.updateOne({ $set: { again: until_date } })
             await ctx.sendChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Bonyeza button hapa chini kuwasiliana nae.`, { 
-                parse_mode: "HTML", 
+            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena baada ya dakika 10\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili. Bonyeza button hapa chini kuwasiliana nae.`, {
+                parse_mode: "HTML",
                 reply_parameters: { message_id: msgid },
                 reply_markup: {
                     inline_keyboard: [
-                        [{ text: `📩 Zama Inbox 📩`, url: `tg://user?id=${userid}`}]
+                        [{ text: `📩 Zama Inbox 📩`, url: `tg://user?id=${userid}` }]
                     ]
                 }
             })
@@ -107,8 +107,8 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
         if (caption.length >= 180) {
             let unix = ctx.message.date
             let status = await ctx.getChatMember(userid)
-            let verified = await verifiedList.findOne({chatid: userid})
-            if (status.can_send_photos == false || (verified?.again && verified.again > unix)) {
+            let verified = await verifiedList.findOne({ chatid: userid })
+            if (verified?.again && verified.again > unix) {
                 await ctx.reply(`<b>${ment}</b> umesubirishwa kupost tangazo kwa dk 10, subiri dk zako 10 ziishe utapost tena`, {
                     reply_parameters: {
                         message_id: msgid, allow_sending_without_reply: true
@@ -119,7 +119,6 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
                 }, 3000)
             } else {
                 //call to check if is verified member, allow and mute
-                console.log(status)
                 await reusableRestriction(ctx, caption, 180, delay)
             }
         }
@@ -139,7 +138,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
         let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
 
         let data = await verifiedList.findOne({ chatid: sender })
-        let status = await ctx.getChatMember(sender)
+        //let status = await ctx.getChatMember(sender)
         if ((!data || data.paid == false) && caption.length > 100) {
             await ctx.restrictChatMember(sender, {
                 until_date: unixNow + 21600
@@ -228,7 +227,7 @@ const watoaHuduma = async (bot, imp) => {
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b> ili kuthibitishwa.\n\n<b>⚠ Tafadhali</b> Usiwasiliane na Admin kama wewe sio mtoa huduma, atakublock.`, { parse_mode: 'HTML' })
         let list = await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
         setTimeout(() => {
-            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Black Berry (@Blackberry255)\n2. Sister G (@mamyy98)\n3. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani.\n\n\n<b>❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma aliethibitishwa ndani ya group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.`, { parse_mode: 'HTML', reply_parameters: {message_id: list.message_id} })
+            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ukikutana na mtoa huduma asiye mwaminifu ndani ya group hili, tafadhali report kwa: \n\n<b>1. Black Berry (@Blackberry255)\n2. Sister G (@mamyy98)\n3. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group. Tusaidiane jamani kukomesha matapeli humu ndani.\n\n\n<b>❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma aliethibitishwa ndani ya group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.`, { parse_mode: 'HTML', reply_parameters: { message_id: list.message_id } })
                 .then((msg) => { toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id }).catch(e => console.log(e.message)) })
                 .catch(e => console.log(e.message, e))
         }, 15000)
@@ -307,6 +306,10 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 let unix = date.getTime() / 1000
                 let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value, unix } }, { new: true });
                 await ctx.reply(`${updUntil.fname} Until is updated to ${unix} (${updUntil.until})`);
+                break;
+            case 'name':
+                let upName = await verifiedList.findOneAndUpdate({ chatid }, { $set: { fname: value, unix } }, { new: true });
+                await ctx.reply(`${upName.chatid} name is updated to ${upName.fname}`);
                 break;
             case 'paid':
                 if (value == 'false') {
