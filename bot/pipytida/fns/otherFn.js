@@ -127,7 +127,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
         let ment = `<a href="tg://user?id=${userid}">${name}</a>`
-        if (caption.length >= 100) {
+        if (caption.length >= 80) {
             let unix = ctx.message.date
             let verified = await verifiedList.findOne({ chatid: userid })
             if (verified?.again && verified.again > unix) {
@@ -143,7 +143,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
                 }, 7000)
             } else {
                 //call to check if is verified member, allow and mute
-                await reusableRestriction(ctx, caption, 180, delay)
+                await reusableRestriction(ctx, caption, 80, delay)
             }
         }
     } catch (error) {
