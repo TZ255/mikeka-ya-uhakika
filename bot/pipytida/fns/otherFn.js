@@ -339,13 +339,13 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 if (value == 'false') {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: false } }, { new: true });
                     await bot.telegram.promoteChatMember(imp.r_chatting, chatid, demotePrivillages)
-                        .catch(e = await ctx.reply(e.message))
+                        .catch(async e => await ctx.reply(e.message))
                     await ctx.reply(`${paidUpdate.fname} is demoted`)
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
                 } else if (value == 'true') {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: true } }, { new: true });
                     await bot.telegram.promoteChatMember(imp.r_chatting, chatid, promotePrivillages)
-                        .catch(e = await ctx.reply(e.message))
+                        .catch(async e => await ctx.reply(e.message))
                     await ctx.reply(`${paidUpdate.fname} is promoted`)
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
                 }
