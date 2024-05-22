@@ -82,14 +82,19 @@ const UnverifyFn = async (bot, ctx, imp) => {
 //reusable restriction
 const reusableRestriction = async (ctx, caption, charsNum, delay) => {
     try {
+        let d = new Date().toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
+        let masaa = Number(d.split(':')[0])
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
         let list = await verifiedList.findOne({ chatid: userid })
         if ((list && list.paid && list.role == 'dada') && caption.length > charsNum) {
             let unix = ctx.message.date
-            let until_date = unix + 1740 //29 mins
-            //add 60 secs to net 1800 secs, user will be able to post after 29 but we show 30
-            let muda = new Date((until_date + 60) * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
+            let until_date = unix + 1800
+            //wait 10 minutes if its midnight
+            if(masaa < 7) {
+                until_date = unix + 600 //10 minutes
+            }
+            let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             let loc = list.loc ? ` Anapatikana <b>${list.loc}</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
@@ -133,8 +138,8 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
             let verified = await verifiedList.findOne({ chatid: userid })
             if (verified?.again && verified.again > unix) {
                 //add 60 seconds to net 30 minutes
-                let muda = new Date((verified.again + 60) * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
-                let subiri = await ctx.reply(`<b>${ment}</b> ulisubirishwa kupost tangazo kwa dk 30, utaruhusiwa kupost tena saa <b>${muda}</b>`, {
+                let muda = new Date(verified.again * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
+                let subiri = await ctx.reply(`<b>${ment}</b> ulisubirishwa kupost tangazo kwa muda, utaruhusiwa kupost tena saa <b>${muda}</b>`, {
                     reply_parameters: {
                         message_id: msgid, allow_sending_without_reply: true
                     }, parse_mode: 'HTML'
