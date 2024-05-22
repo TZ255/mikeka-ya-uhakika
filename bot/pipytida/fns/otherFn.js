@@ -346,6 +346,7 @@ const modFunction = async (bot, ctx, imp, delay) => {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: true } }, { new: true });
                     await bot.telegram.promoteChatMember(imp.r_chatting, chatid, promotePrivillages)
                         .catch(async e => await ctx.reply(e.message))
+                    await bot.telegram.setChatAdministratorCustomTitle(imp.r_chatting, chatid, 'mtoa huduma')
                     await ctx.reply(`${paidUpdate.fname} is promoted`)
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
                 }
