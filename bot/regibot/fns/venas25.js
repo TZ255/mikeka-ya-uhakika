@@ -27,30 +27,32 @@ const checkOdds = async (bot, imp) => {
         if (tday_table && ourDb.length < tday_table.length) {
             await venas25Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text().trim()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let min = time_arr[1]
-                let actual_time = hrs + 2
-                if (actual_time >= 24) {
-                    actual_time = `23`
-                    min = '59'
-                }
-                String(actual_time).padStart(2, '0')
-                let time = `${actual_time}:${min}`
-                let nano = nanoid(4)
+                //check if data in rows are 4 or above
+                if ($('td', el).length > 3) {
+                    let time_data = $('td:nth-child(1)', el).text().trim()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let min = time_arr[1]
+                    let actual_time = hrs + 2
+                    if (actual_time >= 24) {
+                        actual_time = `23`
+                        min = '59'
+                    }
+                    String(actual_time).padStart(2, '0')
+                    let time = `${actual_time}:${min}`
+                    let nano = nanoid(4)
 
-                let league = $('td:nth-child(2)', el).text().trim()
-                let match = $('td:nth-child(3)', el).text().trim()
-                match = match.replace(/\n/g, '').replace(' VS', ' - ')
-                let tip = $('td:nth-child(4)', el).text().trim()
+                    let league = $('td:nth-child(2)', el).text().trim()
+                    let match = $('td:nth-child(3)', el).text().trim()
+                    match = match.replace(/\n/g, '').replace(' VS', ' - ')
+                    let tip = $('td:nth-child(4)', el).text().trim()
 
-                //check if we have match the add to database
-                if (match.length > 5) {
+                    //add to database
                     await venas25Model.create({
                         time, siku, league, match, tip, nano
                     })
                 }
+
             })
             await bot.telegram.sendMessage(imp.shemdoe, `Venas25 found and created`)
         } else {
@@ -87,29 +89,31 @@ const checkTomorrowOdds = async (bot, imp) => {
         if (tday_table && ourDb.length < tday_table.length) {
             await venas25Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text().trim()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let min = time_arr[1]
-                let actual_time = String(hrs + 2).padStart(2, '0')
-                if (actual_time >= 24) {
-                    actual_time = `23`
-                    min = '59'
-                }
-                let time = `${actual_time}:${min}`
-                let nano = nanoid(4)
+                //check if all cells are there (4 or above)
+                if ($('td', el).length > 3) {
+                    let time_data = $('td:nth-child(1)', el).text().trim()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let min = time_arr[1]
+                    let actual_time = String(hrs + 2).padStart(2, '0')
+                    if (actual_time >= 24) {
+                        actual_time = `23`
+                        min = '59'
+                    }
+                    let time = `${actual_time}:${min}`
+                    let nano = nanoid(4)
 
-                let league = $('td:nth-child(2)', el).text().trim()
-                let match = $('td:nth-child(3)', el).text().trim()
-                match = match.replace(/\n/g, '').replace(' VS', ' - ')
-                let tip = $('td:nth-child(4)', el).text().trim()
+                    let league = $('td:nth-child(2)', el).text().trim()
+                    let match = $('td:nth-child(3)', el).text().trim()
+                    match = match.replace(/\n/g, '').replace(' VS', ' - ')
+                    let tip = $('td:nth-child(4)', el).text().trim()
 
-                //check if we have match the add to database
-                if (match.length > 5) {
+                    //add to database
                     await venas25Model.create({
                         time, siku, league, match, tip, nano
                     })
                 }
+
             })
             await bot.telegram.sendMessage(imp.shemdoe, `Venas25 tomorrow found and created`)
         } else {

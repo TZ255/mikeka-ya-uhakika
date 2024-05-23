@@ -826,7 +826,7 @@ const reginaBot = async () => {
                     break;
 
                 //venas 1.5 & 2.5 odds
-                case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '09:02':
+                case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '04:46':
                     call_venas15_fn.checkOdds(bot, imp)
                     call_venas25_fn.checkOdds(bot, imp)
                     break;
