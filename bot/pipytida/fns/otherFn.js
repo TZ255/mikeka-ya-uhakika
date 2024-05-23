@@ -127,13 +127,21 @@ const muteVideosPhotos = async (bot, ctx, imp, delay) => {
 //mute tangazo for 10 minutes
 const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
     try {
-        let caption = ctx.message.text ? ctx.message.text : ctx.message.caption ? ctx.message.caption : 'no caption'
+        let length = 0
+        let caption = 'no cap'
+        if(ctx.message.text) {
+            caption = ctx.message.text
+            length = 200
+        } else if (ctx.message.caption) {
+            caption = ctx.message.caption
+            length = 80
+        }
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
         let ment = `<a href="tg://user?id=${userid}">${name}</a>`
-        if (caption.length >= 80) {
+        if (caption.length >= length) {
             let unix = ctx.message.date
             let verified = await verifiedList.findOne({ chatid: userid })
             if (verified?.again && verified.again > unix) {
@@ -150,7 +158,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
                 }, 7000)
             } else {
                 //call to check if is verified member, allow and mute
-                await reusableRestriction(ctx, caption, 80, delay)
+                await reusableRestriction(ctx, caption, length, delay)
             }
         }
     } catch (error) {
