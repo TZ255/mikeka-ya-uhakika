@@ -131,10 +131,10 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
         let caption = 'no cap'
         if(ctx.message.text) {
             caption = ctx.message.text
-            length = 200
+            length = 300
         } else if (ctx.message.caption) {
             caption = ctx.message.caption
-            length = 80
+            length = 100
         }
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
