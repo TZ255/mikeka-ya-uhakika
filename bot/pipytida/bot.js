@@ -628,15 +628,21 @@ const PipyBot = async () => {
         setInterval(() => {
             let _d = new Date()
             let utcHrs = _d.getUTCHours() // +0:00
-            if (utcHrs > 4 && utcHrs < 23) {
+            let mins = _d.getMinutes()
+            if ((utcHrs > 4 && utcHrs < 23) && (mins % 15 == 0)) {
                 otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
             }
 
             //21 equal to 00 in TZ -- Clear the Group
-            if (utcHrs == 21) {
+            if (utcHrs == 21 && mins == 1) {
                 otheFns.clearingGroup(bot, imp, delay)
             }
-        }, 60000 * 30)
+
+            //send zingatia every 5 minutes
+            if(mins % 5 == 0) {
+                otheFns.utapeliMsg(bot, imp)
+            }
+        }, 60000)
 
 
         bot.launch().catch(e=> console.log(e.message))

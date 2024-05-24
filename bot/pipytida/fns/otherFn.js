@@ -2,7 +2,7 @@ const verifiedList = require('../database/verified')
 const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
 
-const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n\n<b>Mteja!</b> Ikitokea ukatapeliwa na mtoa huduma wa group hili, haraka sana tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)\nau\n2. Fetty Love (@fetyy10)</b>\n\n\n`
+const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili.</b> \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list ya watoa huduma waaminifu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n\n<b>Mteja! Narudia tena... YOYOTE ATAKAE KUFUATA INBOX NI TAPELI, USIMSIKILIZE... PIGA BLOCK TU</b> kisha report kwenye group aondolewe.`
 
 const promotePrivillages = {
     is_anonymous: false,
@@ -249,11 +249,9 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
 }
 
 //pin utapeli
-const utapeliMsg = async (bot, msg, imp, list) => {
+const utapeliMsg = async (bot, imp) => {
     try {
-        let attention = await bot.telegram.sendMessage(imp.r_chatting, zingatiaMsg, { parse_mode: 'HTML', reply_parameters: { message_id: list.message_id } })
-        await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
-            .catch(e => console.log(e.message))
+        let attention = await bot.telegram.sendMessage(imp.r_chatting, zingatiaMsg, { parse_mode: 'HTML' })
         await bot.telegram.unpinAllChatMessages(imp.r_chatting)
             .catch(e => console.log(e.message))
         await bot.telegram.pinChatMessage(imp.r_chatting, attention.message_id)
@@ -276,10 +274,7 @@ const watoaHuduma = async (bot, imp) => {
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
         }
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
-        let list = await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
-        setTimeout(() => {
-            utapeliMsg(bot, msg, imp, list)
-        }, 5000)
+        await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
     } catch (error) {
         console.log(error.message, error)
     }
@@ -405,5 +400,5 @@ const listYangu = async (ctx) => {
 }
 
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg
 }
