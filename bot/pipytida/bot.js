@@ -636,7 +636,7 @@ const PipyBot = async () => {
             if (utcHrs == 21) {
                 otheFns.clearingGroup(bot, imp, delay)
             }
-        }, 60000 * 60)
+        }, 60000 * 30)
 
 
         bot.launch().catch(e=> console.log(e.message))
