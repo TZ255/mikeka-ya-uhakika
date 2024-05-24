@@ -92,11 +92,11 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             let until_date = unix + 600
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
-            let loc = list.loc ? ` Anapatikana <b>${list.loc}</b>.` : ''
+            let loc = list.loc ? ` <b>(${list.loc})</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
             await ctx.sendChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena saa <b>${muda}</b>\n\n<b>${tag}</b> ni miongoni mwa watoa huduma waaminifu ndani ya group hili.${loc} \nBonyeza button hapa chini kuwasiliana nae.`, {
+            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena saa <b>${muda}</b>\n\n<b>${tag}</b> ni mtoa huduma mwaminifu.${loc} \n\nBonyeza button hapa chini kuwasiliana nae.`, {
                 parse_mode: "HTML",
                 reply_parameters: { message_id: msgid },
                 reply_markup: {
@@ -262,7 +262,7 @@ const watoaHuduma = async (bot, imp) => {
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         let list = await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
         setTimeout(() => {
-            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ikitokea ukatapeliwa na mtoa huduma wa group hili, haraka sana tafadhali report kwa: \n\n<b>1. Black Berry (@Blackberry255)\n2. Sister G (@mamyy98)\n3. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group.\n\n\n<b>❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.`, { parse_mode: 'HTML', reply_parameters: { message_id: list.message_id } })
+            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ikitokea ukatapeliwa na mtoa huduma wa group hili, haraka sana tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)\nau\n2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group.\n\n\n<b>❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.`, { parse_mode: 'HTML', reply_parameters: { message_id: list.message_id } })
                 .then((msg) => { toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id }).catch(e => console.log(e.message)) })
                 .catch(e => console.log(e.message, e))
         }, 5000)
