@@ -2,6 +2,8 @@ const verifiedList = require('../database/verified')
 const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
 
+const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n\n<b>Mteja!</b> Ikitokea ukatapeliwa na mtoa huduma wa group hili, haraka sana tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)\nau\n2. Fetty Love (@fetyy10)</b>\n\n\n`
+
 const promotePrivillages = {
     is_anonymous: false,
     can_manage_chat: false,
@@ -82,7 +84,7 @@ const UnverifyFn = async (bot, ctx, imp) => {
 //reusable restriction
 const reusableRestriction = async (ctx, caption, charsNum, delay) => {
     try {
-        let d = new Date().toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
+        let d = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
         let masaa = Number(d.split(':')[0])
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
@@ -90,7 +92,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
         if ((list && list.paid && list.role == 'dada') && caption.length > charsNum) {
             let unix = ctx.message.date
             let until_date = unix + 600
-            let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
+            let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             let loc = list.loc ? ` <b>(${list.loc})</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
@@ -125,7 +127,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
     try {
         let length = 0
         let caption = 'no cap'
-        if(ctx.message.text) {
+        if (ctx.message.text) {
             caption = ctx.message.text
             length = 300
         } else if (ctx.message.caption) {
@@ -142,7 +144,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
             let verified = await verifiedList.findOne({ chatid: userid })
             if (verified?.again && verified.again > unix) {
                 //add 60 seconds to net 30 minutes
-                let muda = new Date(verified.again * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
+                let muda = new Date(verified.again * 1000).toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
                 let subiri = await ctx.reply(`<b>${ment}</b> ulisubirishwa kupost tangazo kwa muda, utaruhusiwa kupost tena saa <b>${muda}</b>`, {
                     reply_parameters: {
                         message_id: msgid, allow_sending_without_reply: true
@@ -246,6 +248,20 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
     }
 }
 
+//pin utapeli
+const utapeliMsg = async (bot, msg, imp, list) => {
+    try {
+        let attention = await bot.telegram.sendMessage(imp.r_chatting, zingatiaMsg, { parse_mode: 'HTML', reply_parameters: { message_id: list.message_id } })
+        await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
+            .catch(e => console.log(e.message))
+        await bot.telegram.unpinAllChatMessages(imp.r_chatting)
+            .catch(e => console.log(e.message))
+        await bot.telegram.pinChatMessage(imp.r_chatting, attention.message_id)
+    } catch (error) {
+        console.log(`utapeliMsg(): ${error.message}`)
+    }
+}
+
 
 //call verifiedlist
 const watoaHuduma = async (bot, imp) => {
@@ -262,9 +278,7 @@ const watoaHuduma = async (bot, imp) => {
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         let list = await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
         setTimeout(() => {
-            bot.telegram.sendMessage(imp.r_chatting, `<b>Mteja!</b> Ikitokea ukatapeliwa na mtoa huduma wa group hili, haraka sana tafadhali report kwa: \n\n<b>1. Sister G (@mamyy98)\nau\n2. Fetty Love (@fetyy10)</b>\n\nBaada ya kureport wataondolewa kwenye group.\n\n\n<b>❌❌ ZINGATIA ❌❌</b>\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili. \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list hapo juu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.`, { parse_mode: 'HTML', reply_parameters: { message_id: list.message_id } })
-                .then((msg) => { toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id }).catch(e => console.log(e.message)) })
-                .catch(e => console.log(e.message, e))
+            utapeliMsg(bot, msg, imp, list)
         }, 5000)
     } catch (error) {
         console.log(error.message, error)
