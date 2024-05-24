@@ -89,11 +89,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
         let list = await verifiedList.findOne({ chatid: userid })
         if ((list && list.paid && list.role == 'dada') && caption.length > charsNum) {
             let unix = ctx.message.date
-            let until_date = unix + 1800
-            //wait 10 minutes if its midnight
-            if(masaa < 7) {
-                until_date = unix + 600 //10 minutes
-            }
+            let until_date = unix + 600
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short'})
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             let loc = list.loc ? ` Anapatikana <b>${list.loc}</b>.` : ''
