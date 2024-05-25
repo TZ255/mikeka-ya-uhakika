@@ -101,7 +101,7 @@ const PipyBot = async () => {
                             reply_markup: defaultReplyMkp
                         })
                     } else if (pload == 'watoa_huduma') {
-                        await otheFns.watoaHuduma(bot, imp)
+                        await otheFns.watoaHudumaPrivateChat(bot, ctx, imp)
                     }
                     //add to database
                     await create(bot, ctx)

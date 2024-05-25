@@ -284,8 +284,29 @@ const watoaHuduma = async (bot, imp) => {
             let username = w.username == 'unknown' ? ment : `@${w.username}`
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
         }
+        
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
+    } catch (error) {
+        console.log(error.message, error)
+    }
+}
+
+//call verifiedlist
+const watoaHudumaPrivateChat = async (bot, ctx, imp) => {
+    try {
+        let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
+        let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
+        for (let [i, w] of watoa.entries()) {
+            let loc = w.loc ? w.loc : '---'
+            let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
+            let ment = `<a href="tg://user?id=${w.chatid}">${w.fname}</a>`
+            let username = w.username == 'unknown' ? ment : `@${w.username}`
+            txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
+        }
+        
+        let msg = await ctx.reply(`${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
+        await toDeleteModel.create({ msgid: msg.message_id, chatid: ctx.chat.id })
     } catch (error) {
         console.log(error.message, error)
     }
@@ -411,5 +432,5 @@ const listYangu = async (ctx) => {
 }
 
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg, watoaHudumaPrivateChat
 }
