@@ -60,14 +60,14 @@ const rtfunction = async () => {
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
             const rateLimitter = []
-            setInterval(() => { 
+            setInterval(() => {
                 rateLimitter.length = 0
 
                 //deleting messages
                 let d = new Date()
                 let time = d.getHours()
                 let mins = d.getMinutes()
-                if(time == 20 && mins == 59) {
+                if (time == 20 && mins == 59) {
                     call_function.deteleMessages(delay)
                 }
             }, 20000)
@@ -636,21 +636,11 @@ const rtfunction = async () => {
                 }
             })
 
-
-            bot.launch()
-                .then(() => {
-                    console.log('Bot is running')
-                    bot.telegram.sendMessage(imp.shemdoe, 'Bot restarted')
-                        .catch((err) => console.log(err.message))
-                })
-                .catch((err) => {
-                    console.log('Bot is not running')
-                    bot.telegram.sendMessage(imp.shemdoe, err.message)
-                        .catch(e => console.log(e.message))
-                })
-
-            process.once('SIGINT', () => bot.stop('SIGINT'))
-            process.once('SIGTERM', () => bot.stop('SIGTERM'))
+            bot.launch().catch(e => {
+                if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
+                    bot.stop('new update')
+                }
+            })
         }
     } catch (error) {
         console.log(error.message)

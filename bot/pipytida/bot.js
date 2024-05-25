@@ -430,9 +430,9 @@ const PipyBot = async () => {
 
         })
 
-        bot.action('list_dadapoa', async ctx=> {
+        bot.action('list_dadapoa', async ctx => {
             try {
-                if(chatGroups.includes(ctx.chat.id)) {
+                if (chatGroups.includes(ctx.chat.id)) {
                     await otheFns.watoaHuduma(bot, imp)
                 }
             } catch (error) {
@@ -638,7 +638,7 @@ const PipyBot = async () => {
 
         //every  1 hour remind people
         setInterval(() => {
-            let tzHours = Number(new Date().toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false}).split(':')[0])
+            let tzHours = Number(new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false }).split(':')[0])
             let mins = new Date().getMinutes()
             //post kati ya saa tatu asubuhi hadi saa 8 usiku
             if ((tzHours > 8 || tzHours < 3) && mins % 20 == 0) {
@@ -651,13 +651,16 @@ const PipyBot = async () => {
             }
 
             //every 10 minutes kati ya saa tatu asubuhi hadi saa nane usiku
-            if(mins % 10 == 0 && (tzHours > 8 || tzHours < 3)) {
+            if (mins % 10 == 0 && (tzHours > 8 || tzHours < 3)) {
                 otheFns.utapeliMsg(bot, imp)
             }
         }, 60000)
 
-
-        bot.launch().catch(e=> console.log(e.message))
+        bot.launch().catch(e=> {
+            if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
+                bot.stop('new update')
+            }
+        })
     } catch (error) {
         console.log(error.message, error)
     }

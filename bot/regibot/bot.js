@@ -845,13 +845,11 @@ const reginaBot = async () => {
             }
         }, 59 * 1000)
 
-        bot.launch().then(async () => {
-            await bot.telegram.sendMessage(imp.shemdoe, 'Bot Restarted')
+        bot.launch().catch(e=> {
+            if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
+                bot.stop('new update')
+            }
         })
-            .catch(async e => {
-                console.log(e.message + ` \n${e}`)
-                await bot.telegram.sendMessage(imp.shemdoe, e.message)
-            })
     } catch (error) {
         console.log(error.message)
     }

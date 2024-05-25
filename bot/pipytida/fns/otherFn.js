@@ -296,7 +296,7 @@ const watoaHuduma = async (bot, imp) => {
 const watoaHudumaPrivateChat = async (bot, ctx, imp) => {
     try {
         let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
-        let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
+        let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group letu</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatuna na msaada na wewe.\n\n`
         for (let [i, w] of watoa.entries()) {
             let loc = w.loc ? w.loc : '---'
             let phone = w.phone ? `<a href="tel:${w.phone}">${w.phone}</a>` : '07********'
