@@ -395,11 +395,11 @@ const rtfunction = async () => {
                     } else if (cdata == 'voda') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 17, cmsgid)
                     } else if (cdata == 'tigo') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 18, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 121, cmsgid)
                     } else if (cdata == 'airtel') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 19, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 121, cmsgid)
                     } else if (cdata == 'halotel') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 20, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 121, cmsgid)
                     } else if (cdata == 'safaricom') {
                         await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 22, cmsgid)
                     } else if (cdata == 'uganda') {
