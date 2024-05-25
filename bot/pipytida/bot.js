@@ -641,7 +641,7 @@ const PipyBot = async () => {
             let tzHours = Number(new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false }).split(':')[0])
             let mins = new Date().getMinutes()
             //post kati ya saa tatu asubuhi hadi saa 8 usiku
-            if ((tzHours > 8 || tzHours < 3) && mins % 20 == 0) {
+            if ((tzHours > 8 || tzHours < 3) && mins % 24 == 0) {
                 otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
             }
 
