@@ -626,20 +626,20 @@ const PipyBot = async () => {
 
         //every  1 hour remind people
         setInterval(() => {
-            let _d = new Date()
-            let utcHrs = _d.getUTCHours() // +0:00
-            let mins = _d.getMinutes()
-            if ((utcHrs > 4 && utcHrs < 23) && (mins % 15 == 0)) {
+            let tzHours = Number(new Date().toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false}).split(':')[0])
+            let mins = new Date().getMinutes()
+            //post kati ya saa tatu asubuhi hadi saa 9 usiku
+            if ((tzHours > 8 || tzHours < 4) && mins % 18 == 0) {
                 otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
             }
 
-            //21 equal to 00 in TZ -- Clear the Group
-            if (utcHrs == 21 && mins == 1) {
+            //clear bin saa sita na dakika moja
+            if (tzHours == 0 && mins == 1) {
                 otheFns.clearingGroup(bot, imp, delay)
             }
 
-            //send zingatia every 5 minutes
-            if(mins % 5 == 0) {
+            //every 5 minutes kati ya saa tatu asubuhi hadi saa tisa usiku
+            if(mins % 5 == 0 && (tzHours > 8 || tzHours < 4)) {
                 otheFns.utapeliMsg(bot, imp)
             }
         }, 60000)
