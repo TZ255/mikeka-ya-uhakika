@@ -7,7 +7,7 @@ const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA\n\nUsitume hela kwa yeyo
 const rmarkup = {
     inline_keyboard: [
         [
-            {text: 'List ya Watoa Huduma', callback_data: 'list_dadapoa'}
+            {text: 'List ya Watoa Huduma', url: 'https://t.me/PipyTidaBot?start=watoa_huduma'}
         ]
     ]
 }

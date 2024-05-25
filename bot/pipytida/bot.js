@@ -100,6 +100,8 @@ const PipyBot = async () => {
                         await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })
+                    } else if (pload == 'watoa_huduma') {
+                        await otheFns.watoaHuduma(bot, imp)
                     }
                     //add to database
                     await create(bot, ctx)
