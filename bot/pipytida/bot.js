@@ -428,6 +428,16 @@ const PipyBot = async () => {
 
         })
 
+        bot.action('list_dadapoa', async ctx=> {
+            try {
+                if(chatGroups.includes(ctx.chat.id)) {
+                    await otheFns.watoaHuduma(bot, imp)
+                }
+            } catch (error) {
+                console.log(error.message)
+            }
+        })
+
         bot.command(['wakubwa', 'sodoma', 'sex', 'wadogo'], async ctx => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8094, {
@@ -629,7 +639,7 @@ const PipyBot = async () => {
             let tzHours = Number(new Date().toLocaleTimeString('en-GB', {timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false}).split(':')[0])
             let mins = new Date().getMinutes()
             //post kati ya saa tatu asubuhi hadi saa 8 usiku
-            if ((tzHours > 8 || tzHours < 3) && mins % 18 == 0) {
+            if ((tzHours > 8 || tzHours < 3) && mins % 20 == 0) {
                 otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
             }
 
@@ -638,8 +648,8 @@ const PipyBot = async () => {
                 otheFns.clearingGroup(bot, imp, delay)
             }
 
-            //every 5 minutes kati ya saa tatu asubuhi hadi saa nane usiku
-            if(mins % 5 == 0 && (tzHours > 8 || tzHours < 3)) {
+            //every 10 minutes kati ya saa tatu asubuhi hadi saa nane usiku
+            if(mins % 10 == 0 && (tzHours > 8 || tzHours < 3)) {
                 otheFns.utapeliMsg(bot, imp)
             }
         }, 60000)
