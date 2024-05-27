@@ -180,11 +180,11 @@ const reginaBot = async () => {
                             }
                             bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
                                 .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                .catch((err) => {
-                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                .catch((er) => {
+                                    if (bads.some((b) => er.message.toLowerCase().includes(b))) {
                                         nyumbuModel.findOneAndDelete({ chatid: u.chatid })
                                             .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                    } else { console.log(`🤷‍♂️ ${er.message}`) }
                                 })
                         }, index * 40)
                     })
