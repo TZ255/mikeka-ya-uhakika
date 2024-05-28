@@ -7,7 +7,7 @@ const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA\n\nUsitume hela kwa yeyo
 const rmarkup = {
     inline_keyboard: [
         [
-            {text: 'List ya Watoa Huduma', url: 'https://t.me/PipyTidaBot?start=watoa_huduma'}
+            { text: 'List ya Watoa Huduma', url: 'https://t.me/PipyTidaBot?start=watoa_huduma' }
         ]
     ]
 }
@@ -259,7 +259,7 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
 //pin utapeli
 const utapeliMsg = async (bot, imp) => {
     try {
-        let attention = await bot.telegram.sendMessage(imp.r_chatting, zingatiaMsg, { 
+        let attention = await bot.telegram.sendMessage(imp.r_chatting, zingatiaMsg, {
             parse_mode: 'HTML',
             reply_markup: rmarkup
         })
@@ -284,7 +284,7 @@ const watoaHuduma = async (bot, imp) => {
             let username = w.username == 'unknown' ? ment : `@${w.username}`
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
         }
-        
+
         let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
     } catch (error) {
@@ -304,7 +304,7 @@ const watoaHudumaPrivateChat = async (bot, ctx, imp) => {
             let username = w.username == 'unknown' ? ment : `@${w.username}`
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
         }
-        
+
         let msg = await ctx.reply(`${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         await toDeleteModel.create({ msgid: msg.message_id, chatid: ctx.chat.id })
     } catch (error) {
@@ -384,8 +384,12 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 await ctx.reply(`${updUntil.fname} Until is updated to ${unix} (${updUntil.until})`);
                 break;
             case 'name':
-                let upName = await verifiedList.findOneAndUpdate({ chatid }, { $set: { fname: value, unix } }, { new: true });
+                let upName = await verifiedList.findOneAndUpdate({ chatid }, { $set: { fname: value } }, { new: true });
                 await ctx.reply(`${upName.chatid} name is updated to ${upName.fname}`);
+                break;
+            case 'username':
+                let upUsename = await verifiedList.findOneAndUpdate({ chatid }, { $set: { username: value } }, { new: true });
+                await ctx.reply(`${upUsename.chatid} name is updated to ${upUsename.username}`);
                 break;
             case 'paid':
                 if (value == 'false') {
