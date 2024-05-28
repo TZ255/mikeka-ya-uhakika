@@ -172,8 +172,9 @@ const PipyBot = async () => {
                                 .then(() => console.log('✅ convo sent to ' + u.chatid))
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        pipyUsers.findOneAndDelete({ chatid: u.chatid })
+                                        pipyUsers.findOneAndDelete({ refferer: 'Pipy', chatid: u.chatid })
                                             .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                            .catch(e => console.log(e.message))
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, index * 40)

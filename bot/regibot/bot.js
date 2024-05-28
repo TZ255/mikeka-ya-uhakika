@@ -182,8 +182,9 @@ const reginaBot = async () => {
                                 .then(() => console.log('✅ convo sent to ' + u.chatid))
                                 .catch((er) => {
                                     if (bads.some((b) => er.message.toLowerCase().includes(b))) {
-                                        nyumbuModel.findOneAndDelete({ chatid: u.chatid })
-                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                        nyumbuModel.findOneAndDelete({ refferer: 'Regina', chatid: u.chatid })
+                                            .then(d => console.log(`🚮 Deleted (${index + 1})`))
+                                            .catch(e => console.log(e.message))
                                     } else { console.log(`🤷‍♂️ ${er.message}`) }
                                 })
                         }, index * 40)
