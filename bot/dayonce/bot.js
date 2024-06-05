@@ -10,8 +10,10 @@ const DayoBot = async () => {
         const tg_slips = require('./database/tg_slips')
         const vidb = require('./database/db')
         const mkekaMega = require('./database/mkeka-mega')
+        const channelListModel = require('./database/linklist')
         const switchUserText = require('./fns/text-arr')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
+        const { postingFn } = require('./fns/deleteJoinMsgs')
 
         const imp = {
             replyDb: -1001608248942,
@@ -31,7 +33,9 @@ const DayoBot = async () => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             matangazoDB: -1001570087172,
-            r_chatting: -1001722693791
+            r_chatting: -1001722693791,
+            dstore: -1001245181784,
+            linksChannel: -1002042952349
         }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
@@ -64,18 +68,15 @@ const DayoBot = async () => {
             resize_keyboard: true
         }
 
-        //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+        bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
         bot.start(async ctx => {
             try {
                 if (ctx.payload) {
                     let pload = ctx.payload
-                    let rahatupu = `https://t.me/+PWiPWm0vB5Y4ZDhk`
-                    let urafiki = `https://t.me/+EOEvgGu3B49lYmY0`
-                    let utamuFolder = `https://t.me/addlist/88O_60izot4xNmE0`
                     if (pload == 'ngono_bongo') {
                         console.log('Ngono Payload Started')
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
+                        await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 161, {
                             reply_markup: defaultReplyMkp
                         })
                     }
@@ -99,7 +100,7 @@ const DayoBot = async () => {
                 }
 
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -117,7 +118,7 @@ const DayoBot = async () => {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653)
                 await create(bot, ctx)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
 
         })
@@ -126,7 +127,7 @@ const DayoBot = async () => {
             try {
                 await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
             } catch (error) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -150,13 +151,13 @@ const DayoBot = async () => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         dayoUsers.findOneAndDelete({ chatid: u.chatid, refferer: 'Dayo' })
                                             .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                            .catch(e=> console.log(e.message))
+                                            .catch(e => console.log(e.message))
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, index * 40)
                     })
                 } catch (err) {
-                    console.log("(Dayo) " +err.message)
+                    console.log("(Dayo) " + err.message)
                 }
             }
 
@@ -189,7 +190,7 @@ const DayoBot = async () => {
                         }
                     })
                 } catch (err) {
-                    console.log("(Dayo) " +err.message)
+                    console.log("(Dayo) " + err.message)
                 }
             }
 
@@ -222,7 +223,7 @@ const DayoBot = async () => {
                         }
                     })
                 } catch (err) {
-                    console.log("(Dayo) " +err.message)
+                    console.log("(Dayo) " + err.message)
                 }
             }
 
@@ -257,7 +258,7 @@ const DayoBot = async () => {
             } catch (err) {
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
                     .catch((e) => console.log(e.message))
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
 
         })
@@ -277,7 +278,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -285,7 +286,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -293,7 +294,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -301,7 +302,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -315,7 +316,7 @@ const DayoBot = async () => {
                 premier = premier.toLocaleString('en-us')
                 await ctx.reply(`Mpaka sasa kwenye Database yetu tuna nyumbu <b>${nyumbusP.toLocaleString('en-us')}</b> wa Dayonce.\n\nJumla kuu ni <b>${jumla.toLocaleString('en-us')}</b>. \n\n\nPia upande wa promo tuko na:\n1. Uncategoriized: ${unknown}\n2. Premier: ${premier}`, { parse_mode: 'HTML' })
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -323,7 +324,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -331,7 +332,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -355,7 +356,7 @@ const DayoBot = async () => {
                     reply_markup: {
                         inline_keyboard: [
                             [
-                                {'text': 'Mkeka wa Leo', web_app: {url: mk}}
+                                { 'text': 'Mkeka wa Leo', web_app: { url: mk } }
                             ]
                         ]
                     }
@@ -365,7 +366,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.command('setbtn', async ctx=> {
+        bot.command('setbtn', async ctx => {
             try {
                 await bot.telegram.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
                     reply_markup: defaultReplyMkp
@@ -379,7 +380,7 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
         })
 
@@ -390,7 +391,7 @@ const DayoBot = async () => {
                 await ctx.deleteMessage(org_msg_id)
                 await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
             }
 
         })
@@ -399,7 +400,60 @@ const DayoBot = async () => {
             try {
                 await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8094)
             } catch (err) {
-                console.log("(Dayo) " +err.message)
+                console.log("(Dayo) " + err.message)
+            }
+        })
+
+        bot.on('channel_post', async ctx => {
+            try {
+                let tangazo = ctx.channelPost.chat.id
+
+                if (tangazo == imp.matangazoDB && ctx.channelPost.reply_to_message) {
+                    let tangazo_id = ctx.channelPost.reply_to_message.message_id
+                    let reply = ctx.channelPost.text
+                    let reply_id = ctx.channelPost.message_id
+                    if (reply.includes('-100')) {
+                        let [title, chid] = reply.split(' >> ')
+                        await channelListModel.create({
+                            chid: Number(chid), msgid: tangazo_id, title
+                        })
+                        let done_msg = await ctx.reply('Channel Added Successfully')
+                        await delay(3000)
+                        await ctx.deleteMessage(done_msg.message_id)
+                        await ctx.deleteMessage(reply_id)
+                    }
+                }
+            } catch (error) {
+                console.error(error)
+                await ctx.reply(error.message)
+            }
+        })
+
+        bot.on('chat_join_request', async ctx => {
+            let chatid = ctx.chatJoinRequest.from.id
+            let username = ctx.chatJoinRequest.from.first_name
+            let channel_id = ctx.chatJoinRequest.chat.id
+            let cha_title = ctx.chatJoinRequest.chat.title
+
+            const notOperate = [imp.mylove, imp.dstore]
+
+            try {
+                //dont process channels listed above
+                if (!notOperate.includes(channel_id)) {
+                    let user = await dayoUsers.findOne({chatid})
+                    if (!user) {
+                        await dayoUsers.create({chatid, refferer: 'Dayo', blocked: false, username})
+                    }
+                    await bot.telegram.approveChatJoinRequest(channel_id, chatid)
+                    await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                }
+
+            } catch (err) {
+                console.log(err.message, err)
+                bot.telegram.sendMessage(imp.shemdoe, err.message)
             }
         })
 
@@ -512,14 +566,29 @@ const DayoBot = async () => {
             }
         })
 
-        bot.launch().catch(e=> {
+        setInterval(() => {
+            let [hrs, mins] = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false }).split(':')
+            console.log(hrs + ':' + mins)
+
+            //post saa mbili asbh hadi saa nane usiku
+            if (Number(hrs) > 7 || Number(hrs) < 3) {
+                if (Number(mins) == 19) {
+                    postingFn(bot, imp).catch(e => console.log(e.message))
+                    bot.telegram.sendMessage(imp.shemdoe, `1h passed, link posted at ${hrs}:${mins}`)
+                        .catch(e => console.log(e.message))
+                }
+            }
+
+        }, 60000)
+
+        bot.launch().catch(e => {
             if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                 bot.stop('new update')
             }
         })
-        
+
     } catch (error) {
-        console.log("(Dayo) "+error.message, error)
+        console.log("(Dayo) " + error.message, error)
     }
 }
 

@@ -594,22 +594,6 @@ const reginaBot = async () => {
             }
         })
 
-        bot.on('chat_join_request', async ctx => {
-            try {
-                let userid = ctx.chatJoinRequest.user_chat_id
-                let chan_id = ctx.chatJoinRequest.chat.id
-                let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
-
-                await ctx.approveChatJoinRequest(userid)
-                await delay(1000)
-                await bot.telegram.sendMessage(userid, `Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML', reply_markup: defaultReplyMkp })
-            } catch (err) {
-                console.log(err.message, err)
-                await bot.telegram.sendMessage(imp.shemdoe, `(${ctx.chat.id}) ` + err.message)
-                    .catch(e => console.log(e.message))
-            }
-        })
-
         call_supatips_function(bot)
         call_fametips_function(bot)
         call_betslip_function(bot, imp)

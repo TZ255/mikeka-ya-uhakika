@@ -604,38 +604,6 @@ const rtfunction = async () => {
                 }
             })
 
-            bot.on('chat_join_request', async ctx => {
-                let chatid = ctx.chatJoinRequest.from.id
-                let username = ctx.chatJoinRequest.from.first_name
-                let channel_id = ctx.chatJoinRequest.chat.id
-                let cha_title = ctx.chatJoinRequest.chat.title
-                let handle = 'unknown'
-
-                const notOperate = [imp.xbongo, imp.rtgrp]
-
-                try {
-                    //check @handle
-                    if (ctx.chatJoinRequest.from.username) {
-                        handle = ctx.chatJoinRequest.from.username
-                    }
-                    //dont process xbongo
-                    if (!notOperate.includes(channel_id)) {
-                        let user = await rtStarterModel.findOne({ chatid })
-                        if (!user) {
-                            await rtStarterModel.create({ chatid, username, handle, refferer: 'rtbot', free: 5, paid: false, startDate: null, endDate: null })
-                        }
-                        await bot.telegram.approveChatJoinRequest(channel_id, chatid)
-                        await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.\n\nIngia sasa\nhttps://t.me/+8sYOwE1SqoFkOGY0\nhttps://t.me/+8sYOwE1SqoFkOGY0`, {
-                            parse_mode: 'HTML',
-                            disable_web_page_preview: true
-                        })
-                    }
-
-                } catch (err) {
-                    errMessage(err, chatid)
-                }
-            })
-
             bot.launch().catch(e => {
                 if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                     bot.stop('new update')
