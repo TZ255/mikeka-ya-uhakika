@@ -452,8 +452,7 @@ const DayoBot = async () => {
                 }
 
             } catch (err) {
-                console.log(err.message, err)
-                bot.telegram.sendMessage(imp.shemdoe, err.message)
+                console.log(err.message)
             }
         })
 
@@ -574,7 +573,7 @@ const DayoBot = async () => {
             if (Number(hrs) > 7 || Number(hrs) < 3) {
                 if (Number(mins) == 19) {
                     postingFn(bot, imp).catch(e => console.log(e.message))
-                    bot.telegram.sendMessage(imp.shemdoe, `1h passed, link posted at ${hrs}:${mins}`)
+                    bot.telegram.sendMessage(imp.shemdoe, `1h passed, link posted at ${hrs}:${mins}`, {disable_notification: true})
                         .catch(e => console.log(e.message))
                 }
             }
