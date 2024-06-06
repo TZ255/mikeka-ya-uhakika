@@ -21,6 +21,10 @@ const vrfySchema = new Schema({
         type: String,
         default: 'dada'
     },
+    title: {
+        type: String,
+        default: 'mtoa huduma'
+    },
     again: {
         type: Number,
         default: 173

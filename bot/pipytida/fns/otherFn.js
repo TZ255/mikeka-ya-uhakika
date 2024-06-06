@@ -343,6 +343,27 @@ const updatePhone = async (bot, ctx) => {
     }
 }
 
+//update title
+const updateAdminTitle = async (bot, ctx, imp) => {
+    let Groups = [imp.r_chatting, imp.sio_shida]
+    try {
+        let txt = ctx.message.text
+        let chatid = ctx.message.reply_to_message.from.id
+        let title = txt.toLowerCase().split('title=')[1].trim()
+        let user = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title } }, { new: true })
+
+        for (let G of Groups) {
+            await bot.telegram.promoteChatMember(G, chatid, promotePrivillages)
+                .then(async () => {
+                    await bot.telegram.setChatAdministratorCustomTitle(G, chatid, title)
+                    await ctx.reply(`${user.fname} Admin Title changed to ${title}`)
+                }).catch(async e => await ctx.reply(e.message))
+        }
+    } catch (error) {
+        await ctx.reply(error.message)
+    }
+}
+
 
 //clearing the group
 const clearingGroup = async (bot, imp, delay) => {
@@ -392,6 +413,10 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 let upName = await verifiedList.findOneAndUpdate({ chatid }, { $set: { fname: value } }, { new: true });
                 await ctx.reply(`${upName.chatid} name is updated to ${upName.fname}`);
                 break;
+            case 'title':
+                let upTitle = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title: value } }, { new: true });
+                await ctx.reply(`${upTitle.chatid} name is updated to ${upTitle.fname}`);
+                break;
             case 'username':
                 let upUsename = await verifiedList.findOneAndUpdate({ chatid }, { $set: { username: value } }, { new: true });
                 await ctx.reply(`${upUsename.chatid} name is updated to ${upUsename.username}`);
@@ -407,11 +432,12 @@ const modFunction = async (bot, ctx, imp, delay) => {
                     }
                 } else if (value == 'true') {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: true } }, { new: true });
+                    let title = paidUpdate.title ? paidUpdate.title : 'mtoa huduma'
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
                     for (let G of Groups) {
                         await bot.telegram.promoteChatMember(G, chatid, promotePrivillages)
                             .then(async () => {
-                                await bot.telegram.setChatAdministratorCustomTitle(G, chatid, 'mtoa huduma')
+                                await bot.telegram.setChatAdministratorCustomTitle(G, chatid, title)
                                 await ctx.reply(`${paidUpdate.fname} is promoted on ${G}`)
                             }).catch(async e => await ctx.reply(e.message))
                     }
@@ -446,5 +472,5 @@ const listYangu = async (ctx) => {
 }
 
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg, watoaHudumaPrivateChat
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg, watoaHudumaPrivateChat, updateAdminTitle
 }

@@ -539,6 +539,9 @@ const PipyBot = async () => {
                         } else if (ctx.message.text.toLocaleLowerCase().includes('phone=')) {
                             //update phone number
                             await otheFns.updatePhone(bot, ctx)
+                        } else if (ctx.message.text.toLocaleLowerCase().includes('title=')) {
+                            //update admin title
+                            await otheFns.updatePhone(bot, ctx)
                         }
                     }
 
