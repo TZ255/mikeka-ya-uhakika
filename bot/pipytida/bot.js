@@ -40,7 +40,8 @@ const PipyBot = async () => {
             r_testing: -4115709988,
             muvikap2: 5940671686,
             blackberry: 1101685785,
-            TelegramChannelId: 777000
+            TelegramChannelId: 777000,
+            sio_shida: -1002110306030
         }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
@@ -82,7 +83,7 @@ const PipyBot = async () => {
         }
 
         const admins = [imp.halot, imp.shemdoe, imp.blackberry, imp.xbongo, imp.TelegramChannelId]
-        const chatGroups = [imp.r_chatting, imp.r_testing]
+        const chatGroups = [imp.r_chatting, imp.sio_shida]
 
         //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
@@ -469,7 +470,7 @@ const PipyBot = async () => {
                 } else {
                     //kama ni kwenye group angalia list vinginevyo elekeza
                     if (chatGroups.includes(ctx.chat.id)) {
-                        await otheFns.watoaHuduma(bot, imp)
+                        await otheFns.watoaHuduma(bot, imp, ctx.chat.id)
                     } else {
                         await ctx.reply(`Command hii /watoa_huduma inatumika tu ndani ya group letu la kuchat kuona list ya Dada Poa waaminifu waliothibitishwa na uongozi wa RT Groups.\n\nBonyeza link hapa chini kuingia kwenye group letu la kuchat\n${imp.link_chatgroup}\n${imp.link_chatgroup}`)
                     }
@@ -487,6 +488,33 @@ const PipyBot = async () => {
                 }
             } catch (error) {
                 await ctx.reply(error.message)
+            }
+        })
+
+        bot.on('chat_join_request', async ctx => {
+            let chatid = ctx.chatJoinRequest.from.id
+            let username = ctx.chatJoinRequest.from.first_name
+            let channel_id = ctx.chatJoinRequest.chat.id
+            let cha_title = ctx.chatJoinRequest.chat.title
+
+            const Operate = [imp.r_chatting, imp.sio_shida]
+
+            try {
+                //process only on operate
+                if (Operate.includes(channel_id)) {
+                    let user = await dayoUsers.findOne({chatid})
+                    if (!user) {
+                        await dayoUsers.create({chatid, refferer: 'Dayo', blocked: false, username})
+                    }
+                    await bot.telegram.approveChatJoinRequest(channel_id, chatid)
+                    await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                }
+
+            } catch (err) {
+                console.log(err.message)
             }
         })
 
@@ -643,7 +671,9 @@ const PipyBot = async () => {
             let mins = new Date().getMinutes()
             //post kati ya saa tatu asubuhi hadi saa 8 usiku
             if ((tzHours > 8 || tzHours < 3) && mins % 24 == 0) {
-                otheFns.watoaHuduma(bot, imp).catch(err => console.log(err.message, err))
+                for (let G of chatGroups) {
+                    otheFns.watoaHuduma(bot, imp, G).catch(err => console.log(err.message, err))
+                }
             }
 
             //clear bin saa sita na dakika moja

@@ -260,13 +260,16 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
 //pin utapeli
 const utapeliMsg = async (bot, imp) => {
     try {
-        let attention = await bot.telegram.sendMessage(imp.r_chatting, zingatiaMsg, {
-            parse_mode: 'HTML',
-            reply_markup: rmarkup
-        })
-        await bot.telegram.unpinAllChatMessages(imp.r_chatting)
-            .catch(e => console.log(e.message))
-        await bot.telegram.pinChatMessage(imp.r_chatting, attention.message_id)
+        let Groups = [imp.r_chatting, imp.sio_shida]
+        for (let G of Groups) {
+            let attention = await bot.telegram.sendMessage(G, zingatiaMsg, {
+                parse_mode: 'HTML',
+                reply_markup: rmarkup
+            })
+            await bot.telegram.unpinAllChatMessages(G)
+                .catch(e => console.log(e.message))
+            await bot.telegram.pinChatMessage(G, attention.message_id)
+        }
     } catch (error) {
         console.log(`utapeliMsg(): ${error.message}`)
     }
@@ -274,7 +277,7 @@ const utapeliMsg = async (bot, imp) => {
 
 
 //call verifiedlist
-const watoaHuduma = async (bot, imp) => {
+const watoaHuduma = async (bot, imp, grpId) => {
     try {
         let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
         let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
@@ -286,7 +289,7 @@ const watoaHuduma = async (bot, imp) => {
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
         }
 
-        let msg = await bot.telegram.sendMessage(imp.r_chatting, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
+        let msg = await bot.telegram.sendMessage(grpId, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
     } catch (error) {
         console.log(error.message, error)

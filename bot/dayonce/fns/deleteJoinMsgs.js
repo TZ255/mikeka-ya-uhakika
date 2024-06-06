@@ -93,7 +93,8 @@ const postingFn = async (bot, imp) => {
                 case grps.r_chatting:
                     //create new invite link and post
                     let link3 = await createLink(bot, imp, chid, `link no. ${upd.times}`, expireUnix)
-                    await postLink(bot, imp, 131, ch.title, link3)
+                    let link3ios = await createLink(bot, imp, grps.sio_shida, `link no. ${upd.times}`, expireUnix)
+                    await postIphoneLink(bot, imp, 131, `link no. ${upd.times}`, link3, link3ios)
                     break;
 
                 case grps.sio_shida:
