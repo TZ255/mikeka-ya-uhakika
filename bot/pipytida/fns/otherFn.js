@@ -100,7 +100,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
         let list = await verifiedList.findOne({ chatid: userid })
         if ((list && list.paid && list.role == 'dada') && (caption.length > charsNum || wajinga.some(w => caption.includes(w)))) {
             let unix = ctx.message.date
-            let until_date = unix + 600
+            let until_date = unix + 420 //7 mins
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             let loc = list.loc ? ` <b>(${list.loc})</b>.` : ''
@@ -260,7 +260,7 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
 //pin utapeli
 const utapeliMsg = async (bot, imp) => {
     try {
-        let Groups = [imp.r_chatting, imp.sio_shida]
+        let Groups = [imp.r_chatting]
         for (let G of Groups) {
             let attention = await bot.telegram.sendMessage(G, zingatiaMsg, {
                 parse_mode: 'HTML',
