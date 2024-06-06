@@ -3,6 +3,7 @@
 const DayoBot = async () => {
     try {
         const { Telegraf } = require('telegraf')
+        const { message } = require('telegraf/filters')
         const bot = new Telegraf(process.env.DAYO_TOKEN)
             .catch((err) => console.log('(Dayo)' + err.message))
 
@@ -38,6 +39,8 @@ const DayoBot = async () => {
             linksChannel: -1002042952349,
             sio_shida: -1002110306030
         }
+
+        const chatGroups = [imp.r_chatting, imp.sio_shida]
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
@@ -235,9 +238,6 @@ const DayoBot = async () => {
                 if (ctx.chat.type == 'private') {
                     let rpid = ctx.message.message_id
                     await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rpid)
-                } else {
-                    //elekeza dm
-                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 console.log(err)
@@ -251,9 +251,6 @@ const DayoBot = async () => {
                 if (ctx.chat.type == 'private') {
                     let rpid = ctx.message.message_id
                     await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rpid)
-                } else {
-                    //elekeza dm
-                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 console.log(err)
@@ -267,9 +264,6 @@ const DayoBot = async () => {
                 if (ctx.chat.type == 'private') {
                     let rpid = ctx.message.message_id
                     await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
-                } else {
-                    //elekeza dm
-                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
                 }
             } catch (err) {
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -471,7 +465,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on('message', async ctx => {
+        bot.on(message('text'), async ctx => {
             try {
                 if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
                     if (ctx.message.reply_to_message.text) {
@@ -511,7 +505,8 @@ const DayoBot = async () => {
                     }
                 }
 
-                if (ctx.chat.type == 'private' || ctx.chat.id == imp.r_chatting) {
+                if (ctx.chat.type == 'private') {
+                    //only process text messages on private. leave groups to PipyTida
                     //create user if not on database
                     await create(bot, ctx)
 
@@ -529,7 +524,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on('photo', async ctx => {
+        bot.on(message('photo'), async ctx => {
             try {
                 let mid = ctx.message.message_id
                 let username = ctx.chat.first_name
@@ -561,9 +556,8 @@ const DayoBot = async () => {
                         })
                     }
                 }
-
-
-                else {
+                
+                else if(ctx.chat.type == 'private' && chatid != imp.halot) {
                     await bot.telegram.copyMessage(imp.halot, chatid, mid, {
                         caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
                         parse_mode: 'HTML'

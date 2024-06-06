@@ -5,22 +5,16 @@ const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, use
             case 'MKEKA 1':
                 if (ctx.chat.type == 'private') {
                     await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rp_id,);
-                } else {
-                    await mikekaFns.elekezaDM(bot, ctx, imp, delay)
                 }
                 break;
             case 'MKEKA 2':
                 if (ctx.chat.type == 'private') {
                     await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rp_id);
-                } else {
-                    await mikekaFns.elekezaDM(bot, ctx, imp, delay)
                 }
                 break;
             case 'MKEKA 3':
                 if (ctx.chat.type == 'private') {
                     await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rp_id);
-                } else {
-                    await mikekaFns.elekezaDM(bot, ctx, imp, delay)
                 }
                 break;
             case '💯 BetWinner App (200% Bonus)':
