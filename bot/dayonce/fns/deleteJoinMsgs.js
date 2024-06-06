@@ -35,7 +35,7 @@ const postLink = async (bot, imp, msgid, linkName, chlink) => {
             reply_markup: {
                 inline_keyboard: [
                     [
-                        { text: `JOIN | ${linkName}`, url: chlink }
+                        { text: `💙 JOIN NOW 💙`, url: chlink }
                     ]
                 ]
             }
@@ -53,10 +53,8 @@ const postIphoneLink = async (bot, imp, msgid, linkName, droidLink, iosLink) => 
             reply_markup: {
                 inline_keyboard: [
                     [
-                        { text: `🤖 JOIN | Android Users`, url: droidLink }
-                    ],
-                    [
-                        { text: `🍏 JOIN | iPhone Users`, url: iosLink }
+                        { text: `➜ Android`, url: droidLink },
+                        { text: `➜ iOS`, url: iosLink }
                     ]
                 ]
             }
