@@ -1,14 +1,27 @@
 const txtArr = async (txt, call_sendMikeka_functions, bot, ctx, imp, userid, username, mid, mkArrs, delay, rp_id) => {
+    const mikekaFns = require('./mkeka-1-2-3')
     try {
         switch (txt) {
             case 'MKEKA 1':
-                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rp_id,);
+                if (ctx.chat.type == 'private') {
+                    await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rp_id,);
+                } else {
+                    await mikekaFns.elekezaDM(bot, ctx, imp, delay)
+                }
                 break;
             case 'MKEKA 2':
-                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rp_id);
+                if (ctx.chat.type == 'private') {
+                    await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rp_id);
+                } else {
+                    await mikekaFns.elekezaDM(bot, ctx, imp, delay)
+                }
                 break;
             case 'MKEKA 3':
-                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rp_id);
+                if (ctx.chat.type == 'private') {
+                    await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rp_id);
+                } else {
+                    await mikekaFns.elekezaDM(bot, ctx, imp, delay)
+                }
                 break;
             case '💯 BetWinner App (200% Bonus)':
                 await bot.telegram.copyMessage(userid, imp.matangazoDB, 102);
