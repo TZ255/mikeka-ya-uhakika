@@ -351,7 +351,7 @@ const updateAdminTitle = async (bot, ctx, imp) => {
     try {
         let txt = ctx.message.text
         let chatid = ctx.message.reply_to_message.from.id
-        let title = txt.toLowerCase().split('title=')[1].trim()
+        let title = txt.split('itle=')[1].trim()
         let user = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title } }, { new: true })
 
         for (let G of Groups) {
