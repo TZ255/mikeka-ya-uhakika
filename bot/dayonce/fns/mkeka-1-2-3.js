@@ -125,6 +125,16 @@ const supatips = async (ctx, bot, delay, imp) => {
     }
 }
 
+const elekezaDM = async (bot, ctx, imp, delay) => {
+    try {
+        let _mid = ctx.message.message_id
+        let ment = ctx.message.from.first_name
+        await ctx.reply(`Habari <b>${ment}</b> \n\nKupata mikeka ya leo fungua chat yangu hapa <b>@PipyTidaBot</b> na utumie menu kupata mkeka no. 1, 2 au 3\n\nPia unaweza pata mkeka wetu wa kila siku kwenye channel yetu hapa <b>@mkeka_wa_leo</b>`, { parse_mode: 'HTML', reply_parameters: { message_id: _mid } })
+    } catch (error) {
+        console.log(error.message, error)
+    }
+}
+
 module.exports = {
-    sendMkeka1, sendMkeka2, sendMkeka3, supatips
+    sendMkeka1, sendMkeka2, sendMkeka3, supatips, elekezaDM
 }

@@ -35,7 +35,8 @@ const DayoBot = async () => {
             matangazoDB: -1001570087172,
             r_chatting: -1001722693791,
             dstore: -1001245181784,
-            linksChannel: -1002042952349
+            linksChannel: -1002042952349,
+            sio_shida: -1002110306030
         }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
@@ -231,8 +232,13 @@ const DayoBot = async () => {
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
             try {
-                let rpid = ctx.message.message_id
-                await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rpid)
+                if (ctx.chat.type == 'private') {
+                    let rpid = ctx.message.message_id
+                    await call_sendMikeka_functions.sendMkeka1(ctx, delay, bot, imp, rpid)
+                } else {
+                    //elekeza dm
+                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
+                }
             } catch (err) {
                 console.log(err)
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -242,8 +248,13 @@ const DayoBot = async () => {
 
         bot.command('mkeka2', async ctx => {
             try {
-                let rpid = ctx.message.message_id
-                await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rpid)
+                if (ctx.chat.type == 'private') {
+                    let rpid = ctx.message.message_id
+                    await call_sendMikeka_functions.sendMkeka2(ctx, delay, bot, imp, rpid)
+                } else {
+                    //elekeza dm
+                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
+                }
             } catch (err) {
                 console.log(err)
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
@@ -253,14 +264,18 @@ const DayoBot = async () => {
 
         bot.command('mkeka3', async ctx => {
             try {
-                let rpid = ctx.message.message_id
-                await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
+                if (ctx.chat.type == 'private') {
+                    let rpid = ctx.message.message_id
+                    await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
+                } else {
+                    //elekeza dm
+                    await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
+                }
             } catch (err) {
                 await bot.telegram.sendMessage(imp.shemdoe, err.message)
                     .catch((e) => console.log(e.message))
-                console.log("(Dayo) " + err.message)
+                console.log(err.message, err)
             }
-
         })
 
         bot.command('site', async ctx => {
@@ -435,7 +450,7 @@ const DayoBot = async () => {
             let channel_id = ctx.chatJoinRequest.chat.id
             let cha_title = ctx.chatJoinRequest.chat.title
 
-            const notOperate = [imp.mylove, imp.dstore]
+            const notOperate = [imp.mylove, imp.dstore, imp.r_chatting, imp.sio_shida]
 
             try {
                 //dont process channels listed above
