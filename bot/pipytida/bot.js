@@ -541,7 +541,7 @@ const PipyBot = async () => {
                             await otheFns.updatePhone(bot, ctx)
                         } else if (ctx.message.text.toLocaleLowerCase().includes('title=')) {
                             //update admin title
-                            await otheFns.updatePhone(bot, ctx)
+                            await otheFns.updateAdminTitle(bot, ctx, imp)
                         }
                     }
 
