@@ -367,6 +367,7 @@ const modFunction = async (bot, ctx, imp, delay) => {
         let chatid = Number(data[1])
         let param = data[2]
         let value = data[3]
+        let Groups = [imp.r_chatting, imp.sio_shida]
 
         switch (param) {
             case 'loc':
@@ -398,17 +399,22 @@ const modFunction = async (bot, ctx, imp, delay) => {
             case 'paid':
                 if (value == 'false') {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: false } }, { new: true });
-                    await bot.telegram.promoteChatMember(imp.r_chatting, chatid, demotePrivillages)
-                        .catch(async e => await ctx.reply(e.message))
-                    await ctx.reply(`${paidUpdate.fname} is demoted`)
-                    await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
+                    await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`)
+                    for (let G of Groups) {
+                        await bot.telegram.promoteChatMember(G, chatid, demotePrivillages)
+                            .catch(async e => await ctx.reply(e.message))
+                        await ctx.reply(`${paidUpdate.fname} is demoted on ${G}`)
+                    }
                 } else if (value == 'true') {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: true } }, { new: true });
-                    await bot.telegram.promoteChatMember(imp.r_chatting, chatid, promotePrivillages)
-                        .catch(async e => await ctx.reply(e.message))
-                    await bot.telegram.setChatAdministratorCustomTitle(imp.r_chatting, chatid, 'mtoa huduma')
-                    await ctx.reply(`${paidUpdate.fname} is promoted`)
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
+                    for (let G of Groups) {
+                        await bot.telegram.promoteChatMember(G, chatid, promotePrivillages)
+                            .then(async () => {
+                                await bot.telegram.setChatAdministratorCustomTitle(G, chatid, 'mtoa huduma')
+                                await ctx.reply(`${paidUpdate.fname} is promoted on ${G}`)
+                            }).catch(async e => await ctx.reply(e.message))
+                    }
                 }
                 break;
             default:
