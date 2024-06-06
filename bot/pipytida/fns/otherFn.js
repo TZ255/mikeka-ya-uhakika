@@ -268,7 +268,9 @@ const utapeliMsg = async (bot, imp) => {
             })
             await bot.telegram.unpinAllChatMessages(G)
                 .catch(e => console.log(e.message))
-            await bot.telegram.pinChatMessage(G, attention.message_id)
+            await bot.telegram.pinChatMessage(G, attention.message_id, {
+                disable_notification: true
+            })
         }
     } catch (error) {
         console.log(`utapeliMsg(): ${error.message}`)
