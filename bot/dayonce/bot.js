@@ -76,7 +76,7 @@ const DayoBot = async () => {
                     let pload = ctx.payload
                     if (pload == 'ngono_bongo') {
                         console.log('Ngono Payload Started')
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 161, {
+                        await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })
                     }
