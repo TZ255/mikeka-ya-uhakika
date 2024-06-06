@@ -502,9 +502,9 @@ const PipyBot = async () => {
             try {
                 //process only on operate
                 if (Operate.includes(channel_id)) {
-                    let user = await dayoUsers.findOne({chatid})
+                    let user = await pipyUsers.findOne({chatid})
                     if (!user) {
-                        await dayoUsers.create({chatid, refferer: 'Dayo', blocked: false, username})
+                        await pipyUsers.create({chatid, refferer: 'Dayo', blocked: false, username})
                     }
                     await bot.telegram.approveChatJoinRequest(channel_id, chatid)
                     await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
