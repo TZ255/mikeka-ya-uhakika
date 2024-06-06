@@ -92,12 +92,13 @@ const UnverifyFn = async (bot, ctx, imp) => {
 //reusable restriction
 const reusableRestriction = async (ctx, caption, charsNum, delay) => {
     try {
+        let wajinga = ['+255 750 707 357']
         let d = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
         let masaa = Number(d.split(':')[0])
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
         let list = await verifiedList.findOne({ chatid: userid })
-        if ((list && list.paid && list.role == 'dada') && caption.length > charsNum) {
+        if ((list && list.paid && list.role == 'dada') && (caption.length > charsNum || wajinga.some(w => caption.includes(w)))) {
             let unix = ctx.message.date
             let until_date = unix + 600
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
