@@ -491,18 +491,26 @@ const PipyBot = async () => {
             }
         })
 
-        bot.command('ondoa', async ctx=> {
+        bot.command('ondoa', async ctx => {
             try {
-                if(chatGroups.includes(ctx.chat.id) && ctx.message.reply_to_message) {
+                if (chatGroups.includes(ctx.chat.id) && ctx.message.reply_to_message) {
                     let userid = ctx.message.reply_to_message.from.id
                     let fname = ctx.message.reply_to_message.from.first_name
+                    let fullName = ctx.message.reply_to_message.from.last_name ? `${fname} ${ctx.message.reply_to_message.from.last_name}` : fname
                     let my_msgid = ctx.message.message_id
+                    let rep_msgid = ctx.message.reply_to_message.message_id
+                    let myid = ctx.message.from.id
+                    let mention = `<a href="tg://user?id=123456789">${fullName}</a>`
+                    let status = await ctx.getChatMember(myid)
 
-                    await ctx.banChatMember(userid, 0)
-                    await ctx.reply(`<b>${fname}</b> amekula ban ya maisha kwenye hili group.`, {
-                        reply_parameters: {message_id: my_msgid},
-                        parse_mode: 'HTML'
-                    })
+                    if (['administrator', 'creator'].includes(status.status)) {
+                        await ctx.banChatMember(userid, 0)
+                        await ctx.reply(`<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
+                            reply_parameters: { message_id: rep_msgid },
+                            parse_mode: 'HTML'
+                        })
+                    }
+
                 }
             } catch (error) {
                 await ctx.reply(error.message)
@@ -550,7 +558,7 @@ const PipyBot = async () => {
                         if (banned.some(b => fullName.includes(b))) {
                             await ctx.banChatMember(member.id, 0);
                             await bot.telegram.sendMessage(imp.blackberry, `${fullName} banned`)
-                            await ctx.reply(`<b>${fullName}</b> amejaribu kuingia kwenye group, nimemuondoa`, {parse_mode: 'HTML'})
+                            await ctx.reply(`<b>${fullName}</b> amejaribu kuingia kwenye group, nimemuondoa`, { parse_mode: 'HTML' })
                         }
                     }
                 }
