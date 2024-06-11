@@ -502,9 +502,9 @@ const PipyBot = async () => {
             try {
                 //process only on operate
                 if (Operate.includes(channel_id)) {
-                    let user = await pipyUsers.findOne({chatid})
+                    let user = await pipyUsers.findOne({ chatid })
                     if (!user) {
-                        await pipyUsers.create({chatid, refferer: 'Dayo', blocked: false, username})
+                        await pipyUsers.create({ chatid, refferer: 'Dayo', blocked: false, username })
                     }
                     await bot.telegram.approveChatJoinRequest(channel_id, chatid)
                     await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
@@ -515,6 +515,29 @@ const PipyBot = async () => {
 
             } catch (err) {
                 console.log(err.message)
+            }
+        })
+
+        bot.on(message('new_chat_members'), async ctx => {
+            let banned = ['sister g']
+            try {
+                if (chatGroups.includes(ctx.chat.id)) {
+                    const newMembers = ctx.message.new_chat_members;
+
+                    for (let member of newMembers) {
+                        const firstName = member.first_name ? member.first_name.toLowerCase() : '';
+                        const lastName = member.last_name ? member.last_name.toLowerCase() : '';
+                        const fullName = `${firstName} ${lastName}`.trim();
+
+                        if (banned.some(b => fullName.includes(b))) {
+                            await ctx.banChatMember(member.id, 0);
+                            await bot.telegram.sendMessage(imp.blackberry, `${fullName} banned`)
+                            await ctx.reply(`<b>${fullName}</b> amejaribu kuingia kwenye group, nimemuondoa`, {parse_mode: 'HTML'})
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log(error.message)
             }
         })
 
@@ -690,7 +713,7 @@ const PipyBot = async () => {
             }
         }, 60000)
 
-        bot.launch().catch(e=> {
+        bot.launch().catch(e => {
             if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                 bot.stop('new update')
             }
