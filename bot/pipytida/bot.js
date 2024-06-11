@@ -491,6 +491,24 @@ const PipyBot = async () => {
             }
         })
 
+        bot.command('ondoa', async ctx=> {
+            try {
+                if(chatGroups.includes(ctx.chat.id) && ctx.message.reply_to_message) {
+                    let userid = ctx.message.reply_to_message.from.id
+                    let fname = ctx.message.reply_to_message.from.first_name
+                    let my_msgid = ctx.message.message_id
+
+                    await ctx.banChatMember(userid, 0)
+                    await ctx.reply(`<b>${fname}</b> amekula ban ya maisha kwenye hili group.`, {
+                        reply_parameters: {message_id: my_msgid},
+                        parse_mode: 'HTML'
+                    })
+                }
+            } catch (error) {
+                await ctx.reply(error.message)
+            }
+        })
+
         bot.on('chat_join_request', async ctx => {
             let chatid = ctx.chatJoinRequest.from.id
             let username = ctx.chatJoinRequest.from.first_name
