@@ -14,7 +14,7 @@ const DayoBot = async () => {
         const switchUserText = require('./fns/text-arr')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
         const { postingFn } = require('./fns/deleteJoinMsgs')
-        const { clearDB } = require('./fns/convoFn')
+        const { clearDB, mainConvo } = require('./fns/convoFn')
 
         const imp = {
             replyDb: -1001608248942,
@@ -144,24 +144,19 @@ const DayoBot = async () => {
         })
 
         bot.command('convo', async ctx => {
-            let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/convo-')[1].trim())
-            let bads = ['blocked', 'deactivated']
             if (myId == imp.shemdoe || myId == imp.halot) {
+                let myId = ctx.chat.id
+                let txt = ctx.message.text
+                let msg_id = Number(txt.split('/convo-')[1].trim())
+                let bads = ['blocked', 'deactivated']
                 try {
-                    let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
+                    if ([imp.shemdoe, imp.halot].includes(myId)) {
+                        let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
 
-                    for (let [index, u] of all_users.entries()) {
-                        ctx.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp }).then(() => console.log('✅ convo sent to ' + u.chatid))
-                            .catch((err) => {
-                                if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                    u.deleteOne()
-                                    console.log(`🚮 ${u.username} deleted`)
-                                } else { console.log(`🤷‍♂️ ${err.message}`) }
-                            })
-                        if (index == all_users.length - 1) {
-                            await ctx.reply('Nimemaliza conversation')
+                        for (let [index, u] of all_users.entries()) {
+                            setTimeout(() => {
+                                mainConvo(bot, ctx, imp, u, index, msg_id, defaultReplyMkp, all_users, bads).catch(e => console.log(e.message))
+                            }, 35 * index)
                         }
                     }
                 } catch (err) {
@@ -179,7 +174,7 @@ const DayoBot = async () => {
 
                     for (let [index, u] of all_users.entries()) {
                         setTimeout(() => {
-                            clearDB(bot, ctx, u, index, bads, all_users)
+                            clearDB(bot, ctx, u, index, bads, all_users).catch(e=> console.log(e.message))
                         }, 35 * index)
                     }
                 } catch (err) {

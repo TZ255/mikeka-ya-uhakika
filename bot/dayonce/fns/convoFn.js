@@ -12,4 +12,21 @@ let clearDB = async (bot, ctx, u, index, bads, all_users) => {
     }
 }
 
-module.exports = {clearDB}
+const mainConvo = async (bot, ctx, imp, u, index, msg_id, defaultReplyMkp, all_users, bads) => {
+    try {
+        await bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+            .catch(async (err) => {
+                if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                    await u.deleteOne()
+                    console.log(`🚮 ${u.username} deleted`)
+                } else { console.log(`🤷‍♂️ ${err.message}`) }
+            })
+        if (index == all_users.length - 1) {
+            await ctx.reply('Nimemaliza conversation')
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+module.exports = { clearDB, mainConvo }
