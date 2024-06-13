@@ -392,7 +392,7 @@ const rtfunction = async () => {
                         let txt = `Una Points ${user.points} kwenye account yako ya RT Malipo.`
                         await ctx.answerCallbackQuery({ text: txt, cache_time: 10, show_alert: true })
                     } else if (['rudi_nyuma', 'ongeza_points'].includes(cdata)) {
-                        await ctx.deleteMessage(cmsgid)
+                        await ctx.api.deleteMessage(chatid, cmsgid)
                         await call_function.payingInfo(bot, ctx, delay, imp, chatid, 26)
                     } else if (cdata == 'vid_ongeza_pts') {
                         await call_function.payingInfo(bot, ctx, delay, imp, chatid, 26)

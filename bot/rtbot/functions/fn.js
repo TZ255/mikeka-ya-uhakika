@@ -204,7 +204,7 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
     })
     let botname = ctx.me.username
     await toDeleteMsgs.create({ userid: chatid, bot: botname, msgid: info.message_id })
-    await ctx.deleteMessage(cbmid)
+    await ctx.api.deleteMessage(chatid, cbmid)
 }
 
 const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
@@ -218,7 +218,7 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
             ]
         }
     })
-    await ctx.deleteMessage(cbmid)
+    await ctx.api.deleteMessage(chatid, cbmid)
 }
 
 const deteleMessages = async (delay) => {
