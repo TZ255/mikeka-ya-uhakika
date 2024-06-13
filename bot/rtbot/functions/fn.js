@@ -8,7 +8,7 @@ const createUser = async (ctx, delay) => {
         let chatid = ctx.chat.id
         let username = ctx.chat.first_name
         let handle = 'unknown'
-        let refferer = ctx.botInfo.username
+        let refferer = ctx.me.username
 
         if (ctx.chat.username) {
             handle = ctx.chat.username
@@ -33,7 +33,7 @@ const createUser = async (ctx, delay) => {
 const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //upload video
     let type = OS
-    let botname = ctx.botInfo.username
+    let botname = ctx.me.username
     await ctx.replyWithChatAction('upload_video')
     let dvid = await bot.api.copyMessage(userid, imp.ohmyDB, vid.msgId, {
         reply_markup: {
@@ -202,7 +202,7 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
             ]
         }
     })
-    let botname = ctx.botInfo.username
+    let botname = ctx.me.username
     await toDeleteMsgs.create({ userid: chatid, bot: botname, msgid: info.message_id })
     await ctx.deleteMessage(cbmid)
 }

@@ -186,7 +186,7 @@ const rtfunction = async () => {
                 if (myId == imp.shemdoe || myId == imp.halot) {
                     try {
                         await ctx.reply('starting')
-                        let botname = ctx.botInfo.username
+                        let botname = ctx.me.username
                         let all_users = await rtStarterModel.find({ refferer: botname })
 
                         all_users.forEach((u, index) => {
@@ -215,7 +215,7 @@ const rtfunction = async () => {
             bot.command('bless', async (ctx) => {
                 try {
                     if (ctx.chat.id === imp.rtmalipo) {
-                        const botname = ctx.botInfo.username;
+                        const botname = ctx.me.username;
                         await ctx.reply('Starting');
                         const usersToUpdate = await rtStarterModel.find({ points: { $lt: 250 }, refferer: botname });
 
@@ -238,7 +238,7 @@ const rtfunction = async () => {
                 try {
                     if (ctx.chat.id = imp.rtmalipo) {
                         await ctx.reply('Starting')
-                        let botname = ctx.botInfo.username
+                        let botname = ctx.me.username
                         let all = await rtStarterModel.find({ points: { $gte: 500 }, paid: false, refferer: botname })
 
                         all.forEach((u, i) => {
