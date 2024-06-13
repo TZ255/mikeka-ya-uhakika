@@ -21,6 +21,7 @@ const reginaBot = async () => {
 
         const call_supatips_function = require('./fns/supatips')
         const call_fametips_function = require('./fns/fametips')
+        const call_famescheduled_fn = require('./fns/fame-scheduled')
         const call_betslip_function = require('./fns/betslip')
         const call_oncallbackquery_function = require('./fns/oncallbackquery')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
