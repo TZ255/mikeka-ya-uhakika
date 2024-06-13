@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const getRouter = require('./routes/get')
+const postRouter = require('./routes/post')
 const elimit = require('express-rate-limit')
 const regina_bot = require('./bot/regibot/bot')
 const rahatupu_bot = require('./bot/rtbot/bot')
@@ -34,6 +35,7 @@ app.use(express.static(__dirname + '/public'))
 app.set('trust proxy', true) //our app is hosted on server using proxy to pass user request
 app.use(cors())
 app.use(limiter)
+app.use(postRouter)
 app.use(getRouter)
 
 if (process.env.environment == 'production') {

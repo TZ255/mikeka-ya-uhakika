@@ -1,7 +1,7 @@
 
-
 const DayoBot = async () => {
     try {
+        const { default: axios } = require('axios');
         const { Bot } = require('grammy')
         const bot = new Bot(process.env.DAYO_TOKEN)
         const { autoRetry } = require("@grammyjs/auto-retry");
@@ -144,23 +144,20 @@ const DayoBot = async () => {
         })
 
         bot.command('convo', async ctx => {
-            if (myId == imp.shemdoe || myId == imp.halot) {
+            if ([imp.shemdoe, imp.halot].includes(ctx.chat.id)) {
                 let myId = ctx.chat.id
                 let txt = ctx.message.text
                 let msg_id = Number(txt.split('/convo-')[1].trim())
-                let bads = ['blocked', 'deactivated']
                 try {
-                    if ([imp.shemdoe, imp.halot].includes(myId)) {
-                        let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
-
-                        for (let [index, u] of all_users.entries()) {
-                            setTimeout(() => {
-                                mainConvo(bot, ctx, imp, u, index, msg_id, defaultReplyMkp, all_users, bads).catch(e => console.log(e.message))
-                            }, 35 * index)
-                        }
+                    if(process.env.environment == 'production') {
+                        let PURL = `https://mikeka-ya-uhakika-production.up.railway.app/dayonce/${myId}/${msg_id}`
+                        await axios.post(PURL)
+                    } else if(process.env.environment == 'local') {
+                        let LURL = `http://localhost:3000/dayonce/${myId}/${msg_id}`
+                        await axios.post(LURL)
                     }
                 } catch (err) {
-                    console.log("(Dayo) " + err.message)
+                    await ctx.reply(err.message)
                 }
             }
         })
