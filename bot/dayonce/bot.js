@@ -180,7 +180,7 @@ const DayoBot = async () => {
                     for (let [index, u] of all_users.entries()) {
                         setTimeout(() => {
                             clearDB(bot, ctx, u, index, bads, all_users)
-                        }, 35)
+                        }, 35 * index)
                     }
                 } catch (err) {
                     console.log("(Dayo) " + err.message)
