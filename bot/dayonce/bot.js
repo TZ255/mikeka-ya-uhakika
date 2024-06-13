@@ -153,9 +153,10 @@ const DayoBot = async () => {
 
                     for (let [index, u] of all_users.entries()) {
                         ctx.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp }).then(() => console.log('✅ convo sent to ' + u.chatid))
-                            .catch(async (err) => {
+                            .catch((err) => {
                                 if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                    await u.deleteOne()
+                                    u.deleteOne()
+                                    console.log(`🚮 ${u.username} deleted`)
                                 } else { console.log(`🤷‍♂️ ${err.message}`) }
                             })
                         if (index == all_users.length - 1) {
@@ -178,9 +179,9 @@ const DayoBot = async () => {
                     for (let [index, u] of all_users.entries()) {
                         ctx.api.sendChatAction(u.chatid, 'typing')
                         .then(() => console.log('✅ convo sent to ' + u.chatid))
-                            .catch(async (err) => {
+                            .catch((err) => {
                                 if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                    await u.deleteOne()
+                                    u.deleteOne()
                                     console.log(`🚮 ${u.username} deleted`)
                                 } else { console.log(`🤷‍♂️ ${err.message}`) }
                             })
