@@ -148,7 +148,7 @@ const DayoBot = async () => {
             let bads = ['blocked', 'deactivated']
             if ([imp.shemdoe, imp.halot].includes(ctx.chat.id)) {
                 try {
-                    let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
+                    let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false }).limit(500)
 
                     all_users.forEach((u, index) => {
                         if (index == all_users.length - 1) {
