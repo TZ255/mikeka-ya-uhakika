@@ -16,7 +16,7 @@ const grps = {
 //create link fn
 const createLink = async (bot, imp, chid, name, expire) => {
     try {
-        let creating = await bot.telegram.createChatInviteLink(chid, {
+        let creating = await bot.api.createChatInviteLink(chid, {
             name: name,
             expire_date: expire,
             creates_join_request: true
@@ -24,14 +24,14 @@ const createLink = async (bot, imp, chid, name, expire) => {
         return creating.invite_link
     } catch (err) {
         console.log(err.message, err)
-        await bot.telegram.sendMessage(imp.shemdoe, `Creating Link ${err.message}`)
+        await bot.api.sendMessage(imp.shemdoe, `Creating Link ${err.message}`)
     }
 }
 
 //post link
 const postLink = async (bot, imp, msgid, linkName, chlink) => {
     try {
-        await bot.telegram.copyMessage(imp.linksChannel, imp.matangazoDB, msgid, {
+        await bot.api.copyMessage(imp.linksChannel, imp.matangazoDB, msgid, {
             reply_markup: {
                 inline_keyboard: [
                     [
@@ -42,14 +42,14 @@ const postLink = async (bot, imp, msgid, linkName, chlink) => {
         })
     } catch (err) {
         console.log(err.message, err)
-        await bot.telegram.sendMessage(imp.shemdoe, `Copying Link ${err.message}`)
+        await bot.api.sendMessage(imp.shemdoe, `Copying Link ${err.message}`)
     }
 }
 
 //post link
 const postIphoneLink = async (bot, imp, msgid, linkName, droidLink, iosLink) => {
     try {
-        await bot.telegram.copyMessage(imp.linksChannel, imp.matangazoDB, msgid, {
+        await bot.api.copyMessage(imp.linksChannel, imp.matangazoDB, msgid, {
             reply_markup: {
                 inline_keyboard: [
                     [
@@ -61,7 +61,7 @@ const postIphoneLink = async (bot, imp, msgid, linkName, droidLink, iosLink) => 
         })
     } catch (err) {
         console.log(err.message, err)
-        await bot.telegram.sendMessage(imp.shemdoe, `Copying Link ${err.message}`)
+        await bot.api.sendMessage(imp.shemdoe, `Copying Link ${err.message}`)
     }
 }
 
@@ -136,7 +136,7 @@ const postingFn = async (bot, imp) => {
         }
     } catch (error) {
         console.log(error.message, error)
-        await bot.telegram.sendMessage(imp.shemdoe, `Posting Link:: ${error.message}`)
+        await bot.api.sendMessage(imp.shemdoe, `Posting Link:: ${error.message}`)
     }
 }
 

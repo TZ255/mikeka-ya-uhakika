@@ -2,10 +2,9 @@
 
 const DayoBot = async () => {
     try {
-        const { Telegraf } = require('telegraf')
-        const { message } = require('telegraf/filters')
-        const bot = new Telegraf(process.env.DAYO_TOKEN)
-            .catch((err) => console.log('(Dayo)' + err.message))
+        const { Bot } = require('grammy')
+        const bot = new Bot(process.env.DAYO_TOKEN)
+        const { autoRetry } = require("@grammyjs/auto-retry");
 
         const dayoUsers = require('./database/chats')
         const tg_slips = require('./database/tg_slips')
@@ -72,15 +71,23 @@ const DayoBot = async () => {
             resize_keyboard: true
         }
 
-        bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+        bot.catch((err) => {
+            const ctx = err.ctx;
+            console.error(`(Dayo): ${err.message}`, err);
+        });
 
-        bot.start(async ctx => {
+        //use auto-retry
+        bot.api.config.use(autoRetry());
+
+        bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+
+        bot.command('start', async ctx => {
             try {
-                if (ctx.payload) {
-                    let pload = ctx.payload
+                if (ctx.match.length > 2) {
+                    let pload = ctx.match
                     if (pload == 'ngono_bongo') {
                         console.log('Ngono Payload Started')
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
+                        await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })
                     }
@@ -88,7 +95,7 @@ const DayoBot = async () => {
                     await create(bot, ctx)
 
                 } else {
-                    await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653, {
+                    await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7653, {
                         reply_markup: defaultReplyMkp
                     })
 
@@ -99,7 +106,7 @@ const DayoBot = async () => {
                             username: ctx.chat.first_name,
                             refferer: "Dayo"
                         })
-                        await bot.telegram.sendMessage(imp.logsBin, '(Dayo) New user found me - Added to DB')
+                        await bot.api.sendMessage(imp.logsBin, '(Dayo) New user found me - Added to DB')
                     }
                 }
 
@@ -119,7 +126,7 @@ const DayoBot = async () => {
 
         bot.command(['help', 'stop'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7653)
                 await create(bot, ctx)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
@@ -139,98 +146,52 @@ const DayoBot = async () => {
             let myId = ctx.chat.id
             let txt = ctx.message.text
             let msg_id = Number(txt.split('/convo-')[1].trim())
-            let bads = ['deactivated', 'blocked']
+            let bads = ['blocked', 'deactivated']
             if (myId == imp.shemdoe || myId == imp.halot) {
                 try {
                     let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
 
-                    all_users.forEach((u, index) => {
-                        setTimeout(() => {
-                            if (index == all_users.length - 1) {
-                                ctx.reply('Nimemaliza conversation')
-                            }
-                            bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                .catch((err) => {
-                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        dayoUsers.findOneAndDelete({ chatid: u.chatid, refferer: 'Dayo' })
-                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                            .catch(e => console.log(e.message))
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                })
-                        }, index * 40)
-                    })
+                    for (let [index, u] of all_users.entries()) {
+                        ctx.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp }).then(() => console.log('✅ convo sent to ' + u.chatid))
+                            .catch(async (err) => {
+                                if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                    await u.deleteOne()
+                                } else { console.log(`🤷‍♂️ ${err.message}`) }
+                            })
+                        if (index == all_users.length - 1) {
+                            await ctx.reply('Nimemaliza conversation')
+                        }
+                    }
                 } catch (err) {
                     console.log("(Dayo) " + err.message)
                 }
             }
-
         })
 
-        bot.command('premier', async ctx => {
+        bot.command('cleardb', async ctx => {
             let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/premier-')[1].trim())
-            let bads = ['deactivated', 'blocked']
+            let bads = ['blocked', 'deactivated']
             if (myId == imp.shemdoe || myId == imp.halot) {
                 try {
-                    let all_users = await dayoUsers.find({ refferer: "Dayo", promo: 'premier' })
+                    let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
 
-                    all_users.forEach((u, index) => {
-                        if (u.blocked != true) {
-                            setTimeout(() => {
-                                if (index == all_users.length - 1) {
-                                    ctx.reply('Nimemaliza conversation')
-                                }
-                                bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                    .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                    .catch((err) => {
-                                        if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                            dayoUsers.findOneAndDelete({ chatid: u.chatid })
-                                                .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                        } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                    })
-                            }, index * 40)
+                    for (let [index, u] of all_users.entries()) {
+                        ctx.api.sendChatAction(u.chatid, 'typing')
+                        .then(() => console.log('✅ convo sent to ' + u.chatid))
+                            .catch(async (err) => {
+                                if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                    await u.deleteOne()
+                                    console.log(`🚮 ${u.username} deleted`)
+                                } else { console.log(`🤷‍♂️ ${err.message}`) }
+                            })
+                        if (index == all_users.length - 1) {
+                            await ctx.reply('Nimemaliza conversation')
                         }
-                    })
+                    }
                 } catch (err) {
                     console.log("(Dayo) " + err.message)
                 }
             }
-
-        })
-
-        bot.command('unknown', async ctx => {
-            let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/unknown-')[1].trim())
-            let bads = ['deactivated', 'blocked']
-            if (myId == imp.shemdoe || myId == imp.halot) {
-                try {
-                    let all_users = await dayoUsers.find({ refferer: "Dayo", promo: 'unknown' })
-
-                    all_users.forEach((u, index) => {
-                        if (u.blocked != true) {
-                            setTimeout(() => {
-                                if (index == all_users.length - 1) {
-                                    ctx.reply('Nimemaliza conversation')
-                                }
-                                bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                    .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                    .catch((err) => {
-                                        if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                            dayoUsers.findOneAndDelete({ chatid: u.chatid })
-                                                .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                        } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                    })
-                            }, index * 40)
-                        }
-                    })
-                } catch (err) {
-                    console.log("(Dayo) " + err.message)
-                }
-            }
-
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
@@ -241,7 +202,7 @@ const DayoBot = async () => {
                 }
             } catch (err) {
                 console.log(err)
-                await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.api.sendMessage(imp.shemdoe, err.message)
                     .catch(e => console.log(e.message))
             }
         })
@@ -254,7 +215,7 @@ const DayoBot = async () => {
                 }
             } catch (err) {
                 console.log(err)
-                await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.api.sendMessage(imp.shemdoe, err.message)
                     .catch(e => console.log(e.message))
             }
         })
@@ -266,7 +227,7 @@ const DayoBot = async () => {
                     await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp, rpid)
                 }
             } catch (err) {
-                await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.api.sendMessage(imp.shemdoe, err.message)
                     .catch((e) => console.log(e.message))
                 console.log(err.message, err)
             }
@@ -285,7 +246,7 @@ const DayoBot = async () => {
 
         bot.command('kujisajili', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7595)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -293,7 +254,7 @@ const DayoBot = async () => {
 
         bot.command('kujisajili_bw', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
+                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -301,7 +262,7 @@ const DayoBot = async () => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
+                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -309,7 +270,7 @@ const DayoBot = async () => {
 
         bot.command('kudeposit', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7596)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -331,7 +292,7 @@ const DayoBot = async () => {
 
         bot.command(['jisajili_m', 'deposit_m'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7652)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -339,7 +300,7 @@ const DayoBot = async () => {
 
         bot.command('betbuilder', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7655)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -377,7 +338,7 @@ const DayoBot = async () => {
 
         bot.command('setbtn', async ctx => {
             try {
-                await bot.telegram.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
+                await bot.api.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
                     reply_markup: defaultReplyMkp
                 })
             } catch (error) {
@@ -385,31 +346,32 @@ const DayoBot = async () => {
             }
         })
 
-        bot.action(['jisajili_m', 'deposit_m'], async ctx => {
-            try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
-            } catch (err) {
-                console.log("(Dayo) " + err.message)
-            }
-        })
-
-        bot.action('accept_pload', async ctx => {
-            try {
-                let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
-                let org_msg_id = ctx.callbackQuery.message.message_id
-                await ctx.deleteMessage(org_msg_id)
-                await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
-            } catch (err) {
-                console.log("(Dayo) " + err.message)
-            }
-
-        })
-
         bot.command(['wakubwa', 'sodoma', 'sex', 'wadogo'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8094)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8094)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
+            }
+        })
+
+        bot.on('callback_query:data', async ctx => {
+            try {
+                let data = ctx.callbackQuery.data
+
+                switch (data) {
+                    case 'accept_pload':
+                        let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
+                        let org_msg_id = ctx.callbackQuery.message.message_id
+                        await ctx.deleteMessage(org_msg_id)
+                        await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
+                        break;
+
+                    case 'jisajili_m': case 'deposit_m':
+                        await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7652)
+                        break;
+                }
+            } catch (error) {
+                console.log('(Dayo): ' + error.message)
             }
         })
 
@@ -449,12 +411,12 @@ const DayoBot = async () => {
             try {
                 //dont process channels listed above
                 if (!notOperate.includes(channel_id)) {
-                    let user = await dayoUsers.findOne({chatid})
+                    let user = await dayoUsers.findOne({ chatid })
                     if (!user) {
-                        await dayoUsers.create({chatid, refferer: 'Dayo', blocked: false, username})
+                        await dayoUsers.create({ chatid, refferer: 'Dayo', blocked: false, username })
                     }
-                    await bot.telegram.approveChatJoinRequest(channel_id, chatid)
-                    await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
+                    await bot.api.approveChatJoinRequest(channel_id, chatid)
+                    await bot.api.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true
                     })
@@ -465,7 +427,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on(message('text'), async ctx => {
+        bot.on(':text', async ctx => {
             try {
                 if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
                     if (ctx.message.reply_to_message.text) {
@@ -488,7 +450,7 @@ const DayoBot = async () => {
                         }
 
                         else {
-                            await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
+                            await bot.api.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
                         }
 
                     }
@@ -501,7 +463,7 @@ const DayoBot = async () => {
                         let mid = Number(ids.split('&mid=')[1])
 
 
-                        await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+                        await bot.api.sendMessage(userid, my_msg, { reply_to_message_id: mid })
                     }
                 }
 
@@ -524,7 +486,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on(message('photo'), async ctx => {
+        bot.on((':photo'), async ctx => {
             try {
                 let mid = ctx.message.message_id
                 let username = ctx.chat.first_name
@@ -539,7 +501,7 @@ const DayoBot = async () => {
                         let rmid = Number(ids.split('&mid=')[1])
 
 
-                        await bot.telegram.copyMessage(userid, chatid, mid, {
+                        await bot.api.copyMessage(userid, chatid, mid, {
                             reply_to_message_id: rmid
                         })
                     }
@@ -551,24 +513,24 @@ const DayoBot = async () => {
                         let rmid = Number(ids.split('&mid=')[1])
 
 
-                        await bot.telegram.copyMessage(userid, chatid, mid, {
+                        await bot.api.copyMessage(userid, chatid, mid, {
                             reply_to_message_id: rmid
                         })
                     }
                 }
-                
-                else if(ctx.chat.type == 'private' && chatid != imp.halot) {
-                    await bot.telegram.copyMessage(imp.halot, chatid, mid, {
+
+                else if (ctx.chat.type == 'private' && chatid != imp.halot) {
+                    await bot.api.copyMessage(imp.halot, chatid, mid, {
                         caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
                         parse_mode: 'HTML'
                     })
                 }
             } catch (err) {
                 if (!err.message) {
-                    await bot.telegram.sendMessage(imp.shemdoe, err.description)
+                    await bot.api.sendMessage(imp.shemdoe, err.description)
                     console.log(err)
                 } else {
-                    await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                    await bot.api.sendMessage(imp.shemdoe, err.message)
                     console.log(err)
                 }
             }
@@ -582,19 +544,22 @@ const DayoBot = async () => {
             if (Number(hrs) > 7 || Number(hrs) < 3) {
                 if (Number(mins) == 19) {
                     postingFn(bot, imp).catch(e => console.log(e.message))
-                    bot.telegram.sendMessage(imp.shemdoe, `1h passed, link posted at ${hrs}:${mins}`, {disable_notification: true})
+                    bot.api.sendMessage(imp.shemdoe, `1h passed, link posted at ${hrs}:${mins}`, { disable_notification: true })
                         .catch(e => console.log(e.message))
                 }
             }
 
         }, 60000)
 
-        bot.launch().catch(e => {
+        // Stopping the bot when the Node.js process is about to be terminated
+        process.once("SIGINT", () => bot.stop());
+        process.once("SIGTERM", () => bot.stop());
+
+        bot.start().catch(e => {
             if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                 bot.stop('new update')
             }
         })
-
     } catch (error) {
         console.log("(Dayo) " + error.message, error)
     }

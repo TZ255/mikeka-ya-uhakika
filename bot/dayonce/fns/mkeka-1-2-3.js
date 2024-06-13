@@ -12,18 +12,18 @@ const sendMkeka1 = async (ctx, delay, bot, imp, rpid) => {
         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $inc: { mk1: 1 } })
         console.log(tzHrs)
         if (mk && (tzHrs >= 0 && tzHrs < 22)) {
-            await ctx.sendChatAction('upload_photo')
+            await ctx.replyWithChatAction('upload_photo')
             await delay(500)
-            await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, mk.mid, {
+            await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, mk.mid, {
                 reply_to_message_id: rpid, allow_sending_without_reply: true
             })
         } else if (mk && (tzHrs >= 22)) {
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             await delay(1000)
             await ctx.reply('Mikeka ya leo tayari tumeweka na kwa leo tumefunga hesabu. \n\nTafadhali rudi tena hapa baadae kupata mikeka ya kesho.', {reply_to_message_id: rpid, allow_sending_without_reply: true})
         }
         else {
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             await delay(1000)
             await ctx.reply('Mkeka namba 1 bado haujaandaliwa, jaribu mkeka namba 3 /mkeka3', {reply_to_message_id: rpid, allow_sending_without_reply: true})
         }
@@ -40,19 +40,19 @@ const sendMkeka2 = async (ctx, delay, bot, imp, rpid) => {
         let mk = await tg_slips.findOne({ siku: td, brand: 'betway' })
         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $inc: { mk2: 1 } })
         if (mk && (tzHrs >= 0 && tzHrs < 22)) {
-            await ctx.sendChatAction('upload_photo')
+            await ctx.replyWithChatAction('upload_photo')
             await delay(500)
-            await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, mk.mid, {
+            await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, mk.mid, {
                 reply_to_message_id: rpid, allow_sending_without_reply: true
             })
         } else if (mk && (tzHrs >= 22)) {
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             await delay(1000)
             await ctx.reply('Mikeka ya leo tayari tumeweka na kwa leo tumefunga hesabu. Tafadhali rudi tena hapa baadae kupata mikeka ya kesho.', {
                 reply_to_message_id: rpid, allow_sending_without_reply: true
             })
         } else {
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             await delay(1000)
             await ctx.reply('Mkeka namba 2 bado haujaandaliwa, jaribu:\n\n▷ Mkeka namba 1 👉 /mkeka1\n\n▷ Mkeka namba 3 👉 /mkeka3', {
                 reply_to_message_id: rpid, allow_sending_without_reply: true
@@ -65,7 +65,7 @@ const sendMkeka2 = async (ctx, delay, bot, imp, rpid) => {
 
 const sendMkeka3 = async (ctx, delay, bot, imp, rpid) => {
     try {
-        await ctx.sendChatAction('typing')
+        await ctx.replyWithChatAction('typing')
         await delay(1000)
         let nairobi = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
         let tzHrs = new Date().getUTCHours() + 3
@@ -92,12 +92,12 @@ const sendMkeka3 = async (ctx, delay, bot, imp, rpid) => {
 
             await ctx.reply(finaText, { parse_mode: 'HTML', disable_web_page_preview: true, reply_to_message_id: rpid, allow_sending_without_reply: true })
         } else if (keka.length > 0 && (tzHrs >= 22)) {
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             await delay(1000)
             await ctx.reply('Mikeka ya leo tayari tumeweka na kwa leo tumefunga hesabu. Tafadhali rudi tena hapa baadae kupata mikeka ya kesho.')
         }
         else {
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             setTimeout(() => {
                 ctx.reply('Mkeka wa leo bado sijauandaa... ndio niko kwenye maandalizi hadi baadae kidogo utakuwa tayari.')
                     .catch(e => console.log(e.message))
@@ -111,7 +111,7 @@ const sendMkeka3 = async (ctx, delay, bot, imp, rpid) => {
 const supatips = async (ctx, bot, delay, imp) => {
     try {
         let url = `http://mikekayauhakika.com`
-        await bot.telegram.copyMessage(ctx.chat.id, imp.mikekaDB, 255, {
+        await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 255, {
             reply_markup: {
                 inline_keyboard: [
                     [
