@@ -87,9 +87,9 @@ const rtfunction = async () => {
                     //add to database if not
                     await call_function.createUser(ctx, delay)
 
-                    if (ctx.payload && !rateLimitter.includes(ctx.chat.id)) {
+                    if (ctx.match && !rateLimitter.includes(ctx.chat.id)) {
                         rateLimitter.push(ctx.chat.id)
-                        let pload = ctx.payload
+                        let pload = ctx.match
                         if (pload.includes('&size')) { pload = pload.split('&size')[0] }
                         let userid = ctx.chat.id
                         if (pload.includes('RTBOT-') || pload.includes('MOVIE-FILE')) {
@@ -140,7 +140,7 @@ const rtfunction = async () => {
 
                         }
                     }
-                    else if (ctx.payload && rateLimitter.includes(ctx.chat.id)) {
+                    else if (ctx.match && rateLimitter.includes(ctx.chat.id)) {
                         await ctx.api.deleteMessage(ctx.chat.id, ctx.message.message_id)
                     }
                     else {
