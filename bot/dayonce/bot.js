@@ -14,6 +14,7 @@ const DayoBot = async () => {
         const switchUserText = require('./fns/text-arr')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
         const { postingFn } = require('./fns/deleteJoinMsgs')
+        const { clearDB } = require('./fns/convoFn')
 
         const imp = {
             replyDb: -1001608248942,
@@ -177,17 +178,9 @@ const DayoBot = async () => {
                     let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
 
                     for (let [index, u] of all_users.entries()) {
-                        ctx.api.sendChatAction(u.chatid, 'typing')
-                        .then(() => console.log('✅ convo sent to ' + u.chatid))
-                            .catch((err) => {
-                                if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                    u.deleteOne()
-                                    console.log(`🚮 ${u.username} deleted`)
-                                } else { console.log(`🤷‍♂️ ${err.message}`) }
-                            })
-                        if (index == all_users.length - 1) {
-                            await ctx.reply('Nimemaliza conversation')
-                        }
+                        setTimeout(() => {
+                            clearDB(bot, ctx, u, index, bads, all_users)
+                        }, 35)
                     }
                 } catch (err) {
                     console.log("(Dayo) " + err.message)
