@@ -54,13 +54,13 @@ const checkOdds = async (bot, imp) => {
                 }
 
             })
-            await bot.telegram.sendMessage(imp.shemdoe, `Venas25 found and created`)
+            await bot.api.sendMessage(imp.shemdoe, `Venas25 found and created`)
         } else {
-            await bot.telegram.sendMessage(imp.shemdoe, `Venas25 - nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
+            await bot.api.sendMessage(imp.shemdoe, `Venas25 - nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
         }
     } catch (err) {
         console.error(err)
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 
@@ -115,13 +115,13 @@ const checkTomorrowOdds = async (bot, imp) => {
                 }
 
             })
-            await bot.telegram.sendMessage(imp.shemdoe, `Venas25 tomorrow found and created`)
+            await bot.api.sendMessage(imp.shemdoe, `Venas25 tomorrow found and created`)
         } else {
-            await bot.telegram.sendMessage(imp.shemdoe, `Venas25 - nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
+            await bot.api.sendMessage(imp.shemdoe, `Venas25 - nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
         }
     } catch (err) {
         console.error(err)
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 
@@ -156,11 +156,11 @@ const checkMatokeoJana = async (bot, imp) => {
                 }
             })
         } else {
-            await bot.telegram.sendMessage(imp.shemdoe, `Venas25 - no yesterday results`)
+            await bot.api.sendMessage(imp.shemdoe, `Venas25 - no yesterday results`)
         }
     } catch (err) {
         console.error(err)
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 

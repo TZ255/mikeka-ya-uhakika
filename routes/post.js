@@ -27,59 +27,59 @@ const imp = {
     sio_shida: -1002110306030
 }
 
-router.post('/dayonce/:admin/:msgid', async (req, res) => {
-    try {
-        //end connection
-        res.status(200).send({ success: true });
+// router.post('/dayonce/:admin/:msgid', async (req, res) => {
+//     try {
+//         //end connection
+//         res.status(200).send({ success: true });
 
-        //perform convos
-        let defaultReplyMkp = {
-            keyboard: [
-                [
-                    { text: "MKEKA 1" },
-                    { text: "MKEKA 2" },
-                    { text: "MKEKA 3" },
-                ]
-            ],
-            is_persistent: true,
-            resize_keyboard: true
-        }
+//         //perform convos
+//         let defaultReplyMkp = {
+//             keyboard: [
+//                 [
+//                     { text: "MKEKA 1" },
+//                     { text: "MKEKA 2" },
+//                     { text: "MKEKA 3" },
+//                 ]
+//             ],
+//             is_persistent: true,
+//             resize_keyboard: true
+//         }
 
-        let msgid = Number(req.params.msgid)
-        let admin = Number(req.params.admin)
-        let bads = ['blocked', 'deactivated']
-        let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-        let API = `https://api.telegram.org/bot${process.env.DAYO_TOKEN}/copyMessage`
-        if ([imp.shemdoe, imp.halot].includes(admin)) {
-            let all_users = await dayoUsers.find().limit(1000)
+//         let msgid = Number(req.params.msgid)
+//         let admin = Number(req.params.admin)
+//         let bads = ['blocked', 'deactivated']
+//         let delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+//         let API = `https://api.telegram.org/bot${process.env.DAYO_TOKEN}/copyMessage`
+//         if ([imp.shemdoe, imp.halot].includes(admin)) {
+//             let all_users = await dayoUsers.find().limit(1000)
 
-            for (let [index, u] of all_users.entries()) {
-                let data = {
-                    chat_id: Number(u.chatid),
-                    from_chat_id: Number(imp.mikekaDB),
-                    message_id: msgid,
-                    reply_markup: defaultReplyMkp
-                }
-                await axios.post(API, data)
-                    .then(() => { console.log(`✅ convo sent to ${u.username}`) })
-                    .catch(async err => {
-                        console.log(err.message)
-                        if (err.response && err.response.data && err.response.data.description) {
-                            let description = err.response.data.description
-                            description = description.toLowerCase()
-                            if (bads.some((bad) => description.includes(bad))) {
-                                await u.deleteOne()
-                                console.log(`🚮 ${u.username} deleted`)
-                            } else { console.log(`🤷‍♂️ ${description}`) }
-                        }
-                    })
-                await delay(35)
-            }
-            await axios.post(API, { chat_id: imp.shemdoe, from_chat_id: imp.mikekaDB, message_id: 8 })
-        }
-    } catch (error) {
-        console.log(`(Dayo Web Convo): ${error.message}`)
-    }
-})
+//             for (let [index, u] of all_users.entries()) {
+//                 let data = {
+//                     chat_id: Number(u.chatid),
+//                     from_chat_id: Number(imp.mikekaDB),
+//                     message_id: msgid,
+//                     reply_markup: defaultReplyMkp
+//                 }
+//                 await axios.post(API, data)
+//                     .then(() => { console.log(`✅ convo sent to ${u.username}`) })
+//                     .catch(async err => {
+//                         console.log(err.message)
+//                         if (err.response && err.response.data && err.response.data.description) {
+//                             let description = err.response.data.description
+//                             description = description.toLowerCase()
+//                             if (bads.some((bad) => description.includes(bad))) {
+//                                 await u.deleteOne()
+//                                 console.log(`🚮 ${u.username} deleted`)
+//                             } else { console.log(`🤷‍♂️ ${description}`) }
+//                         }
+//                     })
+//                 await delay(35)
+//             }
+//             await axios.post(API, { chat_id: imp.shemdoe, from_chat_id: imp.mikekaDB, message_id: 8 })
+//         }
+//     } catch (error) {
+//         console.log(`(Dayo Web Convo): ${error.message}`)
+//     }
+// })
 
 module.exports = router

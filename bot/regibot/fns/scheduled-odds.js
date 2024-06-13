@@ -65,14 +65,14 @@ const checkOdds = async (bot, imp, tablehusika, siku) => {
                 }
             })
 
-            await bot.telegram.sendMessage(imp.shemdoe, `New matches found and mkeka created successfully\n\n` + text + `Arrs: ${nanoArr}`, {
+            await bot.api.sendMessage(imp.shemdoe, `New matches found and mkeka created successfully\n\n` + text + `Arrs: ${nanoArr}`, {
                 parse_mode: 'HTML'
             })
         } else {
-            await bot.telegram.sendMessage(imp.shemdoe, `Automatic fetcher run and nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
+            await bot.api.sendMessage(imp.shemdoe, `Automatic fetcher run and nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
         }
     } catch (err) {
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 
@@ -112,14 +112,14 @@ const checkMatokeo = async (bot, imp, tablehusika, siku) => {
                     let mtch = await supatips_Model.findOne({ match, siku })
                     if (mtch.matokeo == '-:-') {
                         await mtch.updateOne({ $set: { matokeo } })
-                        await bot.telegram.sendMessage(imp.shemdoe, `Results for ${mtch.match} updated to ${matokeo}`)
+                        await bot.api.sendMessage(imp.shemdoe, `Results for ${mtch.match} updated to ${matokeo}`)
                     }
                 }
             }
 
         })
     } catch (err) {
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 
@@ -127,18 +127,18 @@ const check_waLeo = async (bot, imp, siku) => {
     try {
         let checker = await tg_slips.find({ siku })
         if (!checker) {
-            await bot.telegram.sendMessage(imp.shemdoe, 'Nakukumbusha, Post Mkeka wa Leo. Una hadi 03:11')
+            await bot.api.sendMessage(imp.shemdoe, 'Nakukumbusha, Post Mkeka wa Leo. Una hadi 03:11')
         } else {
             for (let c of checker) {
                 if (c.posted == false) {
-                    await bot.telegram.copyMessage(imp.mkekaLeo, imp.mikekaDB, c.mid)
+                    await bot.api.copyMessage(imp.mkekaLeo, imp.mikekaDB, c.mid)
                     await c.updateOne({ $set: { posted: true } })
                 }
             }
         }
     } catch (err) {
         console.log(err.message, err)
-        await bot.telegram.sendMessage(imp.shemdoe, err.message)
+        await bot.api.sendMessage(imp.shemdoe, err.message)
             .catch(e => console.log(e.message))
     }
 }

@@ -66,14 +66,14 @@ const famecheckOdds = async (bot, imp, tablehusika, siku) => {
                 })
             })
 
-            await bot.telegram.sendMessage(imp.shemdoe, `Fames: New matches found and mkeka created successfully\n\n` + text + `Arrs: ${nanoArr}`, {
+            await bot.api.sendMessage(imp.shemdoe, `Fames: New matches found and mkeka created successfully\n\n` + text + `Arrs: ${nanoArr}`, {
                 parse_mode: 'HTML'
             })
         } else {
-            await bot.telegram.sendMessage(imp.shemdoe, `Fame: Automatic fetcher run and nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_trs.length}`)
+            await bot.api.sendMessage(imp.shemdoe, `Fame: Automatic fetcher run and nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_trs.length}`)
         }
     } catch (err) {
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 
@@ -98,13 +98,13 @@ const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
                 let mtch = await fametips_Model.findOne({ match, siku })
                 if (mtch.matokeo == '-:-') {
                     await mtch.updateOne({ $set: { matokeo } })
-                    await bot.telegram.sendMessage(imp.shemdoe, `Fame: Results for ${mtch.match} updated to ${matokeo}`)
+                    await bot.api.sendMessage(imp.shemdoe, `Fame: Results for ${mtch.match} updated to ${matokeo}`)
                 }
             }
         })
         
     } catch (err) {
-        await bot.telegram.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
     }
 }
 

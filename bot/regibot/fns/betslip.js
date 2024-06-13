@@ -6,7 +6,7 @@ const { nanoid } = require('nanoid')
 const betslipModel = require('../database/betslip')
 
 module.exports = (bot, imp) => {
-    bot.command('betslip', async ctx=> {
+    bot.callbackQuery('betslip', async ctx=> {
         try {
             let url = `https://footballpredictions.com/betslip/`
             let html = await axios.get(url)
@@ -40,7 +40,7 @@ module.exports = (bot, imp) => {
         }
     })
 
-    bot.action('post_betslip', async ctx => {
+    bot.callbackQuery('post_betslip', async ctx => {
         try {
             let mid = ctx.callbackQuery.message.message_id
             let mkStr = ctx.callbackQuery.message
@@ -65,7 +65,7 @@ module.exports = (bot, imp) => {
         }
     })
 
-    bot.action('ignore_slip', async ctx=> {
+    bot.callbackQuery('ignore_slip', async ctx=> {
         try {
             await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
         } catch (error) {

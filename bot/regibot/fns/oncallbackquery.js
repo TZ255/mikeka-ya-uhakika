@@ -17,7 +17,7 @@ module.exports = (bot, delay) => {
             let data = ctx.callbackQuery.data
             let mid = ctx.callbackQuery.message.message_id
             if (data.length > 60) {
-                await bot.telegram.sendMessage(imp.shemdoe, 'Warning: Callback data at approve is above the limit')
+                await bot.api.sendMessage(imp.shemdoe, 'Warning: Callback data at approve is above the limit')
                     .catch((err) => console.log(err.message))
             }
 
@@ -27,7 +27,7 @@ module.exports = (bot, delay) => {
                 let channel_id = info[2]
                 let ch_link = 'https://t.me/+804l_wD7yYgzM2Q0'
 
-                await bot.telegram.approveChatJoinRequest(channel_id, userid)
+                await bot.api.approveChatJoinRequest(channel_id, userid)
                     .catch(async (error) => {
                         if (error.message.includes('ALREADY_PARTICIPANT')) {
                             await ctx.deleteMessage(mid).catch(e => console.log(e.message))
@@ -67,7 +67,7 @@ module.exports = (bot, delay) => {
                 })
             } else if (data.includes('updateyd_')) {
                 let nano_Arr = await bin_supatips_Model.find()
-                await supatips_Model.deleteMany({siku: ydd})
+                await supatips_Model.deleteMany({ siku: ydd })
                 for (let bin of nano_Arr) {
                     await supatips_Model.create({
                         matokeo: bin.matokeo,
@@ -194,6 +194,23 @@ module.exports = (bot, delay) => {
                 let ign = await ctx.reply('Mkeka Ignored 🤷‍♂️')
                 await delay(1500)
                 await ctx.deleteMessage(ign.message_id)
+            }
+
+            switch (data) {
+                case 'accept_pload':
+                    let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
+                    let org_msg_id = ctx.callbackQuery.message.message_id
+                    await ctx.deleteMessage(org_msg_id)
+                    await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
+                    break;
+
+                case 'jisajili_m': case 'deposit_m':
+                    await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7652)
+                    break;
+
+                case 'betbuilder':
+                    await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7655)
+                    break;
             }
         } catch (err) {
             console.log(err.message)

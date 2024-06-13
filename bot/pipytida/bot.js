@@ -2,10 +2,9 @@
 
 const PipyBot = async () => {
     try {
-        const { Telegraf } = require('telegraf')
-        const { message } = require('telegraf/filters')
-        const bot = new Telegraf(process.env.PIPY_TOKEN)
-            .catch((err) => console.log(err.message))
+        const { Bot } = require('grammy')
+        const { autoRetry } = require("@grammyjs/auto-retry");
+        const bot = new Bot(process.env.PIPY_TOKEN)
 
         const pipyUsers = require('./database/chats')
         const verifiedList = require('./database/verified')
@@ -60,12 +59,16 @@ const PipyBot = async () => {
         }
 
         //catching any error
-        bot.catch((err, ctx) => {
-            console.log(`(Pipy) ${err.message} at ${ctx.updateType}`)
-        })
+        bot.catch((err) => {
+            const ctx = err.ctx;
+            console.error(`(Pipy): ${err.message}`, err);
+        });
+
+        //use auto-retry
+        bot.api.config.use(autoRetry());
 
         //deleting pending updates
-        bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+        bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -85,20 +88,13 @@ const PipyBot = async () => {
         const admins = [imp.halot, imp.shemdoe, imp.blackberry, imp.xbongo, imp.TelegramChannelId]
         const chatGroups = [imp.r_chatting, imp.sio_shida]
 
-        //bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
-
-
-
-        bot.start(async ctx => {
+        bot.command('start', async ctx => {
             try {
-                if (ctx.payload) {
-                    let pload = ctx.payload
-                    let rahatupu = `https://t.me/+PWiPWm0vB5Y4ZDhk`
-                    let urafiki = `https://t.me/+EOEvgGu3B49lYmY0`
-                    let utamuFolder = `https://t.me/addlist/88O_60izot4xNmE0`
+                if (ctx.match) {
+                    let pload = ctx.match
                     if (pload == 'ngono_bongo') {
                         console.log('Ngono Payload Started')
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8859, {
+                        await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })
                     } else if (pload == 'watoa_huduma') {
@@ -108,7 +104,7 @@ const PipyBot = async () => {
                     await create(bot, ctx)
 
                 } else {
-                    await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653, {
+                    await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7653, {
                         reply_markup: defaultReplyMkp
                     })
 
@@ -119,7 +115,7 @@ const PipyBot = async () => {
                             username: ctx.chat.first_name,
                             refferer: "Pipy"
                         })
-                        await bot.telegram.sendMessage(imp.logsBin, '(Pipy) New user found me - Added to DB')
+                        await bot.api.sendMessage(imp.logsBin, '(Pipy) New user found me - Added to DB')
                     }
                 }
 
@@ -139,7 +135,7 @@ const PipyBot = async () => {
 
         bot.command(['help', 'stop'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7653)
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7653)
                 await create(bot, ctx)
             } catch (err) {
                 console.log(err.message)
@@ -169,82 +165,15 @@ const PipyBot = async () => {
                             if (index == all_users.length - 1) {
                                 ctx.reply('Nimemaliza conversation')
                             }
-                            bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => console.log('✅ convo sent to ' + u.chatid))
+                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        pipyUsers.findOneAndDelete({ refferer: 'Pipy', chatid: u.chatid })
+                                        pipyUsers.findOneAndDelete({ chatid: u.chatid })
                                             .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
                                             .catch(e => console.log(e.message))
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
-                        }, index * 40)
-                    })
-                } catch (err) {
-                    console.log(err.message)
-                }
-            }
-
-        })
-
-        bot.command('premier', async ctx => {
-            let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/premier-')[1].trim())
-            let bads = ['deactivated', 'blocked']
-            if (myId == imp.shemdoe || myId == imp.halot) {
-                try {
-                    let all_users = await pipyUsers.find({ refferer: "Pipy", promo: 'premier' })
-
-                    all_users.forEach((u, index) => {
-                        if (u.blocked != true) {
-                            setTimeout(() => {
-                                if (index == all_users.length - 1) {
-                                    ctx.reply('Nimemaliza conversation')
-                                }
-                                bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                    .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                    .catch((err) => {
-                                        if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                            pipyUsers.findOneAndDelete({ chatid: u.chatid })
-                                                .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                        } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                    })
-                            }, index * 40)
-                        }
-                    })
-                } catch (err) {
-                    console.log(err.message)
-                }
-            }
-
-        })
-
-        bot.command('unknown', async ctx => {
-            let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/unknown-')[1].trim())
-            let bads = ['deactivated', 'blocked']
-            if (myId == imp.shemdoe || myId == imp.halot) {
-                try {
-                    let all_users = await pipyUsers.find({ refferer: "Pipy", promo: 'unknown' })
-
-                    all_users.forEach((u, index) => {
-                        if (u.blocked != true) {
-                            setTimeout(() => {
-                                if (index == all_users.length - 1) {
-                                    ctx.reply('Nimemaliza conversation')
-                                }
-                                bot.telegram.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                    .then(() => console.log('✅ convo sent to ' + u.chatid))
-                                    .catch((err) => {
-                                        if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                            pipyUsers.findOneAndDelete({ chatid: u.chatid })
-                                                .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                        } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                    })
-                            }, index * 40)
-                        }
+                        }, index * 35)
                     })
                 } catch (err) {
                     console.log(err.message)
@@ -264,7 +193,7 @@ const PipyBot = async () => {
                 }
             } catch (err) {
                 console.log(err)
-                await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.api.sendMessage(imp.shemdoe, err.message)
                     .catch(e => console.log(e.message))
             }
         })
@@ -280,7 +209,7 @@ const PipyBot = async () => {
                 }
             } catch (err) {
                 console.log(err)
-                await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.api.sendMessage(imp.shemdoe, err.message)
                     .catch(e => console.log(e.message))
             }
         })
@@ -295,7 +224,7 @@ const PipyBot = async () => {
                     await call_sendMikeka_functions.elekezaDM(bot, ctx, imp, delay)
                 }
             } catch (err) {
-                await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                await bot.api.sendMessage(imp.shemdoe, err.message)
                     .catch((e) => console.log(e.message))
                 console.log(err.message, err)
             }
@@ -318,7 +247,7 @@ const PipyBot = async () => {
 
         bot.command('kujisajili', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7595, {
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7595, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -328,7 +257,7 @@ const PipyBot = async () => {
 
         bot.command('kujisajili_bw', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 99, {
+                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 99, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -338,7 +267,7 @@ const PipyBot = async () => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 97, {
+                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 97, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -348,7 +277,7 @@ const PipyBot = async () => {
 
         bot.command('kudeposit', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7596, {
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7596, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -372,7 +301,7 @@ const PipyBot = async () => {
 
         bot.command(['jisajili_m', 'deposit_m'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652, {
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7652, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -382,7 +311,7 @@ const PipyBot = async () => {
 
         bot.command('betbuilder', async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7655, {
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7655, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -404,7 +333,7 @@ const PipyBot = async () => {
 
         bot.command('setbtn', async ctx => {
             try {
-                await bot.telegram.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
+                await bot.api.sendMessage(imp.r_chatting, 'Chatting Rahatupu\n\nGroup bora bongo kwa huduma za kikubwa', {
                     reply_markup: defaultReplyMkp
                 })
             } catch (error) {
@@ -412,39 +341,9 @@ const PipyBot = async () => {
             }
         })
 
-        bot.action(['jisajili_m', 'deposit_m'], async ctx => {
-            try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7652)
-            } catch (err) {
-                console.log(err.message)
-            }
-        })
-
-        bot.action('accept_pload', async ctx => {
-            try {
-                let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
-                let org_msg_id = ctx.callbackQuery.message.message_id
-                await ctx.deleteMessage(org_msg_id)
-                await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
-            } catch (err) {
-                console.log(err.message, err)
-            }
-
-        })
-
-        bot.action('list_dadapoa', async ctx => {
-            try {
-                if (chatGroups.includes(ctx.chat.id)) {
-                    await otheFns.watoaHuduma(bot, imp)
-                }
-            } catch (error) {
-                console.log(error.message)
-            }
-        })
-
         bot.command(['wakubwa', 'sodoma', 'sex', 'wadogo'], async ctx => {
             try {
-                await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 8094, {
+                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8094, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -517,6 +416,27 @@ const PipyBot = async () => {
             }
         })
 
+        bot.on('callback_query:data', async ctx => {
+            try {
+                let data = ctx.callbackQuery.data
+
+                switch (data) {
+                    case 'accept_pload':
+                        let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
+                        let org_msg_id = ctx.callbackQuery.message.message_id
+                        await ctx.deleteMessage(org_msg_id)
+                        await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
+                        break;
+
+                    case 'jisajili_m': case 'deposit_m':
+                        await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7652)
+                        break;
+                }
+            } catch (error) {
+                console.log('(Pipy): ' + error.message)
+            }
+        })
+
         bot.on('chat_join_request', async ctx => {
             let chatid = ctx.chatJoinRequest.from.id
             let username = ctx.chatJoinRequest.from.first_name
@@ -532,8 +452,8 @@ const PipyBot = async () => {
                     if (!user) {
                         await pipyUsers.create({ chatid, refferer: 'Dayo', blocked: false, username })
                     }
-                    await bot.telegram.approveChatJoinRequest(channel_id, chatid)
-                    await bot.telegram.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
+                    await bot.api.approveChatJoinRequest(channel_id, chatid)
+                    await bot.api.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true
                     })
@@ -544,7 +464,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(message('new_chat_members'), async ctx => {
+        bot.on(':new_chat_members', async ctx => {
             let banned = ['sister g']
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
@@ -557,7 +477,7 @@ const PipyBot = async () => {
 
                         if (banned.some(b => fullName.includes(b))) {
                             await ctx.banChatMember(member.id, 0);
-                            await bot.telegram.sendMessage(imp.blackberry, `${fullName} banned`)
+                            await bot.api.sendMessage(imp.blackberry, `${fullName} banned`)
                             await ctx.reply(`<b>${fullName}</b> amejaribu kuingia kwenye group, nimemuondoa`, { parse_mode: 'HTML' })
                         }
                     }
@@ -567,7 +487,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(message('text'), async ctx => {
+        bot.on(':text', async ctx => {
             try {
                 if (ctx.message.reply_to_message) {
                     if (admins.includes(ctx.chat.id) && ctx.message.reply_to_message.text) {
@@ -617,7 +537,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(message('photo'), async ctx => {
+        bot.on(':photo', async ctx => {
             try {
                 if (ctx.chat.type == 'private') {
                     let mid = ctx.message.message_id
@@ -633,7 +553,7 @@ const PipyBot = async () => {
                             let rmid = Number(ids.split('&mid=')[1])
 
 
-                            await bot.telegram.copyMessage(userid, chatid, mid, {
+                            await bot.api.copyMessage(userid, chatid, mid, {
                                 reply_to_message_id: rmid
                             })
                         }
@@ -645,13 +565,13 @@ const PipyBot = async () => {
                             let rmid = Number(ids.split('&mid=')[1])
 
 
-                            await bot.telegram.copyMessage(userid, chatid, mid, {
+                            await bot.api.copyMessage(userid, chatid, mid, {
                                 reply_to_message_id: rmid
                             })
                         }
                     }
 
-                    await bot.telegram.copyMessage(imp.halot, chatid, mid, {
+                    await bot.api.copyMessage(imp.halot, chatid, mid, {
                         caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
                         parse_mode: 'HTML'
                     })
@@ -668,7 +588,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(message('video'), async ctx => {
+        bot.on(':video', async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified (only applicable if all users are allowed to post)
@@ -682,7 +602,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(message('animation'), async ctx => {
+        bot.on(':animation', async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified (only applicable if all users are allowed to post)
@@ -696,7 +616,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(message('sticker'), async ctx => {
+        bot.on(':sticker', async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
                     let unixNow = ctx.message.date
@@ -739,7 +659,11 @@ const PipyBot = async () => {
             }
         }, 60000)
 
-        bot.launch().catch(e => {
+        // Stopping the bot when the Node.js process is about to be terminated
+        process.once("SIGINT", () => bot.stop());
+        process.once("SIGTERM", () => bot.stop());
+
+        bot.start().catch(e => {
             if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                 bot.stop('new update')
             }

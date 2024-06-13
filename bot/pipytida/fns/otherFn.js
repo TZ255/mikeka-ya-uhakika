@@ -105,7 +105,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             let loc = list.loc ? ` <b>(${list.loc})</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
-            await ctx.sendChatAction('typing')
+            await ctx.replyWithChatAction('typing')
             await delay(1000)
             let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena saa <b>${muda}</b>\n\n<b>${tag}</b> ni mtoa huduma mwaminifu.${loc} \n\nBonyeza button hapa chini kuwasiliana nae.`, {
                 parse_mode: "HTML",
@@ -206,7 +206,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             if (data.fname != name || data.username != username) {
                 let _info = `Taarifa za Mtoa huduma ${data.fname} zimeboreshwa, amebadili jina kuwa ${name} na username kuwa ${username}.`
                 await data.updateOne({ $set: { fname: name, username } })
-                await bot.telegram.sendMessage(imp.blackberry, _info)
+                await bot.api.sendMessage(imp.blackberry, _info)
             }
         }
     } catch (error) {
@@ -235,7 +235,7 @@ const adminReplyToMessageFn = async (bot, ctx, imp) => {
         }
 
         else {
-            await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
+            await bot.api.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
         }
     } catch (error) {
         await ctx.reply(error.message)
@@ -251,7 +251,7 @@ const adminReplyTextToPhotoFn = async (bot, ctx, imp) => {
         let userid = Number(ids.split('&mid=')[0])
         let mid = Number(ids.split('&mid=')[1])
 
-        await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+        await bot.api.sendMessage(userid, my_msg, { reply_to_message_id: mid })
     } catch (error) {
         await ctx.reply(error.message)
     }
@@ -262,13 +262,13 @@ const utapeliMsg = async (bot, imp) => {
     try {
         let Groups = [imp.r_chatting]
         for (let G of Groups) {
-            let attention = await bot.telegram.sendMessage(G, zingatiaMsg, {
+            let attention = await bot.api.sendMessage(G, zingatiaMsg, {
                 parse_mode: 'HTML',
                 reply_markup: rmarkup
             })
-            await bot.telegram.unpinAllChatMessages(G)
+            await bot.api.unpinAllChatMessages(G)
                 .catch(e => console.log(e.message))
-            await bot.telegram.pinChatMessage(G, attention.message_id, {
+            await bot.api.pinChatMessage(G, attention.message_id, {
                 disable_notification: true
             })
         }
@@ -291,7 +291,7 @@ const watoaHuduma = async (bot, imp, grpId) => {
             txt = txt + `<b>👧 ${username} - (${w.fname})</b>\n📞 <b>${phone}</b>\n${loc}\n\n\n`
         }
 
-        let msg = await bot.telegram.sendMessage(grpId, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
+        let msg = await bot.api.sendMessage(grpId, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
         await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
     } catch (error) {
         console.log(error.message, error)
@@ -355,9 +355,9 @@ const updateAdminTitle = async (bot, ctx, imp) => {
         let user = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title } }, { new: true })
 
         for (let G of Groups) {
-            await bot.telegram.promoteChatMember(G, chatid, promotePrivillages)
+            await bot.api.promoteChatMember(G, chatid, promotePrivillages)
                 .then(async () => {
-                    await bot.telegram.setChatAdministratorCustomTitle(G, chatid, title)
+                    await bot.api.setChatAdministratorCustomTitle(G, chatid, title)
                     await ctx.reply(`${user.fname} Admin Title changed to ${title}`)
                 }).catch(async e => await ctx.reply(e.message))
         }
@@ -373,7 +373,7 @@ const clearingGroup = async (bot, imp, delay) => {
         let all = await toDeleteModel.find()
 
         for (let m of all) {
-            await bot.telegram.deleteMessage(m.chatid, m.msgid).catch(e => console.log(e.message))
+            await bot.api.deleteMessage(m.chatid, m.msgid).catch(e => console.log(e.message))
             await m.deleteOne().catch(e => console.log(e.message))
             await delay(20) //delete 50 msgs per sec
         }
@@ -428,7 +428,7 @@ const modFunction = async (bot, ctx, imp, delay) => {
                     let paidUpdate = await verifiedList.findOneAndUpdate({ chatid }, { $set: { paid: false } }, { new: true });
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`)
                     for (let G of Groups) {
-                        await bot.telegram.promoteChatMember(G, chatid, demotePrivillages)
+                        await bot.api.promoteChatMember(G, chatid, demotePrivillages)
                             .catch(async e => await ctx.reply(e.message))
                         await ctx.reply(`${paidUpdate.fname} is demoted on ${G}`)
                     }
@@ -437,9 +437,9 @@ const modFunction = async (bot, ctx, imp, delay) => {
                     let title = paidUpdate.title ? paidUpdate.title : 'mtoa huduma'
                     await ctx.reply(`${paidUpdate.fname} paid status is updated to ${paidUpdate.paid}`);
                     for (let G of Groups) {
-                        await bot.telegram.promoteChatMember(G, chatid, promotePrivillages)
+                        await bot.api.promoteChatMember(G, chatid, promotePrivillages)
                             .then(async () => {
-                                await bot.telegram.setChatAdministratorCustomTitle(G, chatid, title)
+                                await bot.api.setChatAdministratorCustomTitle(G, chatid, title)
                                 await ctx.reply(`${paidUpdate.fname} is promoted on ${G}`)
                             }).catch(async e => await ctx.reply(e.message))
                     }

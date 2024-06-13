@@ -4,23 +4,23 @@ const rtfunction = async () => {
 
     try {
         let tksn = [process.env.RT_TOKEN, process.env.PL_TOKEN, process.env.MUVIKA_TOKEN]
+        const { Bot } = require('grammy')
+        const { autoRetry } = require("@grammyjs/auto-retry");
+        const axios = require('axios').default
+        const OpenAI = require('openai')
         for (let t of tksn) {
-            const { Telegraf } = require('telegraf')
             const mongoose = require('mongoose')
             const rtStarterModel = require('./database/chats')
             const malayaModel = require('./database/malaya')
             const videosDB = require('./database/db')
             const aliExDB = require('./database/aliexpress')
-            const axios = require('axios').default
-            const OpenAI = require('openai')
             const extractInfoOpenAi = require('./functions/openai')
 
             //Middlewares
             const call_function = require('./functions/fn')
 
 
-            const bot = new Telegraf(t)
-                .catch((err) => console.log(err.message))
+            const bot = new Bot(t)
 
             const imp = {
                 replyDb: -1001608248942,
@@ -59,6 +59,9 @@ const rtfunction = async () => {
             //delaying
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+            //use auto-retry
+            bot.api.config.use(autoRetry());
+
             const rateLimitter = []
             setInterval(() => {
                 rateLimitter.length = 0
@@ -72,13 +75,14 @@ const rtfunction = async () => {
                 }
             }, 20000)
 
-            bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+            bot.catch((err) => {
+                const ctx = err.ctx;
+                console.error(`(RT): ${err.message}`, err);
+            });
 
-            bot.catch((err, ctx) => {
-                console.log(`(RT) ${err.message} at ${ctx.updateType}`)
-            })
+            bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
-            bot.start(async ctx => {
+            bot.command('start', async ctx => {
                 try {
                     //add to database if not
                     await call_function.createUser(ctx, delay)
@@ -114,7 +118,7 @@ const rtfunction = async () => {
                             }
                         }
                         if (pload.toLowerCase() == 'verified_list') {
-                            await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7755, {
+                            await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7755, {
                                 reply_markup: {
                                     inline_keyboard: [
                                         [
@@ -124,13 +128,13 @@ const rtfunction = async () => {
                                 }
                             })
                         } else if (pload.toLowerCase() == 'iphone') {
-                            await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 33)
+                            await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 33)
                         } else if (pload.toLowerCase() == 'ongeza_points') {
                             await call_function.payingInfo(bot, ctx, delay, imp, userid, 26)
                         } else if (pload.toLowerCase() == 'get-wakubwa-pack1') {
-                            await ctx.sendChatAction('typing')
+                            await ctx.replyWithChatAction('typing')
                             setTimeout(() => {
-                                bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 36)
+                                bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 36)
                                     .catch(e => console.log(e.message, e))
                             }, 1000)
 
@@ -191,7 +195,7 @@ const rtfunction = async () => {
                                     if (index == all_users.length - 1) {
                                         ctx.reply('Nimemaliza conversation')
                                     }
-                                    bot.telegram.copyMessage(u.chatid, imp.matangazoDB, msg_id)
+                                    bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
                                         .then(() => console.log('✅ sent to ' + u.chatid))
                                         .catch((err) => {
                                             if (err.message.includes('blocked') || err.message.includes('initiate')) {
@@ -219,7 +223,7 @@ const rtfunction = async () => {
                             setTimeout(() => {
                                 const np = 500 - u.points
                                 u.updateOne({ $set: { points: u.points + np } }).catch(e => console.log(e.message))
-                                bot.telegram.copyMessage(u.chatid, imp.matangazoDB, 42).then(() => {
+                                bot.api.copyMessage(u.chatid, imp.matangazoDB, 42).then(() => {
                                     console.log('✅ done kwa ' + u.chatid);
                                 }).catch(e => console.log(e.message))
                             }, 40 * i);
@@ -239,7 +243,7 @@ const rtfunction = async () => {
 
                         all.forEach((u, i) => {
                             setTimeout(() => {
-                                bot.telegram.copyMessage(u.chatid, imp.matangazoDB, 65)
+                                bot.api.copyMessage(u.chatid, imp.matangazoDB, 65)
                                     .then(() => console.log('✅ done kwa ' + u.chatid))
                                     .catch(e => console.log('❌ ' + e.message))
                             }, 40 * i)
@@ -308,7 +312,7 @@ const rtfunction = async () => {
 
             bot.command('msaada', async ctx => {
                 try {
-                    await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 25)
+                    await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 25)
                 } catch (err) {
                     console.log(err.message)
                 }
@@ -316,7 +320,7 @@ const rtfunction = async () => {
 
             bot.command('list', async ctx => {
                 try {
-                    await bot.telegram.copyMessage(ctx.chat.id, imp.pzone, 7755, {
+                    await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7755, {
                         reply_markup: {
                             inline_keyboard: [
                                 [
@@ -357,7 +361,7 @@ const rtfunction = async () => {
                             let rn = Math.floor(Math.random() * 10) + 1
 
                             await aliExDB.create({ msgid: postId, affLink })
-                            await bot.telegram.copyMessage(imp.aliProducts, chan_id, postId, {
+                            await bot.api.copyMessage(imp.aliProducts, chan_id, postId, {
                                 reply_markup: {
                                     inline_keyboard: [
                                         [
@@ -377,7 +381,7 @@ const rtfunction = async () => {
                 }
             })
 
-            bot.on('callback_query', async ctx => {
+            bot.on('callback_query:data', async ctx => {
                 try {
                     let cdata = ctx.callbackQuery.data
                     let cmsgid = ctx.callbackQuery.message.message_id
@@ -386,7 +390,7 @@ const rtfunction = async () => {
                     if (cdata == 'salio') {
                         let user = await rtStarterModel.findOne({ chatid })
                         let txt = `Una Points ${user.points} kwenye account yako ya RT Malipo.`
-                        await ctx.answerCbQuery(txt, { cache_time: 10, show_alert: true })
+                        await ctx.answerCallbackQuery({ text: txt, cache_time: 10, show_alert: true })
                     } else if (['rudi_nyuma', 'ongeza_points'].includes(cdata)) {
                         await ctx.deleteMessage(cmsgid)
                         await call_function.payingInfo(bot, ctx, delay, imp, chatid, 26)
@@ -412,14 +416,14 @@ const rtfunction = async () => {
                     } else if (cdata == 'nimelipia') {
                         await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 30, cmsgid)
                     } else if (cdata == 'video-zingine') {
-                        await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 37)
+                        await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 37)
                     }
                 } catch (err) {
                     console.log(err.message, err)
                 }
             })
 
-            bot.on('text', async ctx => {
+            bot.on(':text', async ctx => {
                 try {
                     if (ctx.message.reply_to_message && admins.includes(ctx.chat.id)) {
                         if (ctx.message.reply_to_message.text) {
@@ -439,7 +443,7 @@ const rtfunction = async () => {
                                 let pts = Number(my_msg.toLocaleLowerCase().split(' p ')[1])
                                 await call_function.addingPoints(ctx, userid, pts, imp)
                             } else {
-                                await bot.telegram.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
+                                await bot.api.copyMessage(userid, myid, my_msg_id, { reply_to_message_id: mid })
                             }
                         }
 
@@ -455,7 +459,7 @@ const rtfunction = async () => {
                                 let pts = Number(my_msg.toLocaleLowerCase().split('paid ')[1])
                                 await call_function.addingPoints(ctx, userid, pts, imp)
                             } else {
-                                await bot.telegram.sendMessage(userid, my_msg, { reply_to_message_id: mid })
+                                await bot.api.sendMessage(userid, my_msg, { reply_to_message_id: mid })
                             }
                         }
                     }
@@ -484,9 +488,9 @@ const rtfunction = async () => {
 
                         for (let m of miamala) {
                             if (txt.toLowerCase().includes(m)) {
-                                await bot.telegram.sendMessage(imp.rtmalipo, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
+                                await bot.api.sendMessage(imp.rtmalipo, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
 
-                                await bot.telegram.copyMessage(userid, imp.matangazoDB, 63, {
+                                await bot.api.copyMessage(userid, imp.matangazoDB, 63, {
                                     reply_markup: {
                                         inline_keyboard: [
                                             [
@@ -501,7 +505,7 @@ const rtfunction = async () => {
 
                         for (let t of zingine) {
                             if (txt.toLocaleLowerCase().includes(t)) {
-                                await bot.telegram.copyMessage(ctx.chat.id, imp.matangazoDB, 96)
+                                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 96)
                                 break;
                             }
                         }
@@ -517,24 +521,24 @@ const rtfunction = async () => {
                                 break;
 
                             case '⛑ Help / Msaada ⛑':
-                                await bot.telegram.copyMessage(userid, imp.matangazoDB, 25)
+                                await bot.api.copyMessage(userid, imp.matangazoDB, 25)
                                 break;
 
                             default:
-                                await bot.telegram.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true })
+                                await bot.api.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML', disable_notification: true })
                         }
                     }
 
                 } catch (err) {
                     if (!err.message) {
-                        await bot.telegram.sendMessage(imp.shemdoe, err.description)
+                        await bot.api.sendMessage(imp.shemdoe, err.description)
                     } else {
-                        await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                        await bot.api.sendMessage(imp.shemdoe, err.message)
                     }
                 }
             })
 
-            bot.on('photo', async ctx => {
+            bot.on(':photo', async ctx => {
                 try {
                     let mid = ctx.message.message_id
                     let username = ctx.chat.first_name
@@ -554,7 +558,7 @@ const rtfunction = async () => {
                             let rmid = Number(ids.split('&mid=')[1])
 
 
-                            await bot.telegram.copyMessage(userid, chatid, mid, {
+                            await bot.api.copyMessage(userid, chatid, mid, {
                                 reply_to_message_id: rmid
                             })
                         }
@@ -566,7 +570,7 @@ const rtfunction = async () => {
                             let rmid = Number(ids.split('&mid=')[1])
 
 
-                            await bot.telegram.copyMessage(userid, chatid, mid, {
+                            await bot.api.copyMessage(userid, chatid, mid, {
                                 reply_to_message_id: rmid
                             })
                         }
@@ -574,16 +578,16 @@ const rtfunction = async () => {
 
 
                     else {
-                        await bot.telegram.copyMessage(imp.halot, chatid, mid, {
+                        await bot.api.copyMessage(imp.halot, chatid, mid, {
                             caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
                             parse_mode: 'HTML'
                         })
-                        await bot.telegram.copyMessage(imp.rtmalipo, chatid, mid, {
+                        await bot.api.copyMessage(imp.rtmalipo, chatid, mid, {
                             caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
                             parse_mode: 'HTML'
                         })
                         await delay(1000)
-                        await bot.telegram.copyMessage(chatid, imp.matangazoDB, 63, {
+                        await bot.api.copyMessage(chatid, imp.matangazoDB, 63, {
                             reply_markup: {
                                 inline_keyboard: [
                                     [
@@ -595,16 +599,20 @@ const rtfunction = async () => {
                     }
                 } catch (err) {
                     if (!err.message) {
-                        await bot.telegram.sendMessage(imp.shemdoe, err.description)
+                        await bot.api.sendMessage(imp.shemdoe, err.description)
                         console.log(err)
                     } else {
-                        await bot.telegram.sendMessage(imp.shemdoe, err.message)
+                        await bot.api.sendMessage(imp.shemdoe, err.message)
                         console.log(err)
                     }
                 }
             })
 
-            bot.launch().catch(e => {
+            // Stopping the bot when the Node.js process is about to be terminated
+            process.once("SIGINT", () => bot.stop());
+            process.once("SIGTERM", () => bot.stop());
+
+            bot.start().catch(e => {
                 if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                     bot.stop('new update')
                 }

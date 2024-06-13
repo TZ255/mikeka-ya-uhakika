@@ -34,8 +34,8 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //upload video
     let type = OS
     let botname = ctx.botInfo.username
-    await ctx.sendChatAction('upload_video')
-    let dvid = await bot.telegram.copyMessage(userid, imp.ohmyDB, vid.msgId, {
+    await ctx.replyWithChatAction('upload_video')
+    let dvid = await bot.api.copyMessage(userid, imp.ohmyDB, vid.msgId, {
         reply_markup: {
             keyboard: [
                 [
@@ -52,7 +52,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //if not add to duplicate and deduct 250 points
     let dup_checker = await binModel.findOne({ chatid: Number(userid), nano: vid.nano })
     if (!dup_checker) {
-        await ctx.sendChatAction('typing')
+        await ctx.replyWithChatAction('typing')
         await binModel.create({ chatid: Number(userid), nano: vid.nano })
 
         let rcvr = await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { points: -250 } }, { new: true })
@@ -116,8 +116,8 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
 }
 
 const payingInfo = async (bot, ctx, delay, imp, userid, mid) => {
-    await ctx.sendChatAction('typing')
-    await bot.telegram.copyMessage(userid, imp.matangazoDB, mid, {
+    await ctx.replyWithChatAction('typing')
+    await bot.api.copyMessage(userid, imp.matangazoDB, mid, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -190,7 +190,7 @@ const addingPoints = async (ctx, chatid, points, imp) => {
 }
 
 const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    let info = await bot.telegram.copyMessage(chatid, imp.matangazoDB, msgid, {
+    let info = await bot.api.copyMessage(chatid, imp.matangazoDB, msgid, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -208,7 +208,7 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
 }
 
 const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    await bot.telegram.copyMessage(chatid, imp.matangazoDB, msgid, {
+    await bot.api.copyMessage(chatid, imp.matangazoDB, msgid, {
         reply_markup: {
             inline_keyboard: [
                 [
