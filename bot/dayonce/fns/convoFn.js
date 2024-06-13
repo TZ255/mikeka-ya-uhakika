@@ -12,7 +12,8 @@ let clearDB = async (bot, ctx, u, index, bads, all_users) => {
     }
 }
 
-const mainConvo = async (bot, ctx, imp, u, index, msg_id, defaultReplyMkp, all_users, bads) => {
+const mainConvo = async (bot, ctx, imp, u, index, msg_id, defaultReplyMkp) => {
+    let bads = ['blocked', 'deactivated']
     try {
         await bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
             .catch(async (err) => {
@@ -21,9 +22,6 @@ const mainConvo = async (bot, ctx, imp, u, index, msg_id, defaultReplyMkp, all_u
                     console.log(`🚮 ${u.username} deleted`)
                 } else { console.log(`🤷‍♂️ ${err.message}`) }
             })
-        if (index == all_users.length - 1) {
-            await ctx.reply('Nimemaliza conversation')
-        }
     } catch (error) {
         console.log(error.message)
     }

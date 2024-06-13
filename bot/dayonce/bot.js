@@ -1,7 +1,7 @@
 
+
 const DayoBot = async () => {
     try {
-        const { default: axios } = require('axios');
         const { Bot } = require('grammy')
         const bot = new Bot(process.env.DAYO_TOKEN)
         const { autoRetry } = require("@grammyjs/auto-retry");
@@ -14,7 +14,6 @@ const DayoBot = async () => {
         const switchUserText = require('./fns/text-arr')
         const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
         const { postingFn } = require('./fns/deleteJoinMsgs')
-        const { clearDB, mainConvo } = require('./fns/convoFn')
 
         const imp = {
             replyDb: -1001608248942,
@@ -144,40 +143,33 @@ const DayoBot = async () => {
         })
 
         bot.command('convo', async ctx => {
-            if ([imp.shemdoe, imp.halot].includes(ctx.chat.id)) {
-                let myId = ctx.chat.id
-                let txt = ctx.message.text
-                let msg_id = Number(txt.split('/convo-')[1].trim())
-                try {
-                    if(process.env.environment == 'production') {
-                        let PURL = `https://mikeka-ya-uhakika-production.up.railway.app/dayonce/${myId}/${msg_id}`
-                        await axios.post(PURL)
-                    } else if(process.env.environment == 'local') {
-                        let LURL = `http://localhost:3000/dayonce/${myId}/${msg_id}`
-                        await axios.post(LURL)
-                    }
-                } catch (err) {
-                    await ctx.reply(err.message)
-                }
-            }
-        })
-
-        bot.command('cleardb', async ctx => {
-            let myId = ctx.chat.id
+            let txt = ctx.message.text
+            let msg_id = Number(txt.split('/convo-')[1].trim())
             let bads = ['blocked', 'deactivated']
-            if (myId == imp.shemdoe || myId == imp.halot) {
+            if ([imp.shemdoe, imp.halot].includes(ctx.chat.id)) {
                 try {
                     let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
 
-                    for (let [index, u] of all_users.entries()) {
+                    all_users.forEach((u, index) => {
+                        if (index == all_users.length - 1) {
+                            ctx.reply('Nimemaliza conversation')
+                        }
                         setTimeout(() => {
-                            clearDB(bot, ctx, u, index, bads, all_users).catch(e=> console.log(e.message))
+                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .catch((err) => {
+                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
+                                        dayoUsers.findOneAndDelete({ chatid: u.chatid, refferer: 'Dayo' })
+                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
+                                            .catch(e => console.log(e.message))
+                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                })
                         }, 35 * index)
-                    }
+                    })
                 } catch (err) {
                     console.log("(Dayo) " + err.message)
                 }
             }
+
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
