@@ -424,7 +424,7 @@ const PipyBot = async () => {
                     case 'accept_pload':
                         let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
                         let org_msg_id = ctx.callbackQuery.message.message_id
-                        await ctx.deleteMessage(org_msg_id)
+                        await ctx.api.deleteMessage(ctx.chat.id, org_msg_id)
                         await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
                         break;
 

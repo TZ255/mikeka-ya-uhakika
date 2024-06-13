@@ -58,7 +58,7 @@ module.exports = (bot, imp) => {
                     await betslipModel.create({match, date, tip, odd})
                 }
                 await ctx.reply('mkeka posted')
-                await ctx.deleteMessage(mid)
+                await ctx.api.deleteMessage(ctx.chat.id, mid)
             }
         } catch (error) {
             console.log(error.message, error)
@@ -67,7 +67,7 @@ module.exports = (bot, imp) => {
 
     bot.callbackQuery('ignore_slip', async ctx=> {
         try {
-            await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+            await ctx.api.deleteMessage(ctx.chat.id, ctx.callbackQuery.message.message_id)
         } catch (error) {
             await ctx.reply('error.message')
         }

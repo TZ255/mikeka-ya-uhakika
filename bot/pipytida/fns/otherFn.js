@@ -160,8 +160,8 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
                     }, parse_mode: 'HTML'
                 })
                 setTimeout(() => {
-                    ctx.deleteMessage(msgid).catch(e => console.log(e.message, e))
-                    ctx.deleteMessage(subiri.message_id).catch(e => console.log(e.message, e))
+                    ctx.api.deleteMessage(ctx.chat.id, msgid).catch(e => console.log(e.message, e))
+                    ctx.api.deleteMessage(ctx.chat.id, subiri.message_id).catch(e => console.log(e.message, e))
                 }, 7000)
             } else {
                 //call to check if is verified member, allow and mute
@@ -199,7 +199,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             let mambo = await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa masaa 6.\n\nHuruhusiwi kutuma tangazo la picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
             await toDeleteModel.create({ chatid: ctx.chat.id, msgid: mambo.message_id })
             setTimeout(() => {
-                ctx.deleteMessage(msg_id).catch(e => console.log(e.message))
+                ctx.api.deleteMessage(ctx.chat.id, msg_id).catch(e => console.log(e.message))
             }, 30000)
         } else if (data && data.paid == true) {
             //check if data are correct

@@ -472,7 +472,7 @@ const reginaBot = async () => {
                         await delay(1000)
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 2652)
                         await delay(500)
-                        await ctx.deleteMessage(txtid)
+                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('wrap betway')) {
                         let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
@@ -480,17 +480,17 @@ const reginaBot = async () => {
                         await delay(1000)
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 2608)
                         await delay(500)
-                        await ctx.deleteMessage(txtid)
+                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('wrap betwinner')) {
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 2582)
                         await delay(500)
-                        await ctx.deleteMessage(txtid)
+                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('wrap meridian')) {
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 55)
                         await delay(500)
-                        await ctx.deleteMessage(txtid)
+                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('wrap pm')) {
                         let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
@@ -498,7 +498,7 @@ const reginaBot = async () => {
                         await delay(1000)
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 1770)
                         await delay(500)
-                        await ctx.deleteMessage(txtid)
+                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('delete mkeka') && ctx.channelPost.reply_to_message) {
                         let siku = new Date().toLocaleDateString('en-gb', { timeZone: 'Africa/Nairobi' })
@@ -506,7 +506,7 @@ const reginaBot = async () => {
                         await tg_slips.findOneAndDelete({ mid, siku })
                         let mm = await ctx.reply('Mkeka Deleted')
                         await delay(2000)
-                        await ctx.deleteMessage(mm.message_id)
+                        await ctx.api.deleteMessage(ctx.chat.id, mm.message_id)
                     }
                 }
 
@@ -536,7 +536,7 @@ const reginaBot = async () => {
 
                         let info = await ctx.reply(`Mkeka for ${siku} posted & waombaji reseted`, { reply_to_message_id: rp_id })
                         setTimeout(() => {
-                            ctx.deleteMessage(info.message_id).catch(e => {
+                            ctx.api.deleteMessage(ctx.chat.id, info.message_id).catch(e => {
                                 console.log(e.message, e)
                                 ctx.reply(e.message).catch(ee => console.log(ee))
                             })
@@ -555,7 +555,7 @@ const reginaBot = async () => {
                         })
                         let info = await ctx.reply('Graph posted', { reply_to_message_id: rp_id })
                         await delay(2000)
-                        await ctx.deleteMessage(info.message_id)
+                        await ctx.api.deleteMessage(ctx.chat.id, info.message_id)
                     }
                 }
 

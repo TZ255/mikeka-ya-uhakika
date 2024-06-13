@@ -340,7 +340,7 @@ const DayoBot = async () => {
                     case 'accept_pload':
                         let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
                         let org_msg_id = ctx.callbackQuery.message.message_id
-                        await ctx.deleteMessage(org_msg_id)
+                        await ctx.api.deleteMessage(ctx.chat.id, org_msg_id)
                         await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
                         break;
 
@@ -356,6 +356,7 @@ const DayoBot = async () => {
         bot.on('channel_post', async ctx => {
             try {
                 let tangazo = ctx.channelPost.chat.id
+                console.log(ctx.chat.id)
 
                 if (tangazo == imp.matangazoDB && ctx.channelPost.reply_to_message) {
                     let tangazo_id = ctx.channelPost.reply_to_message.message_id
@@ -368,8 +369,8 @@ const DayoBot = async () => {
                         })
                         let done_msg = await ctx.reply('Channel Added Successfully')
                         await delay(3000)
-                        await ctx.deleteMessage(done_msg.message_id)
-                        await ctx.deleteMessage(reply_id)
+                        await ctx.api.deleteMessage(tangazo, done_msg.message_id)
+                        await ctx.api.deleteMessage(tangazo, reply_id)
                     }
                 }
             } catch (error) {

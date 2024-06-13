@@ -36,12 +36,12 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                         await ctx.reply(`User updated with the following information:\n\nFullname: ${upd.fullName}\nChatid: <code>${upd.chatid}</code>\nPhone: ${upd.phone}`, {
                             parse_mode: 'HTML', reply_parameters: {message_id: userTrans}
                         })
-                        await ctx.deleteMessage(msgid)
+                        await ctx.api.deleteMessage(ctx.chat.id, msgid)
                     } else {
                         await ctx.reply('Some information is not found', {
                             reply_parameters: {message_id: userTrans}
                         })
-                        await ctx.deleteMessage(msgid)
+                        await ctx.api.deleteMessage(ctx.chat.id, msgid)
                     }
                 }
                 main()

@@ -30,7 +30,7 @@ module.exports = (bot, delay) => {
                 await bot.api.approveChatJoinRequest(channel_id, userid)
                     .catch(async (error) => {
                         if (error.message.includes('ALREADY_PARTICIPANT')) {
-                            await ctx.deleteMessage(mid).catch(e => console.log(e.message))
+                            await ctx.api.deleteMessage(ctx.chat.id, mid).catch(e => console.log(e.message))
                             await ctx.reply(`Ombi lako limekubaliwa, ingia sasa \n${ch_link}`)
                                 .catch(ee => console.log(ee.message))
                         }
@@ -38,7 +38,7 @@ module.exports = (bot, delay) => {
 
                 await tempChat.findOneAndDelete({ chatid: Number(userid) })
                 console.log('pending deleted')
-                await ctx.deleteMessage(mid)
+                await ctx.api.deleteMessage(ctx.chat.id, mid)
                 await ctx.reply(`<b>Hi! ${ctx.chat.first_name}</b>\n\nOmbi lako limekubaliwa... Ingia kwenye channel yetu kwa kubonyeza button hapo chini`, {
                     parse_mode: 'HTML',
                     reply_markup: {
@@ -190,17 +190,17 @@ module.exports = (bot, delay) => {
 
             else if (data == 'ignore_bin') {
                 await bin_supatips_Model.deleteMany()
-                await ctx.deleteMessage(mid)
+                await ctx.api.deleteMessage(ctx.chat.id, mid)
                 let ign = await ctx.reply('Mkeka Ignored 🤷‍♂️')
                 await delay(1500)
-                await ctx.deleteMessage(ign.message_id)
+                await ctx.api.deleteMessage(ctx.chat.id, ign.message_id)
             }
 
             switch (data) {
                 case 'accept_pload':
                     let pload_link = `https://t.me/+PWiPWm0vB5Y4ZDhk`
                     let org_msg_id = ctx.callbackQuery.message.message_id
-                    await ctx.deleteMessage(org_msg_id)
+                    await ctx.api.deleteMessage(ctx.chat.id, org_msg_id)
                     await ctx.reply(`Hongera 👏 Ombi lako la kujiunga na channel yetu limekubaliwa\n\n🔞 <b>Ingia Sasa\n${pload_link}\n${pload_link}</b>`, { parse_mode: 'HTML' })
                     break;
 

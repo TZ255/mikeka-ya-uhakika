@@ -141,7 +141,7 @@ const rtfunction = async () => {
                         }
                     }
                     else if (ctx.payload && rateLimitter.includes(ctx.chat.id)) {
-                        await ctx.deleteMessage(ctx.message.message_id)
+                        await ctx.api.deleteMessage(ctx.chat.id, ctx.message.message_id)
                     }
                     else {
                         let user = ctx.chat.first_name
