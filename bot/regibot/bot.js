@@ -788,19 +788,25 @@ const reginaBot = async () => {
                 //venas 1.5 & 2.5 odds
                 case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '04:46':
                     call_venas15_fn.checkOdds(bot, imp)
-                    call_venas25_fn.checkOdds(bot, imp)
+                    setTimeout(() => {
+                        call_venas25_fn.checkOdds(bot, imp)
+                    }, 5000)
                     break;
 
                 //venas 1.5 & 2.5 odds
                 case '15:12': case '16:12': case '17:12': case '18:12': case '19:02': case '20:02': case '21:02': case '22:02': case '23:12':
                     call_venas15_fn.checkTomorrowOdds(bot, imp)
-                    call_venas25_fn.checkTomorrowOdds(bot, imp)
+                    setTimeout(() => {
+                        call_venas25_fn.checkTomorrowOdds(bot, imp)
+                    }, 5000)
                     break;
 
                 //venas 1.5 & 2.5 matokeo
                 case '03:13': case '05:13': case '07:13': case '08:13': case '09:13': case '11:03':
                     call_venas15_fn.checkMatokeoJana(bot, imp)
-                    call_venas25_fn.checkMatokeoJana(bot, imp)
+                    setTimeout(()=> {
+                        call_venas25_fn.checkMatokeoJana(bot, imp)
+                    }, 5000)
                     break;
             }
         }, 59 * 1000)
