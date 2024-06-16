@@ -1,6 +1,7 @@
 const verifiedList = require('../database/verified')
 const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
+const {uaminifuMessage, remindMtoaHuduma} = require('./partials/smallFns')
 
 const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili.</b> \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list ya watoa huduma waaminifu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n<b>Mteja! Narudia tena... \nUKITAPELIWA NI UFALA WAKO BRO.\n\nYOYOTE ATAKAE KUFUATA INBOX NI TAPELI, USIMSIKILIZE... PIGA BLOCK </b> kisha report kwenye group aondolewe.`
 
@@ -107,16 +108,29 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             await list.updateOne({ $set: { again: until_date } })
             await ctx.replyWithChatAction('typing')
             await delay(1000)
-            let notf = await ctx.reply(`<b>${tag}</b> utaruhusiwa kupost tangazo tena saa <b>${muda}</b>\n\n<b>${tag}</b> ni mtoa huduma mwaminifu.${loc} \n\nBonyeza button hapa chini kuwasiliana nae.`, {
-                parse_mode: "HTML",
-                reply_parameters: { message_id: msgid },
-                reply_markup: {
-                    inline_keyboard: [
-                        [{ text: `📩 Zama Inbox 📩`, url: `tg://user?id=${userid}` }]
-                    ]
+            //angalia kama mtoa huduma amebakiza masaa 12 hela yake kuisha
+            //kwenye db taarifa ziko kwa +3 bongo
+            if (list.unix) {
+                let now = ctx.message.date + (3 * 60 * 60) //add three hours
+                let dbEnd = list.unix
+                let diff = dbEnd - now
+                let tenHrs = 10 * 60 * 60
+                //check difference if its <12 hours
+                if (diff > 60 && diff < tenHrs) {
+                    //kumbusha kulipia
+                    await remindMtoaHuduma(ctx, tag, msgid)
+                } else if(diff > tenHrs) {
+                    //send uaminifu message
+                    let notf = await uaminifuMessage(ctx, tag, muda, loc, userid, msgid)
+                    //delete message later
+                    await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
+                } else if(diff <= 60) {
+                    //demote user
+                    await ctx.api.promoteChatMember(ctx.chat.id, userid, demotePrivillages)
+                    await list.updateOne({$set: {paid: false}})
+                    await bot.api.sendMessage(1101685785, `${list.fname} demoted`) //blackberry
                 }
-            })
-            await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
+            }
         }
     } catch (error) { console.log(error.message, error) }
 }
@@ -406,7 +420,8 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 await ctx.reply(`${updID.fname} ID is updated to to ${updID.chatid}`);
                 break;
             case 'until':
-                let date = new Date(value)
+                let dvalue = value.replace(/,/g, '') //remove comma
+                let date = new Date(dvalue + " 23:59:00 GMT+0300")
                 let unix = date.getTime() / 1000
                 let updUntil = await verifiedList.findOneAndUpdate({ chatid }, { $set: { until: value, unix } }, { new: true });
                 await ctx.reply(`${updUntil.fname} Until is updated to ${unix} (${updUntil.until})`);
