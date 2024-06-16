@@ -26,6 +26,19 @@ const promotePrivillages = {
     can_manage_topics: false
 }
 
+const promoteBanPrivillages = {
+    is_anonymous: false,
+    can_manage_chat: false,
+    can_delete_messages: false,
+    can_manage_video_chats: false,
+    can_restrict_members: true,
+    can_promote_members: false,
+    can_change_info: false,
+    can_invite_users: true,
+    can_pin_messages: false,
+    can_manage_topics: false
+}
+
 const demotePrivillages = {
     is_anonymous: false,
     can_manage_chat: false,
