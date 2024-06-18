@@ -2,7 +2,8 @@ const router = require('express').Router()
 const mkekadb = require('../model/mkeka-mega')
 const fametipsModel = require('../model/fametips')
 const supatipsModel = require('../model/supatips')
-const betslip = require('../model/betslip')
+const megasModel = require('../model/mega-odds')
+const over15Model = require('../model/over15db')
 const graphModel = require('../model/graph-tips')
 const axios = require('axios').default
 
@@ -54,7 +55,42 @@ router.get('/', async (req, res) => {
         let kesho = new_d.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
         let ktips = await fametipsModel.find({ siku: kesho })
 
-        res.render('1-home/home', { ftips, ytips, ktips, jtips, zaNyuma100 })
+        //check if there is no any over 1.5
+        let check_slip = await over15Model.find({ date: d })
+        if (check_slip.length < 1) {
+            //take from mkekamega
+            let betValues = [
+                'Over 2.5', 'GG & Over 2.5', 'GG', 'Over 1.5', '1st Half. Over 0.5',
+                '1/1', '2/2', '1 & GG', '2 & GG', 'X2 & GG', '1X & GG'
+              ];
+            let copies = await megasModel.find({bet: {$in: betValues}, date: d})
+            copies = copies.map(doc=> ({
+                ...doc.toObject(),
+                bet: 'Over 1.5',
+                odds: 1
+            }))
+
+            let copies2 = await supatipsModel.find({tip: {$in: betValues}, siku: d})
+            copies2 = copies2.map(doc=> ({
+                ...doc.toObject(),
+                bet: 'Over 1.5',
+                date: doc.siku,
+                odds: 1
+            }))
+
+            //add them to over15 collection
+            if(copies.length > 0) {await over15Model.insertMany(copies)}
+            if(copies2.length > 0) {await over15Model.insertMany(copies2)}
+            
+            
+        }
+
+        let over15Leo = await over15Model.find({ date: d })
+        let over15Kesho = await over15Model.find({ date: kesho })
+        let over15Juzi = await over15Model.find({ date: _s })
+        let over15Jana = await over15Model.find({ date: _d })
+
+        res.render('1-home/home', { ftips, ytips, ktips, jtips, zaNyuma100, over15Jana, over15Juzi, over15Kesho, over15Leo })
     } catch (err) {
         let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/copyMessage`
         console.log(err.message, err)

@@ -139,17 +139,20 @@
     }
 
     .left .tble-cont table .tip-td,
-    .left .tble-cont table .matokeo-td {
+    .left .tble-cont table .matokeo-td,
+    .left .tble-cont table .matokeo-tds-over15 {
         vertical-align: middle;
         text-align: center;
     }
 
-    .left .tble-cont table .matokeo-td {
+    .left .tble-cont table .matokeo-td,
+    .left .tble-cont table .matokeo-tds-over15 {
         color: #1e90ff;
         cursor: pointer;
     }
 
-    .left .tble-cont table .matokeo-td .m2 {
+    .left .tble-cont table .matokeo-td .m2,
+    .left .tble-cont table .matokeo-tds-over15 .m2 {
         background-color: #1e90ff;
         color: white;
         padding: 2px 12px;
@@ -184,10 +187,12 @@
         border: none;
         background-color: #1e90ff;
         color: white;
-        padding: 12px;
-        border-radius: 4px;
+        padding: 14px 0;
+        border-radius: 32px;
         font-weight: bold;
         font-size: 14px;
+        width: 80%;
+        max-width: 320px;
     }
 
     .left .tble-cont .aff .sasa button:active,
