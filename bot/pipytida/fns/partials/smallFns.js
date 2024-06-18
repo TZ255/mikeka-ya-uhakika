@@ -12,7 +12,7 @@ const uaminifuMessage = async (ctx, tag, muda, loc, userid, msgidToReply) => {
 }
 
 const remindMtoaHuduma = async (ctx, tag, msgidToReply) => {
-    let remaind = await ctx.reply(`<b>${tag}</b> mda wako wa kuwepo kwenye group unayoyoma. Tafadhali wasiliana na admin <b>@Blackberry255</b> kabla siku ya leo haijaisha kuepuka kufungiwa group.`, {
+    let remaind = await ctx.reply(`Mtoa huduma <b>${tag}</b> \nTafadhali wasiliana na admin <b>@Blackberry255</b> kabla ya siku ya leo kuisha.`, {
         parse_mode: "HTML",
         reply_parameters: { message_id: msgidToReply }
     })
