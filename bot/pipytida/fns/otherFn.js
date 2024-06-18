@@ -137,7 +137,8 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
                     let notf = await uaminifuMessage(ctx, tag, muda, loc, userid, msgid)
                     //delete message later
                     await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
-                } else if(diff <= 60) {
+                } 
+                if(now >= dbEnd) {
                     //demote user
                     await ctx.api.promoteChatMember(ctx.chat.id, userid, demotePrivillages)
                     await list.updateOne({$set: {paid: false}})
