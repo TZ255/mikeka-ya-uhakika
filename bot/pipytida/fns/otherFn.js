@@ -1,7 +1,7 @@
 const verifiedList = require('../database/verified')
 const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
-const {uaminifuMessage, remindMtoaHuduma} = require('./partials/smallFns')
+const { uaminifuMessage, remindMtoaHuduma } = require('./partials/smallFns')
 
 const zingatiaMsg = `<b>❌❌ ZINGATIA ❌❌ ZINGATIA\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni admin, dalali au mtoa huduma wa group hili.</b> \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list ya watoa huduma waaminifu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n<b>Mteja! Narudia tena... \nUKITAPELIWA NI UFALA WAKO BRO.\n\nYOYOTE ATAKAE KUFUATA INBOX NI TAPELI, USIMSIKILIZE... PIGA BLOCK </b> kisha report kwenye group aondolewe.`
 
@@ -132,16 +132,17 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
                 if (diff > 60 && diff < tenHrs) {
                     //kumbusha kulipia
                     await remindMtoaHuduma(ctx, tag, msgid)
-                } else if(diff > tenHrs) {
+                } else if (diff > tenHrs) {
                     //send uaminifu message
                     let notf = await uaminifuMessage(ctx, tag, muda, loc, userid, msgid)
                     //delete message later
                     await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
-                } 
-                if(now >= dbEnd) {
+                }
+                if (now >= dbEnd) {
                     //demote user
                     await ctx.api.promoteChatMember(ctx.chat.id, userid, demotePrivillages)
-                    await list.updateOne({$set: {paid: false}})
+                        .catch(e => console.log(e.message))
+                    await list.updateOne({ $set: { paid: false } })
                     await bot.api.sendMessage(1101685785, `${list.fname} demoted`) //blackberry
                 }
             }
