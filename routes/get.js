@@ -93,10 +93,10 @@ router.get('/', async (req, res) => {
             
         }
 
-        let over15Leo = await over15Model.find({ date: d })
-        let over15Kesho = await over15Model.find({ date: kesho })
-        let over15Juzi = await over15Model.find({ date: _s })
-        let over15Jana = await over15Model.find({ date: _d })
+        let over15Leo = await over15Model.find({ date: d }).sort('time')
+        let over15Kesho = await over15Model.find({ date: kesho }).sort('time')
+        let over15Juzi = await over15Model.find({ date: _s }).sort('time')
+        let over15Jana = await over15Model.find({ date: _d }).sort('time')
 
         res.render('1-home/home', { ftips, ytips, ktips, jtips, zaNyuma100, over15Jana, over15Juzi, over15Kesho, over15Leo })
     } catch (err) {
