@@ -78,9 +78,18 @@ router.get('/', async (req, res) => {
                 odds: 1
             }))
 
+            let copies3 = await fametipsModel.find({tip: {$in: betValues}, siku: d})
+            copies3 = copies3.map(doc=> ({
+                ...doc.toObject(),
+                bet: 'Over 1.5',
+                date: doc.siku,
+                odds: 1
+            }))
+
             //add them to over15 collection
             if(copies.length > 0) {await over15Model.insertMany(copies)}
             if(copies2.length > 0) {await over15Model.insertMany(copies2)}
+            if(copies3.length > 0) {await over15Model.insertMany(copies3)}
             
             
         }
