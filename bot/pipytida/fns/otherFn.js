@@ -124,8 +124,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
             //angalia kama mtoa huduma amebakiza masaa 12 hela yake kuisha
             //kwenye db taarifa ziko kwa +3 bongo
             if (list.unix) {
-                let _d = Date.now() + (3 * 60 * 60 * 1000) //add three hours
-                let now = _d / 1000  //convert to seconds
+                let now = Date.now() / 1000  //convert to seconds
                 let dbEnd = list.unix
                 let diff = dbEnd - now
                 let tenHrs = 10 * 60 * 60
