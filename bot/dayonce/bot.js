@@ -532,9 +532,7 @@ const DayoBot = async () => {
 
 
         bot.start().catch(e => {
-            if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
-                bot.stop('new update')
-            }
+            bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
         })
     } catch (error) {
         console.log("(Dayo) " + error.message, error)
