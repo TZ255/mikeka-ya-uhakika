@@ -104,7 +104,7 @@ const UnverifyFn = async (bot, ctx, imp) => {
 }
 
 //reusable restriction
-const reusableRestriction = async (ctx, caption, charsNum, delay) => {
+const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
     try {
         let wajinga = ['+255 750 707 357']
         let d = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
@@ -154,7 +154,7 @@ const reusableRestriction = async (ctx, caption, charsNum, delay) => {
 const muteVideosPhotos = async (bot, ctx, imp, delay) => {
     try {
         let caption = ctx.message.caption ? ctx.message.caption : 'null'
-        await reusableRestriction(ctx, caption, 50, delay)
+        await reusableRestriction(bot, ctx, caption, 50, delay)
     } catch (error) {
         console.log(error.message, error)
     }
@@ -194,7 +194,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
                 }, 7000)
             } else {
                 //call to check if is verified member, allow and mute
-                await reusableRestriction(ctx, caption, length, delay)
+                await reusableRestriction(bot, ctx, caption, length, delay)
             }
         }
     } catch (error) {
