@@ -811,10 +811,6 @@ const reginaBot = async () => {
             }
         }, 59 * 1000)
 
-        // Stopping the bot when the Node.js process is about to be terminated
-        process.once("SIGINT", () => bot.stop());
-        process.once("SIGTERM", () => bot.stop());
-
         bot.start().catch(e => {
             if (e.message.includes('409: Conflict: terminated by other getUpdates')) {
                 bot.stop('new update')
