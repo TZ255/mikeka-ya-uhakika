@@ -103,7 +103,7 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay) => {
         axios.post(plAPI, data).catch(e => console.log(e.message))
         axios.post(mvAPI, data).catch(e => console.log(e.message))
     } catch (error) {
-        await ctx.reply(error.message, error)
+        console.log(error.message, error)
     }
 }
 
