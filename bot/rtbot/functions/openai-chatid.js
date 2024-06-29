@@ -1,5 +1,6 @@
 const OpenAI = require('openai');
 const rtStarterModel = require('../database/chats');
+const miamalaModel = require('../database/miamala');
 
 const examples = {
     ex5: `Umepokea Tsh1,000.00, 747900466 Jol gombania. Salio jipya ni Tsh26,684.00. Muamala No. MI240406.1141.Q03294\n\nThe answer I need here is: {"ok": true, "name": "JOL GOMBANIA", "phone": "+255747900466", "trans_id": "MI240406.1141.Q03294", "amount": 1000}`,
@@ -36,6 +37,9 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                     let data = JSON.parse(chatCompletion.choices[0].message.content);
 
                     if (data.ok) {
+                        //delete all pending miamala with the same name from miamala db
+                        await miamalaModel.deleteMany({name: data.name})
+                        //update user data
                         let upd = await rtStarterModel.findOneAndUpdate(
                             { chatid },
                             { $set: { fullName: data.name, phone: data.phone } },

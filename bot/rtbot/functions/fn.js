@@ -1,6 +1,7 @@
 const rtStarterModel = require('../database/chats')
 const toDeleteMsgs = require('../database/todelete')
 const binModel = require('../database/rtbin')
+const miamalaModel = require('../database/miamala');
 const axios = require('axios').default
 
 const createUser = async (ctx, delay) => {
@@ -146,11 +147,13 @@ const addingPoints = async (ctx, chatid, points, imp) => {
         let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
         let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
 
+        //add user points
         let upuser = await rtStarterModel.findOneAndUpdate({ chatid }, {
             $inc: { points: points },
             $set: { paid: true }
         }, { new: true })
 
+        //update revenues
         let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
 
         let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: <code>${upuser.chatid}</code>\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
@@ -183,6 +186,8 @@ const addingPoints = async (ctx, chatid, points, imp) => {
             await ctx.reply('❌❌ This user phone and real name is missing')
         } else if (reaCheck.phone) {
             await ctx.reply('✅✅ Phone and Real name of this user is available')
+            //delete all miamala msgs with this user full name
+            await miamalaModel.deleteMany({name: reaCheck.fullName})
         }
     } catch (error) {
         await ctx.reply(error.message)
