@@ -11,10 +11,12 @@ const rtfunction = async () => {
         for (let t of tksn) {
             const mongoose = require('mongoose')
             const rtStarterModel = require('./database/chats')
+            const miamalaModel = require('./database/miamala');
             const malayaModel = require('./database/malaya')
             const videosDB = require('./database/db')
             const aliExDB = require('./database/aliexpress')
-            const extractInfoOpenAi = require('./functions/openai')
+            const extractInfoOpenAi = require('./functions/openai-chatid')
+            const {extractMiamalaInfo, addingBusinessPoints} = require('./functions/openai-post')
 
             //Middlewares
             const call_function = require('./functions/fn')
@@ -371,9 +373,14 @@ const rtfunction = async () => {
                                 }
                             })
                         }
-                    } else if (chan_id == imp.lipaPtsCh && ctx.channelPost.reply_to_message) {
-                        //extract transactions info with chatGpt
-                        await extractInfoOpenAi.extractInfoOpenAi(bot, ctx, imp, lipaTexts)
+                    } else if (chan_id == imp.lipaPtsCh) {
+                        if (ctx.channelPost.reply_to_message) {
+                            //extract transactions info with chatGpt
+                            await extractInfoOpenAi.extractInfoOpenAi(bot, ctx, imp, lipaTexts)
+                        } else {
+                            //save transaction info
+                            await extractMiamalaInfo(bot, ctx, imp)
+                        }
                     }
                 } catch (err) {
                     console.log(err.message, err)
@@ -605,6 +612,29 @@ const rtfunction = async () => {
                         await bot.api.sendMessage(imp.shemdoe, err.message)
                         console.log(err)
                     }
+                }
+            })
+
+            //business
+            bot.on('business_message', async ctx=> {
+                try {
+                    let my_id = [5849160770]
+                    let rtbot_id = ctx.me.id
+                    let userid = ctx.businessMessage.from.id
+                    if(!my_id.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854) {
+                        //check if user is on db and has name and phone
+                        let user = await rtStarterModel.findOne({chatid: userid})
+                        if(user && user.fullName) {
+                            //check if the user name is saved in miamala db
+                            let tx = await miamalaModel.findOne({name: user.fullName})
+                            if (tx) {
+                                await addingBusinessPoints(ctx, userid, tx.amt, imp, delay)
+                                await tx.deleteOne()
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log(error.message, error)
                 }
             })
 
