@@ -618,10 +618,12 @@ const rtfunction = async () => {
             //business
             bot.on('business_message', async ctx => {
                 try {
-                    let my_id = [5849160770]
+                    let admins = [imp.rtmalipo]
                     let rtbot_id = ctx.me.id
                     let userid = ctx.businessMessage.from.id
-                    if (!my_id.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854) {
+                    let bzid = await ctx.getBusinessConnection()
+                    //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
+                    if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && bzid.user.id == imp.rtmalipo) {
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user.fullName) {
