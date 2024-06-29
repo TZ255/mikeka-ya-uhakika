@@ -14,49 +14,53 @@ const examples = {
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
     const miamala = ['From: M-PESA']
+    const junkies = ['TIPS-AIRTELMONEY', 'has received', 'Transfered', 'sent to', 'from Changisha account']
     try {
         let txt = ctx.channelPost.text ? ctx.channelPost.text : 'no text'
         let msgid = ctx.channelPost.message_id;
 
-        for (let t of miamala) {
-            if (txt.includes(t)) {
-                let muamala = txt.split('Message:')[1];
-                let command = `"${muamala}"\n\nPlease extract the name, phone number, amount and transaction id from this message. If the phone number is missing the country code, please add the Tanzania country code (+255). I need response in JSON format only and I don't want an explanation. If you succeed in extracting all information, add a property "ok: true". If some information is missing, add a property "ok: false". \n\nUse the following examples to see the final answer I need:\n\nExample 1: ${examples.ex1}\n\nExample 2: ${examples.ex2}\n\nExample 3: ${examples.ex3}\n\nExample 4: ${examples.ex4}\n\nExample 5: ${examples.ex5}\n\nThe following examples always return "ok: false" as they don't have phone numbers or names. Example 1: "${examples.false1}"\nExample 2: "${examples.false2}"`;
+        //filtering the text
+        //check if any term of miamala exist
+        let includesMiamala = miamala.some(term => txt.includes(term));
+        //check if all term of junkies doestnt exist
+        let excludesJunkies = junkies.every(term => !txt.includes(term));
 
-                const openai = new OpenAI({
-                    apiKey: process.env.openAIKey,
+        if (includesMiamala && excludesJunkies) {
+            let muamala = txt.split('Message:')[1];
+            let command = `"${muamala}"\n\nPlease extract the name, phone number, amount and transaction id from this message. If the phone number is missing the country code, please add the Tanzania country code (+255). I need response in JSON format only and I don't want an explanation. If you succeed in extracting all information, add a property "ok: true". If some information is missing, add a property "ok: false". \n\nUse the following examples to see the final answer I need:\n\nExample 1: ${examples.ex1}\n\nExample 2: ${examples.ex2}\n\nExample 3: ${examples.ex3}\n\nExample 4: ${examples.ex4}\n\nExample 5: ${examples.ex5}\n\nThe following examples always return "ok: false" as they don't have phone numbers or names. Example 1: "${examples.false1}"\nExample 2: "${examples.false2}"`;
+
+            const openai = new OpenAI({
+                apiKey: process.env.openAIKey,
+            });
+
+            async function main() {
+                const chatCompletion = await openai.chat.completions.create({
+                    messages: [{ role: 'user', content: command }],
+                    model: 'gpt-3.5-turbo',
                 });
 
-                async function main() {
-                    const chatCompletion = await openai.chat.completions.create({
-                        messages: [{ role: 'user', content: command }],
-                        model: 'gpt-3.5-turbo',
-                    });
+                let data = JSON.parse(chatCompletion.choices[0].message.content);
 
-                    let data = JSON.parse(chatCompletion.choices[0].message.content);
+                if (data.ok) {
+                    let validate = await miamalaModel.findOne({ txid: data.trans_id })
+                    if (!validate) {
+                        let upd = await miamalaModel.create({
+                            name: data.name, phone: data.phone, txid: data.trans_id, amt: data.amount
+                        })
 
-                    if (data.ok) {
-                        let validate = await miamalaModel.findOne({ txid: data.trans_id, name: data.name })
-                        if (!validate) {
-                            let upd = await miamalaModel.create({
-                                name: data.name, phone: data.phone, txid: data.trans_id, amt: data.amount
-                            })
-
-                            await ctx.reply(
-                                `Transaction saved to db:\n\nName: ${upd.name}\nTxid: <code>${upd.txid}</code>\nPhone: ${upd.phone}\nAmt: ${upd.amt}`,
-                                { parse_mode: 'HTML', reply_parameters: { message_id: msgid } }
-                            );
-                        }
-                    } else {
-                        await ctx.reply('Failed to save... Some information is not found', {
-                            reply_parameters: { message_id: msgid },
-                        });
+                        await ctx.reply(
+                            `Transaction saved to db:\n\nName: ${upd.name}\nTxid: <code>${upd.txid}</code>\nPhone: ${upd.phone}\nAmt: ${upd.amt}`,
+                            { parse_mode: 'HTML', reply_parameters: { message_id: msgid } }
+                        );
                     }
+                } else {
+                    await ctx.reply('Failed to save... Some information is not found', {
+                        reply_parameters: { message_id: msgid },
+                    });
                 }
-
-                main();
-                break;
             }
+
+            main();
         }
     } catch (error) {
         await ctx.reply(error.message);
