@@ -9,7 +9,7 @@ const MiamalaSchema = new Schema({
     createdAt: { 
         type: Date, 
         default: Date.now, 
-        expires: '1d'
+        expires: '3d'
     }
 }, { strict: false, timestamps: false });
 

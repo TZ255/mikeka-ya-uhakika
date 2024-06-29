@@ -489,13 +489,13 @@ const PipyBot = async () => {
 
         bot.on(':text', async ctx => {
             try {
-                if (ctx.message.reply_to_message) {
+                if (ctx.message && ctx.message.reply_to_message) {
                     if (admins.includes(ctx.chat.id) && ctx.message.reply_to_message.text) {
                         //call adminReplyToText
                         await otheFns.adminReplyToMessageFn(bot, ctx, imp)
                     }
 
-                    if (ctx.message.reply_to_message && chatGroups.includes(ctx.chat.id) && admins.includes(ctx.message.from.id)) {
+                    if (ctx.message && ctx.message.reply_to_message && chatGroups.includes(ctx.chat.id) && admins.includes(ctx.message.from.id)) {
                         if (ctx.message.text.toLocaleLowerCase() == 'verified') {
                             //call verifying function
                             await otheFns.verifyFn(bot, ctx, imp)
@@ -514,7 +514,7 @@ const PipyBot = async () => {
                         }
                     }
 
-                    if (ctx.message.reply_to_message.photo && admins.includes(ctx.chat.id) && ctx.chat.type == 'private') {
+                    if (ctx.message && ctx.message.reply_to_message.photo && admins.includes(ctx.chat.id) && ctx.chat.type == 'private') {
                         //if its text reply to photo
                         await otheFns.adminReplyTextToPhotoFn(bot, ctx, imp)
                     }
