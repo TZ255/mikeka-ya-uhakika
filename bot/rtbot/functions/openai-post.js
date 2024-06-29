@@ -1,4 +1,5 @@
 const OpenAI = require('openai');
+const axios = require('axios').default
 const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
 

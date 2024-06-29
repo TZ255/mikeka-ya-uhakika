@@ -16,7 +16,7 @@ const rtfunction = async () => {
             const videosDB = require('./database/db')
             const aliExDB = require('./database/aliexpress')
             const extractInfoOpenAi = require('./functions/openai-chatid')
-            const {extractMiamalaInfo, addingBusinessPoints} = require('./functions/openai-post')
+            const { extractMiamalaInfo, addingBusinessPoints } = require('./functions/openai-post')
 
             //Middlewares
             const call_function = require('./functions/fn')
@@ -616,20 +616,24 @@ const rtfunction = async () => {
             })
 
             //business
-            bot.on('business_message', async ctx=> {
+            bot.on('business_message', async ctx => {
                 try {
                     let my_id = [5849160770]
                     let rtbot_id = ctx.me.id
                     let userid = ctx.businessMessage.from.id
-                    if(!my_id.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854) {
+                    if (!my_id.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854) {
                         //check if user is on db and has name and phone
-                        let user = await rtStarterModel.findOne({chatid: userid})
-                        if(user && user.fullName) {
-                            //check if the user name is saved in miamala db
-                            let tx = await miamalaModel.findOne({name: user.fullName})
-                            if (tx) {
-                                await addingBusinessPoints(ctx, userid, tx.amt, imp, delay)
-                                await tx.deleteOne()
+                        let user = await rtStarterModel.findOne({ chatid: userid })
+                        if (user && user.fullName) {
+                            //check miamala ya user
+                            let tx = await miamalaModel.find({ name: user.fullName })
+                            if (tx.length > 0) {
+                                let points = 0
+                                for (let t of tx) {
+                                    points = points + t.amt
+                                    await tx.deleteOne()
+                                }
+                                await addingBusinessPoints(ctx, userid, t.amt, imp, delay)
                             }
                         }
                     }
