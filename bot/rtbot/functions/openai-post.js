@@ -82,11 +82,11 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay) => {
 
         await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } })
 
-        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
+        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
 
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
-        let txt4 = `🎉🎉🎉 Hongera 🎉🎉🎉\nMalipo yako yamethibitishwa. <b>Points ${upuser.points}</b> zimeongezwa kwenye account yako.`
+        let txt4 = `🎉🎉🎉 Hongera 🎉🎉🎉\nMalipo yako yamethibitishwa. <b>Points ${points}</b> zimeongezwa kwenye account yako na sasa una jumla ya points <b>${upuser.points}</b>.`
 
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
