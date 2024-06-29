@@ -633,7 +633,7 @@ const rtfunction = async () => {
                                     points = points + t.amt
                                     await t.deleteOne()
                                 }
-                                await addingBusinessPoints(ctx, userid, t.amt, imp, delay)
+                                await addingBusinessPoints(ctx, userid, points, imp, delay)
                             }
                         }
                     }
