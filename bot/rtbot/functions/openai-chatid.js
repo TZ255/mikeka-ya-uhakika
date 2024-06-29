@@ -42,10 +42,13 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                             { new: true }
                         );
 
-                        await ctx.reply(
+                        let u_updated = await ctx.reply(
                             `User updated with the following information:\n\nFullname: ${upd.fullName}\nChatid: <code>${upd.chatid}</code>\nPhone: ${upd.phone}`,
                             { parse_mode: 'HTML', reply_parameters: { message_id: userTrans } }
                         );
+                        setTimeout(()=> {
+                            ctx.api.deleteMessage(ctx.chat.id, u_updated.message_id)
+                        }, 60000)
                     } else {
                         await ctx.reply('Some information is not found', {
                             reply_parameters: { message_id: userTrans },

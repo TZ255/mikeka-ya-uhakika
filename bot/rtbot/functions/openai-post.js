@@ -50,8 +50,8 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                         })
 
                         await ctx.reply(
-                            `Transaction saved to db:\n\nName: ${upd.name}\nTxid: <code>${upd.txid}</code>\nPhone: ${upd.phone}\nAmt: ${upd.amt}`,
-                            { parse_mode: 'HTML', reply_parameters: { message_id: msgid } }
+                            `<code>${upd.txid}</code> of amt <code>${upd.amt}</code> saved to db`,
+                            { parse_mode: 'HTML', disable_notification: 'true', reply_parameters: { message_id: msgid } }
                         );
                     }
                 } else {
@@ -86,13 +86,15 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay) => {
 
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
+        let txt4 = `🎉🎉🎉 Hongera 🎉🎉🎉\nMalipo yako yamethibitishwa. <b>Points ${upuser.points}</b> zimeongezwa kwenye account yako.`
+
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
         let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/sendMessage`
 
         //delay for 3 seconds
         await delay(3000)
-        await ctx.reply(txt2, { parse_mode: 'HTML' })
+        await ctx.reply(txt4, { parse_mode: 'HTML' })
         let data = { chat_id: chatid, text: txt2, parse_mode: 'HTML' }
         if (points < 0) {
             data.text = txt3
