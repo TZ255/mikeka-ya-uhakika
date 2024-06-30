@@ -71,22 +71,36 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
 
 const addingBusinessPoints = async (ctx, chatid, points, imp, delay) => {
     try {
+        //channel links
         let android = `https://t.me/+RFRJJNq0ERM1YTBk`
         let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
         let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
 
+        //bonus points
+        let pts = points
+        if (pts >= 3000 && pts < 4000) {
+            pts = pts + 300
+        } else if (pts >= 4000 && pts < 5000) {
+            pts = pts + 500
+        } else if (pts >= 5000 && pts < 10000) {
+            pts = pts + 1000
+        } else if (pts >= 10000) {
+            pts = pts + 2000
+        }
+
+        //update user points
         let upuser = await rtStarterModel.findOneAndUpdate({ chatid }, {
-            $inc: { points: points },
+            $inc: { points: pts },
             $set: { paid: true }
         }, { new: true })
 
         await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } })
 
-        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
+        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${pts} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
 
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
-        let txt4 = `🎉🎉🎉 Hongera 🎉🎉🎉\nMalipo yako yamethibitishwa. <b>Points ${points}</b> zimeongezwa kwenye account yako na sasa una jumla ya points <b>${upuser.points}</b>.`
+        let txt4 = `🎉🎉🎉 Hongera 🎉🎉🎉\nMalipo yako yamethibitishwa. <b>Points ${pts}</b> zimeongezwa kwenye account yako na sasa una jumla ya points <b>${upuser.points}</b>.`
 
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
