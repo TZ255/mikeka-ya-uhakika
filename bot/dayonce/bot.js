@@ -4,8 +4,6 @@ const DayoBot = async () => {
     try {
         const { Bot } = require('grammy')
         const bot = new Bot(process.env.DAYO_TOKEN)
-        const { autoRetry } = require("@grammyjs/auto-retry");
-
         const dayoUsers = require('./database/chats')
         const tg_slips = require('./database/tg_slips')
         const vidb = require('./database/db')
@@ -75,9 +73,6 @@ const DayoBot = async () => {
             const ctx = err.ctx;
             console.error(`(Dayo): ${err.message}`, err);
         });
-
-        //use auto-retry
-        bot.api.config.use(autoRetry());
 
         bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 

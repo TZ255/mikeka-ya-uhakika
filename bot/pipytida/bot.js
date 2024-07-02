@@ -3,7 +3,6 @@
 const PipyBot = async () => {
     try {
         const { Bot } = require('grammy')
-        const { autoRetry } = require("@grammyjs/auto-retry");
         const bot = new Bot(process.env.PIPY_TOKEN)
 
         const pipyUsers = require('./database/chats')
@@ -63,9 +62,6 @@ const PipyBot = async () => {
             const ctx = err.ctx;
             console.error(`(Pipy): ${err.message}`, err);
         });
-
-        //use auto-retry
-        bot.api.config.use(autoRetry());
 
         //deleting pending updates
         bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))

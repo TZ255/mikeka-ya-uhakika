@@ -19,8 +19,15 @@ const createUser = async (ctx, delay) => {
                 chatid, username, handle, refferer, paid: false, points: 1000, movie: 0, shows: 0, bots: [refferer]
             })
             await delay(2000)
-        } else if (user && !user.bots.includes(refferer)) {
-            await user.updateOne({ $push: { bots: refferer } })
+        } else if (user && (!user.bots.includes(refferer) || user.refferer != refferer)) {
+            //kama array ya bots haina huyu bot ongeza
+            if (!user.bots.includes(refferer)) {
+                await user.updateOne({ $push: { bots: refferer } })
+            }
+            //kama huyu bot sio refferer update
+            if (user.refferer != refferer) {
+                await user.updateOne({ $set: { refferer: refferer } })
+            }
         }
     } catch (error) {
         console.log(error.message)
@@ -61,53 +68,19 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
         } else {
             await rtStarterModel.findOneAndUpdate({ chatid: userid }, { $inc: { shows: 1 } })
         }
-        let data = {
-            chat_id: ctx.chat.id,
-            text: txt,
-            parse_mode: 'HTML',
-            reply_markup: {
-                inline_keyboard: [
-                    [
-                        { text: "💰 Salio", callback_data: 'salio' },
-                        { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
-                    ]
-                ]
-            }
-        }
-        let other = `Umepokea video ... Umebakiwa na points <b>${rcvr.points}</b>`
-        let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
-        let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
-        let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/sendMessage`
 
         setTimeout(() => {
-            if (botname == 'rahatupu_tzbot') {
-                axios.post(rtAPI, data)
-                    .then(() => {
-                        data.text = other.replace('...', 'kutoka kwa <b>@rahatupu_tzbot</b>')
-                        data.disable_notification = true
-                        data.reply_markup.inline_keyboard[0].shift()
-                        axios.post(plAPI, data).catch(e => console.log(e.message))
-                        axios.post(mvAPI, data).catch(e => console.log(e.message))
-                    }).catch(e => console.log(e.message))
-            } else if (botname == 'pilau_bot') {
-                axios.post(plAPI, data)
-                    .then(() => {
-                        data.text = other.replace('...', 'kutoka kwa <b>@pilau_bot.</b>')
-                        data.disable_notification = true
-                        data.reply_markup.inline_keyboard[0].shift()
-                        axios.post(rtAPI, data).catch(e => console.log(e.message))
-                        axios.post(mvAPI, data).catch(e => console.log(e.message))
-                    }).catch(e => console.log(e.message))
-            } else if (botname == 'muvikabot') {
-                axios.post(mvAPI, data)
-                    .then(() => {
-                        data.text = other.replace('video ...', 'Movie kutoka kwa <b>@muvikabot.</b>')
-                        data.disable_notification = true
-                        data.reply_markup.inline_keyboard[0].shift()
-                        axios.post(rtAPI, data).catch(e => console.log(e.message))
-                        axios.post(plAPI, data).catch(e => console.log(e.message))
-                    }).catch(e => console.log(e.message))
-            }
+            ctx.reply(txt, {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "💰 Salio", callback_data: 'salio' },
+                            { text: "➕ Ongeza Points", callback_data: 'ongeza_points' }
+                        ]
+                    ]
+                }
+            }).catch(e => console.log(e.message, e))
         }, 1000)
     }
 }
@@ -152,38 +125,43 @@ const addingPoints = async (ctx, chatid, points, imp) => {
         //update revenues
         let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
 
-        let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: <code>${upuser.chatid}</code>\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
+        //text to reply to me
+        let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: <code>${upuser.chatid}</code>\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n• Fullname: ${upuser?.fullName}\n• Phone: ${upuser?.phone}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
 
-        if (rev.refferer == 'rahatupu_tzbot') { txt1 += '\n\n✅ RTT' }
-        else if (rev.refferer == 'pilau_bot') { txt1 += '\n\n✅ PLL' }
-        else if (rev.refferer == 'muvikabot') { txt1 += '\n\n✅ MOVIE' }
-
+        //text to send to user
         let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.</b>\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
 
+        //text to send if we deduct points
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
+        //api to send message to user
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
         let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/sendMessage`
 
 
+        //reply user info after adding points
         await ctx.reply(txt1, { parse_mode: 'HTML' })
+
+        //data to send to user with API
         let data = { chat_id: chatid, text: txt2, parse_mode: 'HTML' }
+
+        //check if points is negative, update data to deduction message
         if (points < 0) {
             data.text = txt3
         }
-        axios.post(rtAPI, data).catch(e => console.log(e.message))
-        axios.post(plAPI, data).catch(e => console.log(e.message))
-        axios.post(mvAPI, data).catch(e => console.log(e.message))
 
-        //check if phone and real name available
-        let reaCheck = await rtStarterModel.findOne({ chatid })
-        if (!reaCheck.fullName) {
-            await ctx.reply('❌❌ This user phone and real name is missing')
-        } else if (reaCheck.phone) {
-            await ctx.reply('✅✅ Phone and Real name of this user is available')
-            //delete all miamala msgs with this user full name
-            await miamalaModel.deleteMany({name: reaCheck.fullName})
+        //send to users acording to the bot he using
+        switch (upuser.refferer) {
+            case 'rahatupu_tzbot':
+                axios.post(rtAPI, data).catch(e => console.log(e.message))
+                break;
+            case 'pilau_bot':
+                axios.post(plAPI, data).catch(e => console.log(e.message))
+                break;
+            case 'muvikabot':
+                axios.post(mvAPI, data).catch(e => console.log(e.message))
+                break;
         }
     } catch (error) {
         await ctx.reply(error.message)
@@ -230,19 +208,19 @@ const deteleMessages = async (delay) => {
         let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/deleteMessage`
 
         for (let el of all) {
-            let {userid, msgid, bot} = el
+            let { userid, msgid, bot } = el
             let data = { chat_id: userid, message_id: msgid }
 
-            if(bot == 'muvikabot') {
-                await axios.post(mvAPI, data).catch(e=> console.log(`${bot} delete failed: ${e.message}`))
+            if (bot == 'muvikabot') {
+                await axios.post(mvAPI, data).catch(e => console.log(`${bot} delete failed: ${e.message}`))
                 await el.deleteOne()
                 await delay(11) //delete 91 message per seconds
-            } else if(bot == 'pilau_bot') {
-                await axios.post(plAPI, data).catch(e=> console.log(`${bot} delete failed: ${e.message}`))
+            } else if (bot == 'pilau_bot') {
+                await axios.post(plAPI, data).catch(e => console.log(`${bot} delete failed: ${e.message}`))
                 await el.deleteOne()
                 await delay(11) //delete 91 message per seconds
-            } else if(bot == 'rahatupu_tzbot') {
-                await axios.post(rtAPI, data).catch(e=> console.log(`${bot} delete failed: ${e.message}`))
+            } else if (bot == 'rahatupu_tzbot') {
+                await axios.post(rtAPI, data).catch(e => console.log(`${bot} delete failed: ${e.message}`))
                 await el.deleteOne()
                 await delay(11) //delete 91 message per seconds
             }

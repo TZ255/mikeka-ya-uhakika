@@ -12,7 +12,7 @@ const rtSchema = new Schema({
     paid: {type: Boolean, default: false},
     payHistory: {type: Array},
     malipo: {type: Object},
-    bots: {type: [String]}
+    bots: {type: [String], default: []}
 }, {strict: false, timestamps: true })
 
 const ohymy = mongoose.connection.useDb('ohmyNew')

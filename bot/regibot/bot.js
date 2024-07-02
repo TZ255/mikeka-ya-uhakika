@@ -4,9 +4,7 @@
 const reginaBot = async () => {
     try {
         const { Bot } = require('grammy')
-        const { autoRetry } = require("@grammyjs/auto-retry");
         const bot = new Bot(process.env.REGI_TOKEN)
-
         const nyumbuModel = require('./database/chats')
         const tempChat = require('./database/temp-req')
         const my_channels_db = require('./database/my_channels')
@@ -80,11 +78,6 @@ const reginaBot = async () => {
             is_persistent: true,
             resize_keyboard: true
         }
-
-        //use auto-retry
-        bot.api.config.use(autoRetry());
-
-        //bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
 
         bot.catch((err) => {
             const ctx = err.ctx;

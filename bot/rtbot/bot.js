@@ -5,7 +5,6 @@ const rtfunction = async () => {
     try {
         let tksn = [process.env.RT_TOKEN, process.env.PL_TOKEN, process.env.MUVIKA_TOKEN]
         const { Bot } = require('grammy')
-        const { autoRetry } = require("@grammyjs/auto-retry");
         const axios = require('axios').default
         const OpenAI = require('openai')
         for (let t of tksn) {
@@ -60,9 +59,6 @@ const rtfunction = async () => {
 
             //delaying
             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
-            //use auto-retry
-            bot.api.config.use(autoRetry());
 
             const rateLimitter = []
             setInterval(() => {
