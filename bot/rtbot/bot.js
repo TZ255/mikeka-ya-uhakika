@@ -663,7 +663,7 @@ const rtfunction = async () => {
                                 let expire = ctx.businessMessage.date + (60*15)
                                 let limit = 1,
                                 linkName = `for biz ${expire}`
-                                let link = call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
+                                let link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
                                 await ctx.reply(link)
                                 break;
                         }
