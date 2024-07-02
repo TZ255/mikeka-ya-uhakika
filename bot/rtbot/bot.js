@@ -627,11 +627,13 @@ const rtfunction = async () => {
                             let tx = await miamalaModel.find({ name: user.fullName })
                             if (tx.length > 0) {
                                 let points = 0
+                                let txid = ''
                                 for (let t of tx) {
                                     points = points + t.amt
                                     await t.deleteOne()
+                                    txid = t.txid
                                 }
-                                await addingBusinessPoints(ctx, userid, points, imp, delay)
+                                await addingBusinessPoints(ctx, userid, points, imp, delay, txid)
                             }
                         }
                     }
