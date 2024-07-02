@@ -46,7 +46,8 @@ const rtfunction = async () => {
                 aliDB: -1001801595269,
                 aliProducts: -1001971329607,
                 _pack1: -1001943515650,
-                lipaPtsCh: -1002104835299
+                lipaPtsCh: -1002104835299,
+                newRT: -1002228998665
             }
 
             const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'malipo', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
@@ -480,7 +481,7 @@ const rtfunction = async () => {
                         await call_function.createUser(ctx, delay)
 
                         let userid = ctx.chat.id
-                        let txt = ctx.message.text
+                        let txt = ctx.message?.text
                         let username = ctx.chat.first_name
                         let surname = ''
                         if (ctx.chat.last_name) {
@@ -506,10 +507,29 @@ const rtfunction = async () => {
                             }
                         }
 
+                        //check if user send 'niunge, link, zingine'
                         for (let t of zingine) {
-                            if (txt.toLocaleLowerCase().includes(t)) {
-                                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 96)
-                                break;
+                            if (txt.toLocaleLowerCase().includes(t) && ctx.chat.type == 'private') {
+                                if (!rateLimitter.includes(ctx.chat.id)) {
+                                    rateLimitter.push(ctx.chat.id)
+                                    //check if his member
+                                    let status = await ctx.api.getChatMember(imp.newRT, ctx.chat.id)
+                                    switch (status.status) {
+                                        case 'member':
+                                            let mslink = `https://t.me/c/2228998665/99999`
+                                            await ctx.reply(`Rudi kwenye channel\n${mslink}`)
+                                            break;
+                                        default:
+                                            //create new link expire in 15 minute
+                                            let expire = ctx.message.date + (60*15)
+                                            let limit = 1
+                                            let name = `for ${ctx.chat.id}`
+                                            let created_link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, name, imp.shemdoe)
+                                            await ctx.reply(`Hii hapa link yako\n${created_link}`)
+                                            break;
+                                    }
+                                    break;
+                                }
                             }
                         }
 
@@ -616,6 +636,7 @@ const rtfunction = async () => {
                 try {
                     let admins = [imp.rtmalipo]
                     let rtbot_id = ctx.me.id
+                    let message = ctx.businessMessage?.text
                     let userid = ctx.businessMessage.from.id
                     let bzid = await ctx.getBusinessConnection()
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
@@ -635,6 +656,16 @@ const rtfunction = async () => {
                                 }
                                 await addingBusinessPoints(ctx, userid, points, imp, delay, txid)
                             }
+                        }
+                    } else if(admins.includes(ctx.businessMessage.from.id)) {
+                        switch (message.toLowerCase()) {
+                            case 'link':
+                                let expire = ctx.businessMessage.date + (60*15)
+                                let limit = 1,
+                                linkName = `for biz ${expire}`
+                                let link = call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
+                                await ctx.reply(link)
+                                break;
                         }
                     }
                 } catch (error) {

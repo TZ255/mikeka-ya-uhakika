@@ -96,7 +96,7 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid) => {
 
         await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } })
 
-        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${pts} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\n\n<u><b>RT Premium Links:</b></u>\n\n<b>• Android (Wakubwa 🔞)\n${android}\n\n• iPhone (Wakubwa 🔞)\n${iphone}\n\n• MOVIES:\n${muvika}</b>\n\n\n<b>Enjoy, ❤.</b>`
+        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${pts} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nIkitokea umepoteza link ya channel yetu, tuma neno <b>niunge</b> au wasiliana na admin wetu kupata link mpya.\n\n\n<b>Enjoy, ❤.</b>`
 
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
