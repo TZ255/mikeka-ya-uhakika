@@ -2,7 +2,7 @@ const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) =
     const mikekaFns = require('./mkeka-1-2-3')
     try {
         let userid = ctx.chat.id
-        let txt = ctx.message.text
+        let txt = ctx.message?.text
         let username = ctx.chat.first_name
         let rp_id = ctx.message.message_id
         switch (txt) {

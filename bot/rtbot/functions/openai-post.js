@@ -106,16 +106,25 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid) => {
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`
         let mvAPI = `https://api.telegram.org/bot${process.env.MUVIKA_TOKEN}/sendMessage`
 
-        //delay for 3 seconds
-        await delay(3000)
+        //delay for 1 seconds
+        await delay(1000)
         await ctx.reply(txt4, { parse_mode: 'HTML' })
         let data = { chat_id: chatid, text: txt2, parse_mode: 'HTML' }
         if (points < 0) {
             data.text = txt3
         }
-        axios.post(rtAPI, data).catch(e => console.log(e.message))
-        axios.post(plAPI, data).catch(e => console.log(e.message))
-        axios.post(mvAPI, data).catch(e => console.log(e.message))
+        //send to users acording to the bot he using
+        switch (upuser.refferer) {
+            case 'rahatupu_tzbot':
+                axios.post(rtAPI, data).catch(e => console.log(e.message))
+                break;
+            case 'pilau_bot':
+                axios.post(plAPI, data).catch(e => console.log(e.message))
+                break;
+            case 'muvikabot':
+                axios.post(mvAPI, data).catch(e => console.log(e.message))
+                break;
+        }
     } catch (error) {
         console.log(error.message, error)
     }
