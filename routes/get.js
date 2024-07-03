@@ -159,7 +159,7 @@ router.get('/contact/telegram', (req, res) => {
     res.redirect('https://t.me/+owXoXwLlSHxmYjJk')
 })
 
-router.all('*', (req, res) => {
+router.get('*', (req, res) => {
     res.sendStatus(404)
 })
 

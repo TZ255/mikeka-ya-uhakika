@@ -33,11 +33,16 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 app.set('trust proxy', true) //our app is hosted on server using proxy to pass user request
+//attach webhook
+if (process.env.environment == 'production') {
+    rahatupu_bot.rtBot(app)
+}
 app.use(cors())
 app.use(limiter)
 app.use(postRouter)
 app.use(getRouter)
 
+//attach polling
 if (process.env.environment == 'production') {
     regina_bot.rbot()
     rahatupu_bot.rtBot()

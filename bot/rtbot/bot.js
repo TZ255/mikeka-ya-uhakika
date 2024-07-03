@@ -1,54 +1,69 @@
+const { Bot, webhookCallback } = require('grammy')
+const axios = require('axios').default
+const OpenAI = require('openai')
+const mongoose = require('mongoose')
 
-
-const rtfunction = async () => {
+const rtfunction = async (app) => {
 
     try {
-        let tksn = [process.env.RT_TOKEN, process.env.PL_TOKEN, process.env.MUVIKA_TOKEN]
-        const { Bot } = require('grammy')
-        const axios = require('axios').default
-        const OpenAI = require('openai')
+        let tksn = [
+            { NAME: 'rtbot', TOKEN: process.env.RT_TOKEN },
+            { NAME: 'plbot', TOKEN: process.env.PL_TOKEN },
+            { NAME: 'mvbot', TOKEN: process.env.MUVIKA_TOKEN }
+        ]
+        const rtStarterModel = require('./database/chats')
+        const miamalaModel = require('./database/miamala');
+        const malayaModel = require('./database/malaya')
+        const videosDB = require('./database/db')
+        const aliExDB = require('./database/aliexpress')
+        const extractInfoOpenAi = require('./functions/openai-chatid')
+        const { extractMiamalaInfo, addingBusinessPoints } = require('./functions/openai-post')
+
+        //Middlewares
+        const call_function = require('./functions/fn')
+
+        //importants
+        const imp = {
+            replyDb: -1001608248942,
+            pzone: -1001352114412,
+            rpzone: -1001549769969,
+            prem_channel: -1001470139866,
+            local_domain: 't.me/rss_shemdoe_bot?start=',
+            prod_domain: 't.me/ohmychannelV2bot?start=',
+            shemdoe: 741815228,
+            halot: 1473393723,
+            sh1xbet: 5755271222,
+            rtmalipo: 5849160770,
+            xzone: -1001740624527,
+            ohmyDB: -1001586042518,
+            xbongo: -1001263624837,
+            mikekaDB: -1001696592315,
+            logsBin: -1001845473074,
+            mylove: -1001748858805,
+            malayaDB: -1001783364680,
+            rtgrp: -1001899312985,
+            matangazoDB: -1001570087172,
+            aliDB: -1001801595269,
+            aliProducts: -1001971329607,
+            _pack1: -1001943515650,
+            lipaPtsCh: -1002104835299,
+            newRT: -1002228998665
+        }
+
         for (let t of tksn) {
-            const mongoose = require('mongoose')
-            const rtStarterModel = require('./database/chats')
-            const miamalaModel = require('./database/miamala');
-            const malayaModel = require('./database/malaya')
-            const videosDB = require('./database/db')
-            const aliExDB = require('./database/aliexpress')
-            const extractInfoOpenAi = require('./functions/openai-chatid')
-            const { extractMiamalaInfo, addingBusinessPoints } = require('./functions/openai-post')
+            const bot = new Bot(t.TOKEN)
+            let hookPath = `/telebot/${t.NAME}`
+            await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                drop_pending_updates: true
+            })
+                .then(() => {
+                    console.log(`webhook for ${t.NAME} is set`)
+                    bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                })
+                .catch(e => console.log(e.message))
+            app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
-            //Middlewares
-            const call_function = require('./functions/fn')
 
-
-            const bot = new Bot(t)
-
-            const imp = {
-                replyDb: -1001608248942,
-                pzone: -1001352114412,
-                rpzone: -1001549769969,
-                prem_channel: -1001470139866,
-                local_domain: 't.me/rss_shemdoe_bot?start=',
-                prod_domain: 't.me/ohmychannelV2bot?start=',
-                shemdoe: 741815228,
-                halot: 1473393723,
-                sh1xbet: 5755271222,
-                rtmalipo: 5849160770,
-                xzone: -1001740624527,
-                ohmyDB: -1001586042518,
-                xbongo: -1001263624837,
-                mikekaDB: -1001696592315,
-                logsBin: -1001845473074,
-                mylove: -1001748858805,
-                malayaDB: -1001783364680,
-                rtgrp: -1001899312985,
-                matangazoDB: -1001570087172,
-                aliDB: -1001801595269,
-                aliProducts: -1001971329607,
-                _pack1: -1001943515650,
-                lipaPtsCh: -1002104835299,
-                newRT: -1002228998665
-            }
 
             const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'malipo', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
 
@@ -180,30 +195,30 @@ const rtfunction = async () => {
 
             bot.command('convo', async ctx => {
                 let myId = ctx.chat.id
-                let txt = ctx.message.text
-                let msg_id = Number(txt.split('/convo-')[1].trim())
-                if (myId == imp.shemdoe || myId == imp.halot) {
+                let msg_id = Number(ctx.match.trim())
+                if ([imp.shemdoe, imp.halot, imp.rtmalipo].includes(myId) && ctx.match.length > 0) {
                     try {
                         await ctx.reply('starting')
                         let botname = ctx.me.username
                         let all_users = await rtStarterModel.find({ refferer: botname })
 
                         all_users.forEach((u, index) => {
-                            if (u.blocked != true) {
-                                setTimeout(() => {
-                                    if (index == all_users.length - 1) {
-                                        ctx.reply('Nimemaliza conversation')
-                                    }
-                                    bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
-                                        .then(() => console.log('✅ sent to ' + u.chatid))
-                                        .catch((err) => {
-                                            if (err.message.includes('blocked') || err.message.includes('initiate')) {
-                                                rtStarterModel.findOneAndDelete({ chatid: u.chatid })
-                                                    .then(() => { console.log(u.chatid + ' is deleted') })
-                                            }
-                                        })
-                                }, index * 40)
-                            }
+                            setTimeout(() => {
+                                bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
+                                    .then(() => {
+                                        console.log('✅ sent to ' + u.chatid)
+                                        if (index == all_users.length - 1) {
+                                            ctx.reply('Nimemaliza conversation')
+                                        }
+                                    })
+                                    .catch((err) => {
+                                        if (err.message.includes('blocked') || err.message.includes('initiate')) {
+                                            rtStarterModel.findOneAndDelete({ chatid: u.chatid })
+                                                .then(() => { console.log(u.chatid + ' is deleted') })
+                                                .catch(e => console.log(e.message))
+                                        }
+                                    })
+                            }, index * 40)
                         })
                     } catch (err) {
                         console.log(err.message)
@@ -511,21 +526,25 @@ const rtfunction = async () => {
                         for (let t of zingine) {
                             if (txt.toLocaleLowerCase().includes(t) && ctx.chat.type == 'private') {
                                 if (!rateLimitter.includes(ctx.chat.id)) {
+                                    let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
                                     rateLimitter.push(ctx.chat.id)
                                     //check if his member
                                     let status = await ctx.api.getChatMember(imp.newRT, ctx.chat.id)
                                     switch (status.status) {
-                                        case 'member':
+                                        case 'member': case 'administrator': case 'creator':
                                             let mslink = `https://t.me/c/2228998665/99999`
-                                            await ctx.reply(`Rudi kwenye channel\n${mslink}`)
+                                            await ctx.reply(`Rudi kwenye channel\n\n🔞 Pilau\n${mslink}\n\n🎬 Movies\n${muvika}`)
                                             break;
-                                        default:
+                                        case 'kicked': case 'left':
                                             //create new link expire in 15 minute
-                                            let expire = ctx.message.date + (60*15)
+                                            let expire = ctx.message.date + (60 * 15)
                                             let limit = 1
                                             let name = `for ${ctx.chat.id}`
                                             let created_link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, name, imp.shemdoe)
-                                            await ctx.reply(`Hii hapa link yako\n${created_link}`)
+                                            await ctx.reply(`Hii hapa link zako\n\n🔞 Pilau\n${created_link}\n\n🎬 Movies\n${muvika}`)
+                                            break;
+                                        default:
+                                            await ctx.reply('Your account is restricted')
                                             break;
                                     }
                                     break;
@@ -657,12 +676,12 @@ const rtfunction = async () => {
                                 await addingBusinessPoints(ctx, userid, points, imp, delay, txid)
                             }
                         }
-                    } else if(admins.includes(ctx.businessMessage.from.id)) {
+                    } else if (admins.includes(ctx.businessMessage.from.id)) {
                         switch (message.toLowerCase()) {
                             case 'link':
-                                let expire = ctx.businessMessage.date + (60*15)
+                                let expire = ctx.businessMessage.date + (60 * 15)
                                 let limit = 1,
-                                linkName = `for biz ${expire}`
+                                    linkName = `for biz ${expire}`
                                 let link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
                                 await ctx.reply(link)
                                 break;
@@ -673,9 +692,10 @@ const rtfunction = async () => {
                 }
             })
 
-            bot.start().catch(e => {
-                bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
-            })
+            //polling
+            // bot.start().catch(e => {
+            //     bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
+            // })
         }
     } catch (error) {
         console.log(error.message)
