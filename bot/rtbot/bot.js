@@ -58,7 +58,7 @@ const rtfunction = async (app) => {
             })
                 .then(() => {
                     console.log(`webhook for ${t.NAME} is set`)
-                    bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                    bot.api.sendMessage(imp.shemdoe, `${process.env.DOMAIN}${hookPath} set as webhook`)
                 })
                 .catch(e => console.log(e.message))
             app.use(`${hookPath}`, webhookCallback(bot, 'express'))
