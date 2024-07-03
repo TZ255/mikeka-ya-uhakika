@@ -529,15 +529,15 @@ const rtfunction = async (app) => {
                                     switch (status.status) {
                                         case 'member': case 'administrator': case 'creator':
                                             let mslink = `https://t.me/c/2228998665/99999`
-                                            await ctx.reply(`Rudi kwenye channel\n\n🔞 Pilau\n${mslink}\n\n🎬 Movies\n${muvika}`)
+                                            await ctx.reply(`RT PREMIUM LINKS\n\n🔞 Adult Videos\n${mslink}\n\n🎬 Movies\n${muvika}`)
                                             break;
                                         case 'kicked': case 'left':
-                                            //create new link expire in 15 minute
-                                            let expire = ctx.message.date + (60 * 15)
+                                            //create new link expire in 5 minutes
+                                            let expire = ctx.message.date + (60 * 5)
                                             let limit = 1
                                             let name = `for ${ctx.chat.id}`
                                             let created_link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, name, imp.shemdoe)
-                                            await ctx.reply(`Hii hapa link zako\n\n🔞 Pilau\n${created_link}\n\n🎬 Movies\n${muvika}`)
+                                            await ctx.reply(`RT Premium Links\n\n🔞 Adult Videos\n${created_link}\n\n🎬 Movies\n${muvika}`)
                                             break;
                                         default:
                                             await ctx.reply('Your account is restricted')
@@ -690,6 +690,7 @@ const rtfunction = async (app) => {
 
             //polling
             if (process.env.environment == 'local') {
+                // await bot.api.deleteWebhook({drop_pending_updates: true})
                 // bot.start().catch(e => {
                 //     bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
                 // })
