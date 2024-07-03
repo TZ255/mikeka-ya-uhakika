@@ -52,13 +52,13 @@ const rtfunction = async (app) => {
 
         for (let t of tksn) {
             const bot = new Bot(t.TOKEN)
-            let hookPath = `/telebot/${t.NAME}`
+            let hookPath = `/telebot/${process.env.USER}/${t.NAME}`
             await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
                 drop_pending_updates: true
             })
                 .then(() => {
                     console.log(`webhook for ${t.NAME} is set`)
-                    bot.api.sendMessage(imp.shemdoe, `${process.env.DOMAIN}${hookPath} set as webhook`)
+                    bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
                 })
                 .catch(e => console.log(e.message))
             app.use(`${hookPath}`, webhookCallback(bot, 'express'))
