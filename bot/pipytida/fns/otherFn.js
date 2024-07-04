@@ -111,12 +111,12 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
         let masaa = Number(d.split(':')[0])
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
+        let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
         let list = await verifiedList.findOne({ chatid: userid })
         if ((list && list.paid && list.role == 'dada') && (caption.length > charsNum || wajinga.some(w => caption.includes(w)))) {
             let unix = ctx.message.date
             let until_date = unix + 420 //7 mins
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
-            let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
             let loc = list.loc ? ` <b>(${list.loc})</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
             await ctx.replyWithChatAction('typing')
@@ -139,11 +139,12 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
                     await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
                 }
                 if (now >= dbEnd) {
-                    //demote user
-                    await ctx.api.promoteChatMember(ctx.chat.id, userid, demotePrivillages)
-                        .catch(e => console.log(e.message))
+                    //delete user message
+                    await ctx.api.deleteMessage(ctx.chat.id, msgid)
+                        .catch(e => console.log(e))
+                    await ctx.reply(`Mtoa huduma ${tag} tafadhali wasiliana na admin @Blackberry255`)
                     await list.updateOne({ $set: { paid: false } })
-                    await bot.api.sendMessage(1101685785, `${list.fname} demoted`) //blackberry
+                    await bot.api.sendMessage(1101685785, `${list.fname} paid false`) //blackberry
                 }
             }
         }
@@ -210,11 +211,11 @@ const checkSenderFn = async (bot, ctx, imp) => {
         let unixNow = ctx.message.date
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
-        let caption = ctx.message.caption ? ctx.message.caption : 'no cap'
+        let caption = ctx.message?.caption  //checking only ads with captions (phot, video)
 
         let data = await verifiedList.findOne({ chatid: sender })
         //let status = await ctx.getChatMember(sender)
-        if ((!data || data.paid == false) && caption.length > 100) {
+        if (!data && caption.length > 100) {
             await ctx.restrictChatMember(sender, {
                 until_date: unixNow + 21600
             })
