@@ -111,8 +111,8 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
         let masaa = Number(d.split(':')[0])
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
-        let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
         let list = await verifiedList.findOne({ chatid: userid })
+        let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
         if ((list && list.paid && list.role == 'dada') && (caption.length > charsNum || wajinga.some(w => caption.includes(w)))) {
             let unix = ctx.message.date
             let until_date = unix + 420 //7 mins
@@ -211,7 +211,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
         let unixNow = ctx.message.date
         let fname = ctx.message.from.first_name
         let name = ctx.message.from.last_name ? `${fname} ${ctx.message.from.last_name}` : fname
-        let caption = ctx.message?.caption  //checking only ads with captions (phot, video)
+        let caption = ctx.message.caption ? ctx.message.caption : 'no caption'
 
         let data = await verifiedList.findOne({ chatid: sender })
         //let status = await ctx.getChatMember(sender)
