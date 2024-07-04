@@ -15,7 +15,7 @@ const examples = {
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
     const miamala = ['From: M-PESA']
-    const junkies = ['TIPS-AIRTELMONEY', 'has received', 'Transfered', 'sent to', 'from Changisha account']
+    const junkies = ['TIPS-AIRTELMONEY', 'TIPS-HALOTEL', 'TIPS-TIGOPESA', 'has received', 'Transfered', 'sent to', 'from Changisha account']
     try {
         let txt = ctx.channelPost.text ? ctx.channelPost.text : 'no text'
         let msgid = ctx.channelPost.message_id;
