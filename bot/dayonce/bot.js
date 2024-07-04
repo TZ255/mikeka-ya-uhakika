@@ -401,7 +401,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on(':text', async ctx => {
+        bot.on('message:text', async ctx => {
             try {
                 if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
                     if (ctx.message.reply_to_message.text) {
@@ -460,7 +460,7 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on((':photo'), async ctx => {
+        bot.on(('message:photo'), async ctx => {
             try {
                 let mid = ctx.message.message_id
                 let username = ctx.chat.first_name

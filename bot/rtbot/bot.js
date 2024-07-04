@@ -438,7 +438,7 @@ const rtfunction = async (app) => {
                 }
             })
 
-            bot.on(':text', async ctx => {
+            bot.on('message:text', async ctx => {
                 try {
                     if (ctx.message.reply_to_message && admins.includes(ctx.chat.id)) {
                         if (ctx.message.reply_to_message.text) {
@@ -576,7 +576,7 @@ const rtfunction = async (app) => {
                 }
             })
 
-            bot.on(':photo', async ctx => {
+            bot.on('message:photo', async ctx => {
                 try {
                     let mid = ctx.message.message_id
                     let username = ctx.chat.first_name

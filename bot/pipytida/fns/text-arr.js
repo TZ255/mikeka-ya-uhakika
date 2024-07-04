@@ -4,7 +4,7 @@ const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) =
         let userid = ctx.chat.id
         let txt = ctx.message?.text
         let username = ctx.chat.first_name
-        let rp_id = ctx.message.message_id
+        let rp_id = ctx.message?.message_id
         switch (txt) {
             case 'MKEKA 1':
                 if (ctx.chat.type == 'private') {

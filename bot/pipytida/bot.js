@@ -483,7 +483,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(':text', async ctx => {
+        bot.on('message:text', async ctx => {
             try {
                 if (ctx.message && ctx.message.reply_to_message) {
                     if (admins.includes(ctx.chat.id) && ctx.message.reply_to_message.text) {
@@ -533,7 +533,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(':photo', async ctx => {
+        bot.on('message:photo', async ctx => {
             try {
                 if (ctx.chat.type == 'private') {
                     let mid = ctx.message.message_id
@@ -584,7 +584,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(':video', async ctx => {
+        bot.on('message:video', async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified (only applicable if all users are allowed to post)
@@ -598,7 +598,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(':animation', async ctx => {
+        bot.on('message:animation', async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check sender if is verified (only applicable if all users are allowed to post)
@@ -612,7 +612,7 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on(':sticker', async ctx => {
+        bot.on('message:sticker', async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
                     let unixNow = ctx.message.date

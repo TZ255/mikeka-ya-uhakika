@@ -567,7 +567,7 @@ const reginaBot = async () => {
         call_betslip_function(bot, imp)
         call_oncallbackquery_function(bot, delay)
 
-        bot.on(':text', async ctx => {
+        bot.on('message:text', async ctx => {
             try {
                 if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
                     if (ctx.message.reply_to_message.text) {
@@ -663,7 +663,7 @@ const reginaBot = async () => {
             }
         })
 
-        bot.on(':photo', async ctx => {
+        bot.on('message:photo', async ctx => {
             try {
                 let mid = ctx.message.message_id
                 let username = ctx.chat.first_name
