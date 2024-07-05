@@ -523,21 +523,18 @@ const rtfunction = async (app) => {
                             if (txt.toLocaleLowerCase().includes(t) && ctx.chat.type == 'private') {
                                 if (!rateLimitter.includes(ctx.chat.id)) {
                                     let muvika = `https://t.me/+9CChSlwpGWk2YmI0`
+                                    let android = `https://t.me/+RFRJJNq0ERM1YTBk`
+                                    let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
                                     rateLimitter.push(ctx.chat.id)
                                     //check if his member
                                     let status = await ctx.api.getChatMember(imp.newRT, ctx.chat.id)
                                     switch (status.status) {
                                         case 'member': case 'administrator': case 'creator':
                                             let mslink = `https://t.me/c/2228998665/99999`
-                                            await ctx.reply(`RT PREMIUM LINKS\n\n🔞 Adult Videos\n${mslink}\n\n🎬 Movies\n${muvika}`)
+                                            await ctx.reply(`<b><u>RT Premium Links</u>\n\n🔞 18+ Tu\n${mslink}\n\n🎬 Movies\n${muvika}</b>`)
                                             break;
                                         case 'kicked': case 'left':
-                                            //create new link expire in 5 minutes
-                                            let expire = ctx.message.date + (60 * 5)
-                                            let limit = 1
-                                            let name = `for ${ctx.chat.id}`
-                                            let created_link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, name, imp.shemdoe)
-                                            await ctx.reply(`RT Premium Links\n\n🔞 Adult Videos\n${created_link}\n\n🎬 Movies\n${muvika}`)
+                                            await ctx.reply(`<b><u>RT Premium Links</u>\n\n🔞 18+ Tu (Android)\n${android}\n\n🔞 18+ Tu (iPhone)\n${iphone}\n\n🎬 Movies\n${muvika}</b>`)
                                             break;
                                         default:
                                             await ctx.reply('Your account is restricted')
