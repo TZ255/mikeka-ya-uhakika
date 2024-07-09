@@ -374,33 +374,6 @@ const DayoBot = async () => {
             }
         })
 
-        bot.on('chat_join_request', async ctx => {
-            let chatid = ctx.chatJoinRequest.from.id
-            let username = ctx.chatJoinRequest.from.first_name
-            let channel_id = ctx.chatJoinRequest.chat.id
-            let cha_title = ctx.chatJoinRequest.chat.title
-
-            const notOperate = [imp.mylove, imp.dstore, imp.r_chatting, imp.sio_shida]
-
-            try {
-                //dont process channels listed above
-                if (!notOperate.includes(channel_id)) {
-                    let user = await dayoUsers.findOne({ chatid })
-                    if (!user) {
-                        await dayoUsers.create({ chatid, refferer: 'Dayo', blocked: false, username })
-                    }
-                    await bot.api.approveChatJoinRequest(channel_id, chatid)
-                    await bot.api.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
-                        parse_mode: 'HTML',
-                        disable_web_page_preview: true
-                    })
-                }
-
-            } catch (err) {
-                console.log(err.message)
-            }
-        })
-
         bot.on('message:text', async ctx => {
             try {
                 if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {

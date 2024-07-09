@@ -433,33 +433,6 @@ const PipyBot = async () => {
             }
         })
 
-        bot.on('chat_join_request', async ctx => {
-            let chatid = ctx.chatJoinRequest.from.id
-            let username = ctx.chatJoinRequest.from.first_name
-            let channel_id = ctx.chatJoinRequest.chat.id
-            let cha_title = ctx.chatJoinRequest.chat.title
-
-            const Operate = [imp.r_chatting, imp.sio_shida]
-
-            try {
-                //process only on operate
-                if (Operate.includes(channel_id)) {
-                    let user = await pipyUsers.findOne({ chatid })
-                    if (!user) {
-                        await pipyUsers.create({ chatid, refferer: 'Dayo', blocked: false, username })
-                    }
-                    await bot.api.approveChatJoinRequest(channel_id, chatid)
-                    await bot.api.sendMessage(chatid, `Hongera! 🎉 Ombi lako la kujiunga na <b>${cha_title}</b> limekubaliwa.`, {
-                        parse_mode: 'HTML',
-                        disable_web_page_preview: true
-                    })
-                }
-
-            } catch (err) {
-                console.log(err.message)
-            }
-        })
-
         bot.on(':new_chat_members', async ctx => {
             let banned = ['sister g']
             try {
