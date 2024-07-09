@@ -434,7 +434,7 @@ const PipyBot = async () => {
         })
 
         bot.on(':new_chat_members', async ctx => {
-            let banned = ['sister g']
+            let bannedNames = ['sister g', 'nanaof']
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
                     const newMembers = ctx.message.new_chat_members;
@@ -442,9 +442,10 @@ const PipyBot = async () => {
                     for (let member of newMembers) {
                         const firstName = member.first_name ? member.first_name.toLowerCase() : '';
                         const lastName = member.last_name ? member.last_name.toLowerCase() : '';
-                        const fullName = `${firstName} ${lastName}`.trim();
+                        const username = member.username ? member.username.toLowerCase() : '';
+                        const fullName = `${firstName} ${lastName} ${username}`.trim();
 
-                        if (banned.some(b => fullName.includes(b))) {
+                        if (bannedNames.some(b => fullName.includes(b))) {
                             await ctx.banChatMember(member.id, 0);
                             await bot.api.sendMessage(imp.blackberry, `${fullName} banned`)
                             await ctx.reply(`<b>${fullName}</b> amejaribu kuingia kwenye group, nimemuondoa`, { parse_mode: 'HTML' })
