@@ -377,7 +377,7 @@ const updatePhone = async (bot, ctx) => {
 
 //update title
 const updateAdminTitle = async (bot, ctx, imp) => {
-    let Groups = [imp.r_chatting, imp.sio_shida]
+    let Groups = [imp.r_chatting]
     try {
         let txt = ctx.message.text
         let chatid = ctx.message.reply_to_message.from.id
@@ -420,7 +420,7 @@ const modFunction = async (bot, ctx, imp, delay) => {
         let chatid = Number(data[1])
         let param = data[2]
         let value = data[3]
-        let Groups = [imp.r_chatting, imp.sio_shida]
+        let Groups = [imp.r_chatting]
 
         switch (param) {
             case 'loc':

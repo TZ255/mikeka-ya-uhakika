@@ -82,7 +82,7 @@ const PipyBot = async () => {
         }
 
         const admins = [imp.halot, imp.shemdoe, imp.blackberry, imp.xbongo, imp.TelegramChannelId]
-        const chatGroups = [imp.r_chatting, imp.sio_shida]
+        const chatGroups = [imp.r_chatting]
 
         bot.command('start', async ctx => {
             try {
