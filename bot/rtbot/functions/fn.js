@@ -178,6 +178,11 @@ const addingPoints = async (ctx, chatid, points, imp) => {
                 axios.post(mvAPI, data).catch(e => console.log(e.message))
                 break;
         }
+
+        //clear miamala if user name is on it
+        if (upuser?.fullName) {
+            await miamalaModel.deleteMany({name: upuser.fullName})
+        }
     } catch (error) {
         await ctx.reply(error.message)
     }
