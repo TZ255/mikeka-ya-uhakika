@@ -93,14 +93,8 @@ const postingFn = async (bot, imp) => {
                 case grps.r_chatting:
                     //create new invite link and post
                     let link3 = await createLink(bot, imp, chid, `link no. ${upd.times}`, expireUnix)
-                    let link3ios = await createLink(bot, imp, grps.sio_shida, `link no. ${upd.times}`, expireUnix)
+                    let link3ios = await createLink(bot, imp, grps.rtiPhone, `link no. ${upd.times}`, expireUnix)
                     await postIphoneLink(bot, imp, 131, `link no. ${upd.times}`, link3, link3ios)
-                    break;
-
-                case grps.sio_shida:
-                    //create new invite link and post
-                    let link4 = await createLink(bot, imp, chid, `link no. ${upd.times}`, expireUnix)
-                    await postLink(bot, imp, 132, ch.title, link4)
                     break;
 
                 case grps.muvika:
@@ -119,12 +113,6 @@ const postingFn = async (bot, imp) => {
                     //post link to channel
                     let mkekaLink = `https://t.me/mkeka_wa_leo`
                     await postLink(bot, imp, 136, ch.title, mkekaLink)
-                    break;
-
-                case grps.dstore:
-                    //create new invite link and post
-                    let link6 = await createLink(bot, imp, chid, `link no. ${upd.times}`, expireUnix)
-                    await postLink(bot, imp, 135, ch.title, link6)
                     break;
 
                 case grps.rtiPhone:
