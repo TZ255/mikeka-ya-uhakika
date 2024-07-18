@@ -80,7 +80,7 @@ const sendMkeka3 = async (ctx, delay, bot, imp) => {
         let odds = 1
         if (keka.length > 0 && (tzHrs >= 0 && tzHrs < 22)) {
             for (let m of keka) {
-                txt = txt + `<u>${m.time} | ${m.league}</u>\n⚽️ <b><a href="${bwTZ}">${m.match}</a></b>\n<b>✅ ${m.bet}</b>  @${m.odds} \n\n•••\n\n`
+                txt = txt + `<u>${m.time} | ${m.league}</u>\n⚽️ <b><a href="${bwTZ}">${m.match}</a></b>\n<b>🎯 ${m.bet}</b>  @${m.odds} \n\n•••\n\n`
                 odds = (odds * m.odds).toFixed(2)
             }
 

@@ -146,16 +146,17 @@ const DayoBot = async () => {
                     let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
 
                     all_users.forEach((u, index) => {
-                        if (index == all_users.length - 1) {
-                            ctx.reply('Nimemaliza conversation')
-                        }
                         setTimeout(() => {
                             bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .then(() => {
+                                    if (index == all_users.length - 1) {
+                                        ctx.reply('Nimemaliza conversation')
+                                    }
+                                })
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        dayoUsers.findOneAndDelete({ chatid: u.chatid, refferer: 'Dayo' })
-                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                            .catch(e => console.log(e.message))
+                                        u.deleteOne()
+                                        console.log(`${index+1}. Dayo - ${u.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, 35 * index)

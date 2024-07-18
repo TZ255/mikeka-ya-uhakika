@@ -158,15 +158,16 @@ const PipyBot = async () => {
 
                     all_users.forEach((u, index) => {
                         setTimeout(() => {
-                            if (index == all_users.length - 1) {
-                                ctx.reply('Nimemaliza conversation')
-                            }
                             bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .then(() => {
+                                    if (index == all_users.length - 1) {
+                                        ctx.reply('Nimemaliza conversation')
+                                    }
+                                })
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        pipyUsers.findOneAndDelete({ chatid: u.chatid })
-                                            .then(() => { console.log(`🚮 Deleted (${index + 1})`) })
-                                            .catch(e => console.log(e.message))
+                                        u.deleteOne()
+                                        console.log(`${index+1}. Pipy - ${u.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, index * 35)

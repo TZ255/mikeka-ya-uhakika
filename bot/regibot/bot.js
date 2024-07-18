@@ -171,19 +171,19 @@ const reginaBot = async () => {
 
                     all_users.forEach((u, index) => {
                         setTimeout(() => {
-                            if (index == all_users.length - 1) {
-                                ctx.reply('Nimemaliza conversation')
-                            }
                             bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => console.log('✅ convo sent to ' + u.chatid))
+                                .then(() => {
+                                    if (index == all_users.length - 1) {
+                                        ctx.reply('Nimemaliza conversation')
+                                    }
+                                })
                                 .catch((er) => {
                                     if (bads.some((b) => er.message.toLowerCase().includes(b))) {
-                                        nyumbuModel.findOneAndDelete({ refferer: 'Regina', chatid: u.chatid })
-                                            .then(d => console.log(`🚮 Deleted (${index + 1})`))
-                                            .catch(e => console.log(e.message))
+                                        u.deleteOne()
+                                        console.log(`${index + 1}. Regi - ${u.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${er.message}`) }
                                 })
-                        }, index * 40)
+                        }, index * 35)
                     })
                 } catch (err) {
                     console.log(err.message)
@@ -797,7 +797,7 @@ const reginaBot = async () => {
                 //venas 1.5 & 2.5 matokeo
                 case '03:13': case '05:13': case '07:13': case '08:13': case '09:13': case '11:03':
                     call_venas15_fn.checkMatokeoJana(bot, imp)
-                    setTimeout(()=> {
+                    setTimeout(() => {
                         call_venas25_fn.checkMatokeoJana(bot, imp)
                     }, 5000)
                     break;
