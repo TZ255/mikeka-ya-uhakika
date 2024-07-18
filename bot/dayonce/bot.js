@@ -156,7 +156,7 @@ const DayoBot = async () => {
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
-                                        console.log(`${index+1}. Dayo - ${u.chatid} deleted`)
+                                        console.log(`${index+1}. Dayo - ${u?.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, 35 * index)

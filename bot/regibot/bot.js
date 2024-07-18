@@ -180,10 +180,10 @@ const reginaBot = async () => {
                                 .catch((er) => {
                                     if (bads.some((b) => er.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
-                                        console.log(`${index + 1}. Regi - ${u.chatid} deleted`)
+                                        console.log(`${index + 1}. Regi - ${u?.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${er.message}`) }
                                 })
-                        }, index * 35)
+                        }, index * 40)
                     })
                 } catch (err) {
                     console.log(err.message)

@@ -167,10 +167,10 @@ const PipyBot = async () => {
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
-                                        console.log(`${index+1}. Pipy - ${u.chatid} deleted`)
+                                        console.log(`${index+1}. Pipy - ${u?.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
-                        }, index * 35)
+                        }, index * 40)
                     })
                 } catch (err) {
                     console.log(err.message)
