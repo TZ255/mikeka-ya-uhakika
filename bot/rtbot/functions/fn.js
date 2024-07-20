@@ -141,7 +141,7 @@ const addingPoints = async (ctx, chatid, points, imp) => {
         let rev = await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } }, { new: true })
 
         //text to reply to me
-        let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: <code>${upuser.chatid}</code>\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n• Fullname: ${upuser?.fullName}\n• Phone: ${upuser?.phone}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
+        let txt1 = `Points za ${upuser.username} zimeongezwa to <b>${upuser.points} pts.</b>\n\n<u>User Data</u>\n• Points: ${upuser.points}\n• Id: <code>${upuser.chatid}</code>\n• Movies: ${upuser.movie}\n• TV Series: ${upuser.shows}\n• Fullname: ${upuser?.fullName}\n• Phone: ${upuser?.phone}\n• Ref: ${upuser?.refferer}\n\n<tg-spoiler>Mapato added to ${rev.revenue.toLocaleString('en-US')}</tg-spoiler>`
 
         //text to send to user
         let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${points} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nIkitokea umepoteza link ya channel yetu, tuma neno <b>niunge</b> au wasiliana na admin wetu kupata link mpya.\n\n\n<b>Enjoy, ❤.</b>`

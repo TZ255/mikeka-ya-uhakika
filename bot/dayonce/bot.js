@@ -140,7 +140,7 @@ const DayoBot = async () => {
         bot.command('convo', async ctx => {
             let txt = ctx.message.text
             let msg_id = Number(txt.split('/convo-')[1].trim())
-            let bads = ['blocked', 'deactivated']
+            let bads = ['blocked', 'deactivated', 'initiate']
             if ([imp.shemdoe, imp.halot].includes(ctx.chat.id)) {
                 try {
                     let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
