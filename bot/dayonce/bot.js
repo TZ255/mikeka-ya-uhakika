@@ -159,7 +159,7 @@ const DayoBot = async () => {
                                         console.log(`${index+1}. Dayo - ${u?.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
-                        }, 35 * index)
+                        }, 40 * index)
                     })
                 } catch (err) {
                     console.log("(Dayo) " + err.message)

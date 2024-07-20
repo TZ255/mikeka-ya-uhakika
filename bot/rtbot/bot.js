@@ -205,6 +205,7 @@ const rtfunction = async (app) => {
                                         console.log('✅ sent to ' + u.chatid)
                                         if (index == all_users.length - 1) {
                                             ctx.reply('Nimemaliza conversation')
+                                                .catch(e => console.log(e.message))
                                         }
                                     })
                                     .catch((err) => {
@@ -341,19 +342,6 @@ const rtfunction = async (app) => {
                     })
                 } catch (err) {
                     console.log(err.message)
-                }
-            })
-
-            bot.command('update', async ctx => {
-                try {
-                    if (ctx.chat.id == imp.rtmalipo) {
-                        await rtStarterModel.updateMany({}, { $unset: { movie: 1, shows: 1 } })
-                        await ctx.reply('All Data Removed')
-                        await rtStarterModel.updateMany({}, { $set: { movie: 0, shows: 0 } })
-                        await ctx.reply('All Data Readded')
-                    }
-                } catch (error) {
-                    await ctx.reply(error.message)
                 }
             })
 
@@ -531,10 +519,10 @@ const rtfunction = async (app) => {
                                     switch (status.status) {
                                         case 'member': case 'administrator': case 'creator':
                                             let mslink = `https://t.me/c/2228998665/99999`
-                                            await ctx.reply(`<b><u>RT Premium Links</u>\n\n🔞 18+ Tu\n${mslink}\n\n🎬 Movies\n${muvika}</b>`, {parse_mode: 'HTML'})
+                                            await ctx.reply(`<b><u>RT Premium Links</u>\n\n🔞 18+ Tu\n${mslink}\n\n🎬 Movies\n${muvika}</b>`, { parse_mode: 'HTML' })
                                             break;
                                         case 'kicked': case 'left':
-                                            await ctx.reply(`<b><u>RT Premium Links</u>\n\n🔞 18+ Tu (Android)\n${android}\n\n🔞 18+ Tu (iPhone)\n${iphone}\n\n🎬 Movies\n${muvika}</b>`, {parse_mode: 'HTML'})
+                                            await ctx.reply(`<b><u>RT Premium Links</u>\n\n🔞 18+ Tu (Android)\n${android}\n\n🔞 18+ Tu (iPhone)\n${iphone}\n\n🎬 Movies\n${muvika}</b>`, { parse_mode: 'HTML' })
                                             break;
                                         default:
                                             await ctx.reply('Your account is restricted')
