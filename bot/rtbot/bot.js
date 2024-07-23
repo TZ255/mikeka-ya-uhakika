@@ -675,7 +675,13 @@ const rtfunction = async (app) => {
                             await addingBusinessPoints(ctx, uid, points, imp, delay, uid)
 
                             //delete my_adding points msg
-                            await ctx.api.editMessageText(biz_id, my_msg_id, '✅')
+                            let API = `https://api.telegram.org/bot${process.env.RT_TOKEN}/editMessageText`
+                            let editData = {
+                                business_connection_id: biz_id,
+                                message_id: my_msg_id,
+                                text: '✅'
+                            }
+                            await axios.post(API, editData).catch(e => console.log(e.message))
                         }
                         switch (message.toLowerCase()) {
                             case 'link':
