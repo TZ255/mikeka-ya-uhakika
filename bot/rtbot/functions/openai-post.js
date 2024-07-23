@@ -69,7 +69,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
     }
 };
 
-const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid) => {
+const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid, emoji) => {
     try {
         //channel links
         let android = `https://t.me/+RFRJJNq0ERM1YTBk`
@@ -100,7 +100,7 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid) => {
 
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
-        let txt4 = `🎉🎉🎉 Hongera 🎉🎉🎉\nMalipo yako yamethibitishwa. <b>Points ${pts}</b> zimeongezwa kwenye account yako na sasa una jumla ya points <b>${upuser.points}</b>.\n\n<blockquote>This is an automated message confirming your transaction with id <b>${txid}</b></blockquote>`
+        let txt4 = `${emoji} Malipo yako yamethibitishwa. <b>Points ${pts}</b> zimeongezwa kwenye account yako na sasa una jumla ya points <b>${upuser.points}</b>.\n\n<blockquote>This is an automated message confirming your transaction with id <b>${txid}</b></blockquote>`
 
         let rtAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/sendMessage`
         let plAPI = `https://api.telegram.org/bot${process.env.PL_TOKEN}/sendMessage`

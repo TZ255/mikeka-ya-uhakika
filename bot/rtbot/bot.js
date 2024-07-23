@@ -648,6 +648,7 @@ const rtfunction = async (app) => {
                             //check miamala ya user
                             let tx = await miamalaModel.find({ name: user.fullName })
                             if (tx.length > 0) {
+                                let emoji = '⚡⚡⚡'
                                 let points = 0
                                 let txid = ''
                                 for (let t of tx) {
@@ -655,15 +656,16 @@ const rtfunction = async (app) => {
                                     await t.deleteOne()
                                     txid = t.txid
                                 }
-                                await addingBusinessPoints(ctx, userid, points, imp, delay, txid)
+                                await addingBusinessPoints(ctx, userid, points, imp, delay, txid, emoji)
                             }
                         }
                     } else if (admins.includes(ctx.businessMessage.from.id)) {
                         //kama ujumbe wangu unaanza na Paid na ukisplit kwa ' ' length ni 2
-                        if (message.startsWith('Paid ') && message.split(' ').length == 2) {
+                        if (message.startsWith('Umelipa ') && message.split(' ').length == 2) {
                             let uid = ctx.businessMessage.chat.id
-                            let points = Number(message.split('Paid ')[1])
+                            let points = Number(message.split('Umelipa ')[1])
                             let my_msg_id = ctx.businessMessage.message_id
+                            let emoji = '✅'
 
                             //delete miamala yote kwenye db
                             let mteja = await rtStarterModel.findOne({ chatid: uid })
@@ -672,16 +674,7 @@ const rtfunction = async (app) => {
                             }
 
                             //add business points
-                            await addingBusinessPoints(ctx, uid, points, imp, delay, uid)
-
-                            //delete my_adding points msg
-                            let API = `https://api.telegram.org/bot${process.env.RT_TOKEN}/editMessageText`
-                            let editData = {
-                                business_connection_id: biz_id,
-                                message_id: my_msg_id,
-                                text: '✅'
-                            }
-                            await axios.post(API, editData).catch(e => console.log(e.message))
+                            await addingBusinessPoints(ctx, uid, points, imp, delay, uid, emoji)
                         }
                         switch (message.toLowerCase()) {
                             case 'link':
