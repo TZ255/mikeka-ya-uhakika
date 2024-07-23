@@ -638,9 +638,10 @@ const rtfunction = async (app) => {
                     let rtbot_id = ctx.me.id
                     let message = ctx.businessMessage?.text
                     let userid = ctx.businessMessage.from.id
-                    let bzid = await ctx.getBusinessConnection()
+                    let biz_conn = await ctx.getBusinessConnection()
+                    let biz_id = biz_conn.id
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
-                    if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && bzid.user.id == imp.rtmalipo) {
+                    if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user.fullName) {
@@ -658,6 +659,24 @@ const rtfunction = async (app) => {
                             }
                         }
                     } else if (admins.includes(ctx.businessMessage.from.id)) {
+                        //kama ujumbe wangu unaanza na Paid na ukisplit kwa ' ' length ni 2
+                        if (message.startsWith('Paid ') && message.split(' ').length == 2) {
+                            let uid = ctx.businessMessage.chat.id
+                            let points = Number(message.split('Paid ')[1])
+                            let my_msg_id = ctx.businessMessage.message_id
+
+                            //delete miamala yote kwenye db
+                            let mteja = await rtStarterModel.findOne({ chatid: uid })
+                            if (mteja && mteja?.fullName) {
+                                await miamalaModel.deleteMany({name: mteja.fullName})
+                            }
+
+                            //add business points
+                            await addingBusinessPoints(ctx, uid, points, imp, delay, uid)
+
+                            //delete my_adding points msg
+                            await ctx.api.editMessageText(biz_id, my_msg_id, '✅')
+                        }
                         switch (message.toLowerCase()) {
                             case 'link':
                                 let expire = ctx.businessMessage.date + (60 * 15)
