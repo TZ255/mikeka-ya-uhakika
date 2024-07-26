@@ -660,10 +660,10 @@ const rtfunction = async (app) => {
                             }
                         }
                     } else if (admins.includes(ctx.businessMessage.from.id)) {
-                        //kama ujumbe wangu unaanza na Paid na ukisplit kwa ' ' length ni 2
-                        if (message.startsWith('Umelipa ') && message.split(' ').length == 2) {
+                        //kama ujumbe wangu unaanza na + or - na ukiconvert ni number
+                        if (message.startsWith('+') && Number(message)) {
                             let uid = ctx.businessMessage.chat.id
-                            let points = Number(message.split('Umelipa ')[1])
+                            let points = Number(message)
                             let my_msg_id = ctx.businessMessage.message_id
                             let emoji = '✅'
 
