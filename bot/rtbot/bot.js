@@ -656,7 +656,7 @@ const rtfunction = async (app) => {
                                     await t.deleteOne()
                                     txid = t.txid
                                 }
-                                await addingBusinessPoints(ctx, userid, points, imp, delay, txid, emoji)
+                                await addingBusinessPoints(bot, ctx, userid, points, imp, delay, txid, emoji)
                             }
                         }
                     } else if (admins.includes(ctx.businessMessage.from.id)) {
@@ -674,7 +674,7 @@ const rtfunction = async (app) => {
                             }
 
                             //add business points
-                            await addingBusinessPoints(ctx, uid, points, imp, delay, uid, emoji)
+                            await addingBusinessPoints(bot, ctx, uid, points, imp, delay, uid, emoji)
                         }
                         switch (message.toLowerCase()) {
                             case 'link':

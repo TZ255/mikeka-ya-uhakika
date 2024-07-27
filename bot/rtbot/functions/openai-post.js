@@ -2,6 +2,7 @@ const OpenAI = require('openai');
 const axios = require('axios').default
 const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
+const {checkPaidIfMemberPilauZone} = require('./fn')
 
 const examples = {
     ex5: `Umepokea Tsh1,000.00, 747900466 Jol gombania. Salio jipya ni Tsh26,684.00. Muamala No. MI240406.1141.Q03294\n\nThe answer I need here is: {"ok": true, "name": "JOL GOMBANIA", "phone": "+255747900466", "trans_id": "MI240406.1141.Q03294", "amount": 1000}`,
@@ -69,7 +70,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
     }
 };
 
-const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid, emoji) => {
+const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, emoji) => {
     try {
         //channel links
         let android = `https://t.me/+RFRJJNq0ERM1YTBk`
@@ -124,6 +125,16 @@ const addingBusinessPoints = async (ctx, chatid, points, imp, delay, txid, emoji
             case 'muvikabot':
                 axios.post(mvAPI, data).catch(e => console.log(e.message))
                 break;
+        }
+
+        //check if is member to pilauzone. if not send the link
+        let tgstamp = ctx.businessMessage.date
+        let expire = tgstamp + (60*60) //1 hour
+        let pilau_link = await checkPaidIfMemberPilauZone(bot, chatid, imp.newRT, expire, imp.rtmalipo)
+        let invite_msg = `Bado hujajiunga na channel yetu mpya. Kwa videos mpya kila siku jiunge na channel yetu hapa chini \n\n<b>RT - PILAU ZONE 😜 \n${pilau_link}\n${pilau_link}</b>`
+        //send the message
+        for(let rt of [rtAPI, plAPI]) {
+            await axios.post(rt, {chat_id: chatid, text: invite_msg, parse_mode: 'HTML'})
         }
     } catch (error) {
         console.log(error.message, error)

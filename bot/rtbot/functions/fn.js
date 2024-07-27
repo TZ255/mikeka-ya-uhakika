@@ -49,6 +49,21 @@ const createChannelLink = async (bot, chanid, expire, limit, linkName, errorAdmi
     }
 }
 
+//check if members of pilau zone
+const checkPaidIfMemberPilauZone = async (bot, chatid, pilau_id, link_expire, error_admin) => {
+    try {
+        //check status
+        let status = await bot.api.getChatMember(pilau_id, chatid)
+        if(status.status == 'left') {
+            //create inviteLink
+            let link = await createChannelLink(bot, pilau_id, link_expire, 1, `paid ${chatid}`, error_admin)
+            return link;
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     //upload video
     let type = OS
@@ -258,5 +273,6 @@ module.exports = {
     rudiNyumaReply,
     addingPoints,
     deteleMessages,
-    createChannelLink
+    createChannelLink,
+    checkPaidIfMemberPilauZone
 }
