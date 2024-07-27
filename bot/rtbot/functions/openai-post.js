@@ -97,7 +97,7 @@ const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, 
 
         await rtStarterModel.findOneAndUpdate({ chatid: imp.rtmalipo }, { $inc: { revenue: points } })
 
-        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${pts} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Malipo.</b>\n\nTumia points zako vizuri. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\nIkitokea umepoteza link ya channel yetu, tuma neno <b>niunge</b> au wasiliana na admin wetu kupata link mpya.\n\n\n<b>Enjoy, ❤.</b>`
+        let txt2 = `<b>Hongera 🎉 \nMalipo yako yamethibitishwa. Umepokea Points ${pts} na sasa una jumla ya Points ${upuser.points} kwenye account yako ya RT Premium.</b>\n\nTumia points zako vyema. Kumbuka Kila video utakayo download itakugharimu Points 250.\n\n\n<b>Enjoy, ❤.</b>`
 
         let txt3 = `<b>Points ${points} zimeondolewa kwenye account yako na Admin. Umebakiwa na points ${upuser.points}.</b>`
 
@@ -131,10 +131,14 @@ const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, 
         let tgstamp = ctx.businessMessage.date
         let expire = tgstamp + (60*60) //1 hour
         let pilau_link = await checkPaidIfMemberPilauZone(bot, chatid, imp.newRT, expire, imp.rtmalipo)
-        let invite_msg = `Bado hujajiunga na channel yetu mpya. Kwa videos mpya kila siku jiunge na channel yetu hapa chini \n\n<b>RT - PILAU ZONE 😜 \n${pilau_link}\n${pilau_link}</b>`
+        let invite_msg = `Pia tunakukumbusha kujiunga na channel yetu mpya. Kwa videos mpya kila siku jiunge na channel yetu hapa chini \n\n<b>RT - PILAU ZONE 😜 \n${pilau_link}\n${pilau_link}</b>`
         //send the message
         for(let rt of [rtAPI, plAPI]) {
-            await axios.post(rt, {chat_id: chatid, text: invite_msg, parse_mode: 'HTML'})
+            let idata = {
+                chat_id: chatid, text: invite_msg, parse_mode: 'HTML',
+                link_preview_options: {is_disabled: true}
+            }
+            await axios.post(rt, idata)
         }
     } catch (error) {
         console.log(error.message, error)
