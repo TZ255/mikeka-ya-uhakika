@@ -678,7 +678,7 @@ const rtfunction = async (app) => {
                         }
                         switch (message.toLowerCase()) {
                             case 'link':
-                                let expire = ctx.businessMessage.date + (60 * 15)
+                                let expire = ctx.businessMessage.date + (3600 * 4) //4hrs
                                 let limit = 1,
                                     linkName = `for biz ${expire}`
                                 let link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
