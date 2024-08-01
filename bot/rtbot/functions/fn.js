@@ -58,6 +58,8 @@ const checkPaidIfMemberPilauZone = async (bot, chatid, pilau_id, link_expire, er
             //create inviteLink
             let link = await createChannelLink(bot, pilau_id, link_expire, 1, `paid ${chatid}`, error_admin)
             return link;
+        } else {
+            return false
         }
     } catch (error) {
         console.log(error.message)
