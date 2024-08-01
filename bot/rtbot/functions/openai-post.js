@@ -134,12 +134,18 @@ const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, 
         let invite_msg = `Pia tunakukumbusha kujiunga na channel yetu mpya. Kwa videos mpya kila siku jiunge na channel yetu hapa chini \n\n<b>RT - PILAU ZONE 😜 \n${pilau_link}\n${pilau_link}</b>`
         //send the message
         if (pilau_link != false) {
-            for (let rt of [rtAPI, plAPI]) {
-                let idata = {
-                    chat_id: chatid, text: invite_msg, parse_mode: 'HTML',
-                    link_preview_options: { is_disabled: true }
-                }
-                await axios.post(rt, idata)
+            let idata = {
+                chat_id: chatid, text: invite_msg, parse_mode: 'HTML',
+                link_preview_options: { is_disabled: true }
+            }
+            switch (upuser?.refferer) {
+                case 'rahatupu_tzbot':
+                    await axios.post(rtAPI, idata)
+                    break;
+
+                case 'pilau_bot':
+                    await axios.post(plAPI, idata)
+                    break;
             }
         }
     } catch (error) {
