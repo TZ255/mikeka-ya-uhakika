@@ -1,9 +1,22 @@
 
 
-const PipyBot = async () => {
+const PipyBot = async (app) => {
     try {
         const { Bot } = require('grammy')
         const bot = new Bot(process.env.PIPY_TOKEN)
+
+        //set webhook
+        let hookPath = `/telebot/${process.env.USER}/pipytida`
+        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+            drop_pending_updates: true
+        })
+            .then(() => {
+                console.log(`webhook for Pipy is set`)
+                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                    .catch(e => console.log(e.message))
+            })
+            .catch(e => console.log(e.message))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
         const pipyUsers = require('./database/chats')
         const verifiedList = require('./database/verified')
@@ -167,7 +180,7 @@ const PipyBot = async () => {
                                 .catch((err) => {
                                     if (bads.some((b) => err.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
-                                        console.log(`${index+1}. Pipy - ${u?.chatid} deleted`)
+                                        console.log(`${index + 1}. Pipy - ${u?.chatid} deleted`)
                                     } else { console.log(`🤷‍♂️ ${err.message}`) }
                                 })
                         }, index * 40)
@@ -630,9 +643,12 @@ const PipyBot = async () => {
             }
         }, 60000)
 
-        bot.start().catch(e => {
-            bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
-        })
+        if (process.env.environment == 'local') {
+            await bot.api.deleteWebhook({drop_pending_updates: true})
+            bot.start().catch(e => {
+                bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
+            })
+        }
     } catch (error) {
         console.log(error.message, error)
     }
