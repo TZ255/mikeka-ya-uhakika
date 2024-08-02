@@ -76,9 +76,6 @@ const PipyBot = async (app) => {
             console.error(`(Pipy): ${err.message}`, err);
         });
 
-        //deleting pending updates
-        bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
-
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
