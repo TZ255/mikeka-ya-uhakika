@@ -2,21 +2,8 @@
 
 const PipyBot = async (app) => {
     try {
-        const { Bot } = require('grammy')
+        const { Bot, webhookCallback } = require('grammy')
         const bot = new Bot(process.env.PIPY_TOKEN)
-
-        //set webhook
-        let hookPath = `/telebot/${process.env.USER}/pipytida`
-        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
-        })
-            .then(() => {
-                console.log(`webhook for Pipy is set`)
-                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-                    .catch(e => console.log(e.message))
-            })
-            .catch(e => console.log(e.message))
-        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
         const pipyUsers = require('./database/chats')
         const verifiedList = require('./database/verified')
@@ -54,6 +41,19 @@ const PipyBot = async (app) => {
             TelegramChannelId: 777000,
             sio_shida: -1002110306030
         }
+
+        //set webhook
+        let hookPath = `/telebot/${process.env.USER}/pipytida`
+        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+            drop_pending_updates: true
+        })
+            .then(() => {
+                console.log(`webhook for Pipy is set`)
+                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                    .catch(e => console.log(e.message))
+            })
+            .catch(e => console.log(e.message))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
@@ -644,7 +644,7 @@ const PipyBot = async (app) => {
         }, 60000)
 
         if (process.env.environment == 'local') {
-            await bot.api.deleteWebhook({drop_pending_updates: true})
+            await bot.api.deleteWebhook({ drop_pending_updates: true })
             bot.start().catch(e => {
                 bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
             })
