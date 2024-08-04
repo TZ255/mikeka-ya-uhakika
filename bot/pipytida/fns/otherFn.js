@@ -115,7 +115,7 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
         let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
         if ((list && list.paid && list.role == 'dada') && (caption.length > charsNum || wajinga.some(w => caption.includes(w)))) {
             let unix = ctx.message.date
-            let until_date = unix + 900 //15 mins
+            let until_date = unix + 600 //10 mins
             let muda = new Date(until_date * 1000).toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short' })
             let loc = list.loc ? ` <b>(${list.loc})</b>.` : ''
             await list.updateOne({ $set: { again: until_date } })
@@ -171,7 +171,7 @@ const muteLongTextsAndVideos = async (bot, ctx, imp, delay) => {
             length = 300
         } else if (ctx.message.caption) {
             caption = ctx.message.caption
-            length = 30
+            length = 50
         }
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
