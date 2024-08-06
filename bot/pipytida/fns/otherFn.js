@@ -142,10 +142,18 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
                     //delete user message
                     await ctx.api.deleteMessage(ctx.chat.id, msgid)
                         .catch(e => console.log(e))
-                    await ctx.reply(`Mtoa huduma ${tag} tafadhali wasiliana na admin @Blackberry255`, {parse_mode: 'HTML'})
-                    await bot.api.sendMessage(1101685785, `${list.fname} has to pay`) //blackberry
+                    await ctx.reply(`Mtoa huduma ${tag} tafadhali wasiliana na admin @Blackberry255`, { parse_mode: 'HTML' })
+                    await list.updateOne({ $set: { paid: false } })
+                    await bot.api.sendMessage(1101685785, `${list.fname} paid false`) //blackberry
                 }
             }
+        }
+
+        //delete her messages if paid false
+        if (list && list?.paid == false) {
+            await ctx.api.deleteMessage(ctx.chat.id, msgid)
+                .catch(e => console.log(e))
+            await ctx.reply(`Mtoa huduma ${tag} tafadhali wasiliana na admin @Blackberry255`, { parse_mode: 'HTML' })
         }
     } catch (error) { console.log(error.message, error) }
 }
