@@ -203,7 +203,7 @@ const rtfunction = async (app) => {
                         let all_users = await rtStarterModel.find({ refferer: botname })
                         await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
                         for (let [i, u] of all_users.entries()) {
-                            await bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id, { reply_markup: defaultReplyMkp })
+                            await bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
                                 .catch((err) => {
                                     if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
