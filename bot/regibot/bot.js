@@ -17,22 +17,6 @@ const reginaBot = async (app) => {
         const waombajiModel = require('./database/waombaji')
         const supatips_Model = require('./database/supatips')
 
-        //use auto-retry
-        bot.api.config.use(autoRetry());
-
-        //set webhook
-        let hookPath = `/telebot/${process.env.USER}/regina`
-        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
-        })
-            .then(() => {
-                console.log(`webhook for Regi is set`)
-                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-                    .catch(e => console.log(e.message))
-            })
-            .catch(e => console.log(e.message))
-        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
-
 
         const call_supatips_function = require('./fns/supatips')
         const call_fametips_function = require('./fns/fametips')
@@ -63,6 +47,22 @@ const reginaBot = async (app) => {
             mkekaLeo: -1001733907813,
             matangazoDB: -1001570087172,
         }
+
+        //use auto-retry
+        bot.api.config.use(autoRetry());
+
+        //set webhook
+        let hookPath = `/telebot/${process.env.USER}/regina`
+        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+            drop_pending_updates: true
+        })
+            .then(() => {
+                console.log(`webhook for Regi is set`)
+                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                    .catch(e => console.log(e.message))
+            })
+            .catch(e => console.log(e.message))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
