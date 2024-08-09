@@ -3,6 +3,7 @@
 const PipyBot = async (app) => {
     try {
         const { Bot, webhookCallback } = require('grammy')
+        const { autoRetry } = require("@grammyjs/auto-retry")
         const bot = new Bot(process.env.PIPY_TOKEN)
 
         const pipyUsers = require('./database/chats')
@@ -41,6 +42,9 @@ const PipyBot = async (app) => {
             TelegramChannelId: 777000,
             sio_shida: -1002110306030
         }
+
+        //use auto-retry
+        bot.api.config.use(autoRetry());
 
         //set webhook
         let hookPath = `/telebot/${process.env.USER}/pipytida`
@@ -165,23 +169,17 @@ const PipyBot = async (app) => {
             if (myId == imp.shemdoe || myId == imp.halot) {
                 try {
                     let all_users = await pipyUsers.find({ refferer: "Pipy", blocked: false })
+                        .limit(1000)
 
-                    all_users.forEach((u, index) => {
-                        setTimeout(() => {
-                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => {
-                                    if (index == all_users.length - 1) {
-                                        ctx.reply('Nimemaliza conversation')
-                                    }
-                                })
-                                .catch((err) => {
-                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        u.deleteOne()
-                                        console.log(`${index + 1}. Pipy - ${u?.chatid} deleted`)
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                })
-                        }, index * 40)
-                    })
+                    for (let [i, u] of all_users.entries()) {
+                        bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                            .catch((err) => {
+                                if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
+                                    u.deleteOne()
+                                    console.log(`${i + 1}. Pipy - ${u?.chatid} deleted`)
+                                } else { console.log(`🤷‍♂️ ${err.message}`) }
+                            })
+                    }
                 } catch (err) {
                     console.log(err.message)
                 }
