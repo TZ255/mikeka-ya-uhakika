@@ -183,7 +183,7 @@ const reginaBot = async (app) => {
                     let msg_id = Number(ctx.match.trim())
                     let bads = ['deactivated', 'blocked', 'initiate']
                     try {
-                        let all_users = await nyumbuModel.find({ refferer: "Regina" })
+                        let all_users = await nyumbuModel.find({ refferer: "Regina" }).limit(10)
                         await ctx.reply(`Start broadcasting for ${all_users.length} users`)
                         for (let [i, u] of all_users.entries()) {
                             await bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
@@ -191,7 +191,7 @@ const reginaBot = async (app) => {
                                     if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
                                         console.log(`${i + 1}. Regi - ${u?.chatid} deleted`)
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                    } else { console.log(`🤷‍♂️ ${err}`) }
                                 })
                         }
                         await ctx.reply('Nimemaliza Convo')
