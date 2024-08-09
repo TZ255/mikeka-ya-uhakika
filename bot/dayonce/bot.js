@@ -162,7 +162,7 @@ const DayoBot = async (app) => {
                     let all_users = await dayoUsers.find({ refferer: "Dayo" })
                     await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
                     for (let [i, u] of all_users.entries()) {
-                        bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                        await bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
                             .catch((err) => {
                                 if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
                                     u.deleteOne()

@@ -197,13 +197,13 @@ const rtfunction = async (app) => {
             const convoFn = async (ctx) => {
                 if ([imp.halot, imp.shemdoe, imp.rtmalipo].includes(ctx.chat.id) && ctx.match) {
                     let msg_id = Number(ctx.match.trim())
-                    let bads = ['deactivated', 'blocked', 'initiate']
+                    let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
                     try {
                         let botname = ctx.me.username
                         let all_users = await rtStarterModel.find({ refferer: botname })
                         await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
                         for (let [i, u] of all_users.entries()) {
-                            bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id, { reply_markup: defaultReplyMkp })
+                            await bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id, { reply_markup: defaultReplyMkp })
                                 .catch((err) => {
                                     if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
