@@ -170,6 +170,7 @@ const DayoBot = async (app) => {
                                 } else { console.log(`🤷‍♂️ ${err.message}`) }
                             })
                     }
+                    await ctx.reply('Nimemaliza conversation')
                 } catch (err) {
                     console.log(err?.message)
                 }
