@@ -177,26 +177,35 @@ const reginaBot = async (app) => {
             }
         })
 
-        bot.command('convo', async ctx => {
-            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
-                let msg_id = Number(ctx.match.trim())
-                let bads = ['deactivated', 'blocked', 'initiate']
-                try {
-                    let all_users = await nyumbuModel.find({ refferer: "Regina" })
-                    await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
-                    for (let [i, u] of all_users.entries()) {
-                        bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                            .catch((err) => {
-                                if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
-                                    u.deleteOne()
-                                    console.log(`${i + 1}. Regi - ${u?.chatid} deleted`)
-                                } else { console.log(`🤷‍♂️ ${err.message}`) }
-                            })
+        const convoFn = async (ctx) => {
+            try {
+                if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
+                    let msg_id = Number(ctx.match.trim())
+                    let bads = ['deactivated', 'blocked', 'initiate']
+                    try {
+                        let all_users = await nyumbuModel.find({ refferer: "Regina" })
+                        await ctx.reply(`Start broadcasting for ${all_users.length} users`)
+                        for (let [i, u] of all_users.entries()) {
+                            await bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .catch((err) => {
+                                    if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
+                                        u.deleteOne()
+                                        console.log(`${i + 1}. Regi - ${u?.chatid} deleted`)
+                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                })
+                        }
+                        await ctx.reply('Nimemaliza Convo')
+                    } catch (err) {
+                        console.log(err?.message)
                     }
-                } catch (err) {
-                    console.log(err?.message)
                 }
+            } catch (error) {
+                console.log(error?.message)
             }
+        }
+
+        bot.command('convo', async ctx => {
+            convoFn(ctx)
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
