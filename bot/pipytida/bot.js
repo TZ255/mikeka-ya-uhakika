@@ -161,10 +161,12 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.command('convo', async ctx => {
+        const convoFn = async (ctx) => {
             if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
                 let msg_id = Number(ctx.match.trim())
-                let bads = ['deactivated', 'blocked', 'initiate']
+                //cht not found - not using bot for longtime or Group/User to copy from not found
+                //bot is not a member of the channel chat - channel not found
+                let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
                 try {
                     let all_users = await pipyUsers.find({ refferer: "Pipy" })
                     await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
@@ -181,6 +183,10 @@ const PipyBot = async (app) => {
                     console.log(err.message)
                 }
             }
+        }
+
+        bot.command('convo', async ctx => {
+            convoFn(ctx)
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {

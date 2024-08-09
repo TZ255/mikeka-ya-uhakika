@@ -181,24 +181,21 @@ const reginaBot = async (app) => {
             try {
                 if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
                     let msg_id = Number(ctx.match.trim())
-                    let bads = ['deactivated', 'blocked', 'initiate']
-                    try {
-                        let all_users = await nyumbuModel.find({ refferer: "Regina" }).limit(100)
-                        await ctx.reply(`Start broadcasting for ${all_users.length} users`)
-                        for (let [i, u] of all_users.entries()) {
-                            await bot.api.copyMessage(u?.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                            .then(()=> console.log(`Sent to ${u?.chatid}`))
-                                .catch((err) => {
-                                    if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
-                                        u.deleteOne()
-                                        console.log(`${i + 1}. Regi - ${u?.chatid} deleted`)
-                                    } else { console.log(err) }
-                                })
-                        }
-                        await ctx.reply('Nimemaliza Convo')
-                    } catch (err) {
-                        console.log(err?.message, err)
+                    //cht not found - not using bot for longtime or Group/User to copy from not found
+                    //bot is not a member of the channel chat - channel not found
+                    let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
+                    let all_users = await nyumbuModel.find({ refferer: "Regina" })
+                    await ctx.reply(`Start broadcasting for ${all_users.length} users`)
+                    for (let [i, u] of all_users.entries()) {
+                        await bot.api.copyMessage(u?.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                            .catch((err) => {
+                                if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
+                                    u.deleteOne()
+                                    console.log(`${i + 1}. Regi - ${u?.chatid} deleted`)
+                                } else { console.log(`🤷‍♀️ ${err.message}`) }
+                            })
                     }
+                    await ctx.reply('Nimemaliza Convo')
                 }
             } catch (error) {
                 console.log(error?.message)

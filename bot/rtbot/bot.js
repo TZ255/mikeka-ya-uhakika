@@ -194,7 +194,7 @@ const rtfunction = async (app) => {
                 }
             })
 
-            bot.command('convo', async ctx => {
+            const convoFn = async (ctx) => {
                 if ([imp.halot, imp.shemdoe, imp.rtmalipo].includes(ctx.chat.id) && ctx.match) {
                     let msg_id = Number(ctx.match.trim())
                     let bads = ['deactivated', 'blocked', 'initiate']
@@ -215,6 +215,10 @@ const rtfunction = async (app) => {
                         console.log(err?.message)
                     }
                 }
+            }
+
+            bot.command('convo', async ctx => {
+                convoFn(ctx)
             })
 
             bot.command('bless', async (ctx) => {
