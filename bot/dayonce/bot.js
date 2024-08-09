@@ -1,8 +1,9 @@
 
 
-const DayoBot = async () => {
+const DayoBot = async (app) => {
     try {
-        const { Bot } = require('grammy')
+        const { Bot, webhookCallback } = require('grammy')
+        const { autoRetry } = require("@grammyjs/auto-retry")
         const bot = new Bot(process.env.DAYO_TOKEN)
         const dayoUsers = require('./database/chats')
         const tg_slips = require('./database/tg_slips')
@@ -36,6 +37,9 @@ const DayoBot = async () => {
             linksChannel: -1002042952349,
             sio_shida: -1002110306030
         }
+
+        //use auto-retry
+        bot.api.config.use(autoRetry());
 
         const chatGroups = [imp.r_chatting, imp.sio_shida]
 
@@ -74,7 +78,18 @@ const DayoBot = async () => {
             console.error(`(Dayo): ${err.message}`, err);
         });
 
-        bot.api.deleteWebhook({ drop_pending_updates: true }).catch(e => console.log(e.message))
+        //set webhook
+        let hookPath = `/telebot/${process.env.USER}/dayonce`
+        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+            drop_pending_updates: true
+        })
+            .then(() => {
+                console.log(`webhook for Dayonce is set`)
+                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                    .catch(e => console.log(e.message))
+            })
+            .catch(e => console.log(e.message))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
         bot.command('start', async ctx => {
             try {
@@ -138,34 +153,25 @@ const DayoBot = async () => {
         })
 
         bot.command('convo', async ctx => {
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/convo-')[1].trim())
-            let bads = ['blocked', 'deactivated', 'initiate']
-            if ([imp.shemdoe, imp.halot].includes(ctx.chat.id)) {
+            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
+                let msg_id = Number(ctx.match.trim())
+                let bads = ['deactivated', 'blocked', 'initiate']
                 try {
-                    let all_users = await dayoUsers.find({ refferer: "Dayo", blocked: false })
-
-                    all_users.forEach((u, index) => {
-                        setTimeout(() => {
-                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => {
-                                    if (index == all_users.length - 1) {
-                                        ctx.reply('Nimemaliza conversation')
-                                    }
-                                })
-                                .catch((err) => {
-                                    if (bads.some((b) => err.message.toLowerCase().includes(b))) {
-                                        u.deleteOne()
-                                        console.log(`${index+1}. Dayo - ${u?.chatid} deleted`)
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                })
-                        }, 40 * index)
-                    })
+                    let all_users = await dayoUsers.find({ refferer: "Dayo"})
+                    await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
+                    for (let [i, u] of all_users.entries()) {
+                        bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                            .catch((err) => {
+                                if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
+                                    u.deleteOne()
+                                    console.log(`${i + 1}. Dayo - ${u?.chatid} deleted`)
+                                } else { console.log(`🤷‍♂️ ${err.message}`) }
+                            })
+                    }
                 } catch (err) {
-                    console.log("(Dayo) " + err.message)
+                    console.log(err?.message)
                 }
             }
-
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
@@ -498,11 +504,6 @@ const DayoBot = async () => {
             }
 
         }, 60000)
-
-
-        bot.start().catch(e => {
-            bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
-        })
     } catch (error) {
         console.log("(Dayo) " + error.message, error)
     }

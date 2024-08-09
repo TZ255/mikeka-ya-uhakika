@@ -1,9 +1,10 @@
 
 
 
-const reginaBot = async () => {
+const reginaBot = async (app) => {
     try {
-        const { Bot } = require('grammy')
+        const { Bot, webhookCallback } = require('grammy')
+        const { autoRetry } = require("@grammyjs/auto-retry")
         const bot = new Bot(process.env.REGI_TOKEN)
         const nyumbuModel = require('./database/chats')
         const tempChat = require('./database/temp-req')
@@ -15,6 +16,22 @@ const reginaBot = async () => {
         const graphDB = require('./database/graph-tips')
         const waombajiModel = require('./database/waombaji')
         const supatips_Model = require('./database/supatips')
+
+        //use auto-retry
+        bot.api.config.use(autoRetry());
+
+        //set webhook
+        let hookPath = `/telebot/${process.env.USER}/regina`
+        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+            drop_pending_updates: true
+        })
+            .then(() => {
+                console.log(`webhook for Regi is set`)
+                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+                    .catch(e => console.log(e.message))
+            })
+            .catch(e => console.log(e.message))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express'))
 
 
         const call_supatips_function = require('./fns/supatips')
@@ -161,35 +178,25 @@ const reginaBot = async () => {
         })
 
         bot.command('convo', async ctx => {
-            let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/convo-')[1].trim())
-            let bads = ['deactivated', 'blocked', 'initiate']
-            if (myId == imp.shemdoe || myId == imp.halot) {
+            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
+                let msg_id = Number(ctx.match.trim())
+                let bads = ['deactivated', 'blocked', 'initiate']
                 try {
-                    let all_users = await nyumbuModel.find({ refferer: "Regina", blocked: false })
-
-                    all_users.forEach((u, index) => {
-                        setTimeout(() => {
-                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => {
-                                    if (index == all_users.length - 1) {
-                                        ctx.reply('Nimemaliza conversation')
-                                    }
-                                })
-                                .catch((er) => {
-                                    if (bads.some((b) => er.message.toLowerCase().includes(b))) {
-                                        u.deleteOne()
-                                        console.log(`${index + 1}. Regi - ${u?.chatid} deleted`)
-                                    } else { console.log(`🤷‍♂️ ${er.message}`) }
-                                })
-                        }, index * 40)
-                    })
+                    let all_users = await nyumbuModel.find({ refferer: "Regina" })
+                    await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
+                    for (let [i, u] of all_users.entries()) {
+                        bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
+                            .catch((err) => {
+                                if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
+                                    u.deleteOne()
+                                    console.log(`${i + 1}. Regi - ${u?.chatid} deleted`)
+                                } else { console.log(`🤷‍♂️ ${err.message}`) }
+                            })
+                    }
                 } catch (err) {
-                    console.log(err.message)
+                    console.log(err?.message)
                 }
             }
-
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
@@ -803,10 +810,6 @@ const reginaBot = async () => {
                     break;
             }
         }, 59 * 1000)
-
-        bot.start().catch(e => {
-            bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
-        })
     } catch (error) {
         console.log(error.message)
     }

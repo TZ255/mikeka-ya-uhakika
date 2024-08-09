@@ -1,4 +1,5 @@
 const { Bot, webhookCallback } = require('grammy')
+const { autoRetry } = require("@grammyjs/auto-retry")
 const axios = require('axios').default
 const OpenAI = require('openai')
 const mongoose = require('mongoose')
@@ -52,6 +53,10 @@ const rtfunction = async (app) => {
 
         for (let t of tksn) {
             const bot = new Bot(t.TOKEN)
+
+            //use auto-retry
+            bot.api.config.use(autoRetry());
+
             let hookPath = `/telebot/${process.env.USER}/${t.NAME}`
             await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
                 drop_pending_updates: true
@@ -190,37 +195,26 @@ const rtfunction = async (app) => {
             })
 
             bot.command('convo', async ctx => {
-                let myId = ctx.chat.id
-                let msg_id = Number(ctx.match.trim())
-                if ([imp.shemdoe, imp.halot, imp.rtmalipo].includes(myId) && ctx.match.length > 0) {
+                if ([imp.halot, imp.shemdoe, imp.rtmalipo].includes(ctx.chat.id) && ctx.match) {
+                    let msg_id = Number(ctx.match.trim())
+                    let bads = ['deactivated', 'blocked', 'initiate']
                     try {
-                        await ctx.reply('starting')
                         let botname = ctx.me.username
                         let all_users = await rtStarterModel.find({ refferer: botname })
-
-                        all_users.forEach((u, index) => {
-                            setTimeout(() => {
-                                bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
-                                    .then(() => {
-                                        console.log('✅ sent to ' + u.chatid)
-                                        if (index == all_users.length - 1) {
-                                            ctx.reply('Nimemaliza conversation')
-                                                .catch(e => console.log(e.message))
-                                        }
-                                    })
-                                    .catch((err) => {
-                                        if (err.message.includes('blocked') || err.message.includes('initiate')) {
-                                            rtStarterModel.findOneAndDelete({ chatid: u.chatid })
-                                                .then(() => { console.log(u.chatid + ' is deleted') })
-                                                .catch(e => console.log(e.message))
-                                        }
-                                    })
-                            }, index * 40)
-                        })
+                        await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
+                        for (let [i, u] of all_users.entries()) {
+                            bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id, { reply_markup: defaultReplyMkp })
+                                .catch((err) => {
+                                    if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
+                                        u.deleteOne()
+                                        console.log(`${i + 1}. ${botname} - ${u?.chatid} deleted`)
+                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
+                                })
+                        }
                     } catch (err) {
-                        console.log(err.message)
+                        console.log(err?.message)
                     }
-                } else { await ctx.reply('You are not authorized') }
+                }
             })
 
             bot.command('bless', async (ctx) => {
@@ -670,7 +664,7 @@ const rtfunction = async (app) => {
                             //delete miamala yote kwenye db
                             let mteja = await rtStarterModel.findOne({ chatid: uid })
                             if (mteja && mteja?.fullName) {
-                                await miamalaModel.deleteMany({name: mteja.fullName})
+                                await miamalaModel.deleteMany({ name: mteja.fullName })
                             }
 
                             //add business points

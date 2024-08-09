@@ -162,15 +162,12 @@ const PipyBot = async (app) => {
         })
 
         bot.command('convo', async ctx => {
-            let myId = ctx.chat.id
-            let txt = ctx.message.text
-            let msg_id = Number(txt.split('/convo-')[1].trim())
-            let bads = ['deactivated', 'blocked']
-            if (myId == imp.shemdoe || myId == imp.halot) {
+            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
+                let msg_id = Number(ctx.match.trim())
+                let bads = ['deactivated', 'blocked', 'initiate']
                 try {
-                    let all_users = await pipyUsers.find({ refferer: "Pipy", blocked: false })
-                        .limit(1000)
-
+                    let all_users = await pipyUsers.find({ refferer: "Pipy" })
+                    await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
                     for (let [i, u] of all_users.entries()) {
                         bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
                             .catch((err) => {
@@ -184,7 +181,6 @@ const PipyBot = async (app) => {
                     console.log(err.message)
                 }
             }
-
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
