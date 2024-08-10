@@ -152,7 +152,7 @@ const DayoBot = async (app) => {
             }
         })
 
-        bot.command('convo', async ctx => {
+        const convoFn = async (ctx) => {
             if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
                 let msg_id = Number(ctx.match.trim())
                 let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
@@ -182,6 +182,10 @@ const DayoBot = async (app) => {
                     console.log(err?.message)
                 }
             }
+        }
+
+        bot.command('convo', async ctx => {
+            convoFn(ctx)
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
