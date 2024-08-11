@@ -389,7 +389,7 @@ const PipyBot = async (app) => {
                 }
 
             } catch (error) {
-                await ctx.reply(error.message)
+                console.log(error?.message)
             }
         })
 
