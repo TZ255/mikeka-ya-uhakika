@@ -245,6 +245,17 @@ const checkSenderFn = async (bot, ctx, imp) => {
                 await data.updateOne({ $set: { fname: name, username } })
                 await bot.api.sendMessage(imp.blackberry, _info)
             }
+
+            //check if muda umexpire, make paid false
+            let now = Date.now() / 1000  //convert to seconds
+            let dbEnd = data?.unix
+            if (now >= dbEnd) {
+                await list.updateOne({ $set: { paid: false } })
+                await bot.api.sendMessage(1101685785, `${list.fname} paid false`) //blackberry
+            }
+        } else if (data && data?.paid == false) {
+            await ctx.deleteMessage()
+            await ctx.reply(`Mtoa huduma <b>${name} tafadhali wasiliana na admin @Blackberry255</b>`, { parse_mode: 'HTML' })
         }
     } catch (error) {
         console.log(error.message, error)
