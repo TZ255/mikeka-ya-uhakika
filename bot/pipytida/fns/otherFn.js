@@ -250,7 +250,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             //check if muda umexpire, make paid false
             let dbEnd = data?.unix
             if (unixNow >= dbEnd) {
-                await list.updateOne({ $set: { paid: false } })
+                await data.updateOne({ $set: { paid: false } })
                 await bot.api.sendMessage(1101685785, `${list.fname} paid false`) //blackberry
             }
         }
