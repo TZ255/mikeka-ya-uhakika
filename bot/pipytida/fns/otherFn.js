@@ -238,7 +238,8 @@ const checkSenderFn = async (bot, ctx, imp) => {
             setTimeout(() => {
                 ctx.api.deleteMessage(ctx.chat.id, msg_id).catch(e => console.log(e.message))
             }, 30000)
-        } else if (data && data.paid == true) {
+        }
+        if (data && data.paid == true) {
             //check if data are correct
             if (data.fname != name || data.username != username) {
                 let _info = `Taarifa za Mtoa huduma ${data.fname} zimeboreshwa, amebadili jina kuwa ${name} na username kuwa ${username}.`
@@ -247,13 +248,13 @@ const checkSenderFn = async (bot, ctx, imp) => {
             }
 
             //check if muda umexpire, make paid false
-            let now = Date.now() / 1000  //convert to seconds
             let dbEnd = data?.unix
-            if (now >= dbEnd) {
+            if (unixNow >= dbEnd) {
                 await list.updateOne({ $set: { paid: false } })
                 await bot.api.sendMessage(1101685785, `${list.fname} paid false`) //blackberry
             }
-        } else if (data && data?.paid == false) {
+        }
+        if (data && data?.paid == false) {
             await ctx.deleteMessage()
             await ctx.reply(`Mtoa huduma <b>${name} tafadhali wasiliana na admin @Blackberry255</b>`, { parse_mode: 'HTML' })
         }
