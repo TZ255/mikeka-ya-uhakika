@@ -603,27 +603,6 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.on('message:sticker', async ctx => {
-            try {
-                if (chatGroups.includes(ctx.chat.id)) {
-                    let unixNow = ctx.message.date
-                    let chatid = ctx.message.from.id
-                    //cant send other things except the one listed below
-                    await ctx.restrictChatMember(chatid, {
-                        permissions: {
-                            can_send_messages: true,
-                            can_send_videos: true,
-                            can_send_photos: true,
-                            can_send_voice_notes: true
-                        },
-                        until_date: unixNow + 180,
-                    })
-                }
-            } catch (error) {
-                console.log(error.message, error)
-            }
-        })
-
         //every  1 hour remind people
         setInterval(() => {
             let tzHours = Number(new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false }).split(':')[0])
