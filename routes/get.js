@@ -60,7 +60,7 @@ router.get('/', async (req, res) => {
         if (check_slip.length < 1) {
             //take from mkekamega
             let betValues = [
-                'Over 2.5', 'GG & Over 2.5', 'GG', 'Over 1.5', '1st Half. Over 0.5', '1/1', '2/2', '1 & GG', '2 & GG', 'X2 & GG', '1X & GG', '1 & Over 1.5', '2 & Over 1.5', '1 & Over 2.5', '2 & Over 2.5', 'Home Total. Over 1.5', 'Away Total. Over 1.5'
+                'Over 2.5', 'GG & Over 2.5', 'GG', 'Over 1.5', '1st Half. Over 0.5', '1/1', '2/2', '1 & GG', '2 & GG', 'X2 & GG', '1X & GG', '1 & Over 1.5', '2 & Over 1.5', '1 & Over 2.5', '2 & Over 2.5', 'Home Total. Over 1.5', 'Away Total. Over 1.5', 'Over 3.5 Goals', 'Over 1.5 Goals', 'Over 2.5 Goals'
               ];
             let copies = await megasModel.find({bet: {$in: betValues}, date: d})
             copies = copies.map(doc=> ({
