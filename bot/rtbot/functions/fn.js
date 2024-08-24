@@ -210,10 +210,10 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: '✅ Nimelipia Tayari', callback_data: 'nimelipia' }
+                    { text: '✅ Tayari nimefanya malipo', callback_data: 'nimelipia' }
                 ],
                 [
-                    { text: '← Rudi nyuma', callback_data: 'rudi_nyuma' }
+                    { text: '← Anza upya', callback_data: 'rudi_nyuma' }
                 ]
             ]
         }
@@ -229,7 +229,7 @@ const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
             inline_keyboard: [
                 [
                     { text: '← Nyuma/Back', callback_data: 'rudi_nyuma' },
-                    { text: '⛑ Admin', url: 'https://t.me/rt_malipo' }
+                    { text: '⛑ Admin', url: 'https://t.me/pilauzone_admin' }
                 ]
             ]
         }
