@@ -89,7 +89,7 @@ const DayoBot = async (app) => {
                     .catch(e => console.log(e.message))
             })
             .catch(e => console.log(e.message))
-        app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 60000}))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 30000}))
 
         bot.command('start', async ctx => {
             try {

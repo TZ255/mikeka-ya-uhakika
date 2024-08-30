@@ -66,7 +66,7 @@ const rtfunction = async (app) => {
                     bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
                 })
                 .catch(e => console.log(e.message))
-            app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 60000}))
+            app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 30000}))
 
             const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'malipo', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
 
