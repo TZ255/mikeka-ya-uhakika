@@ -344,32 +344,6 @@ const rtfunction = async (app) => {
                 }
             })
 
-            const removingFn = async (ctx) => {
-                if ([imp.halot, imp.shemdoe].includes(ctx.chat.id)) {
-                    try {
-                        let all_users = await nyumbuModel.find().select('chatid')
-                        await ctx.reply(`Start removing ${all_users.length} users`)
-    
-                        all_users.forEach((u, i) => {
-                            setTimeout(() => {
-                                bot.api.banChatMember(imp.xbongo, u.chatid)
-                                    .catch(e => console.log(e?.message))
-                            }, i * 40) // 25 people per second
-                        })
-                    } catch (err) {
-                        console.log(err?.message)
-                    }
-                }
-            }
-    
-            bot.command('kazi', async ctx => {
-                try {
-                    removingFn(ctx)
-                } catch (error) {
-                    console.log('(Dayo - Kazi) ' + error?.message)
-                }
-            })
-
             bot.on('channel_post', async ctx => {
                 try {
                     let chan_id = ctx.channelPost.chat.id

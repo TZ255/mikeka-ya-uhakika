@@ -6,6 +6,7 @@ const DayoBot = async (app) => {
         const { autoRetry } = require("@grammyjs/auto-retry")
         const bot = new Bot(process.env.DAYO_TOKEN)
         const dayoUsers = require('./database/chats')
+        const pipyUsers = require('./database/pipy-users')
         const tg_slips = require('./database/tg_slips')
         const vidb = require('./database/db')
         const mkekaMega = require('./database/mkeka-mega')
@@ -345,32 +346,6 @@ const DayoBot = async (app) => {
                 await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8094)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
-            }
-        })
-
-        const removingFn = async (ctx) => {
-            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id)) {
-                try {
-                    let all_users = await dayoUsers.find().sort('createdAt').select('chatid').limit(35000)
-                    await ctx.reply(`Start removing ${all_users.length} users`)
-
-                    all_users.forEach((u, i) => {
-                        setTimeout(() => {
-                            bot.api.banChatMember(imp.xbongo, u.chatid)
-                                .catch(e => console.log(`(Dayo - Romoving Error) ${e?.message}`))
-                        }, i * 40) // 25 people per second
-                    })
-                } catch (err) {
-                    console.log(err?.message)
-                }
-            }
-        }
-
-        bot.command('kazi', async ctx => {
-            try {
-                removingFn(ctx)
-            } catch (error) {
-                console.log('(Dayo - Kazi) ' + error?.message)
             }
         })
 
