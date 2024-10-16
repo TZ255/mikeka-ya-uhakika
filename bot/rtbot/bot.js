@@ -401,7 +401,7 @@ const rtfunction = async (app) => {
                     } else if (cdata == 'voda') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 17, cmsgid)
                     } else if (cdata == 'tigo') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 189, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 18, cmsgid)
                     } else if (cdata == 'airtel') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 121, cmsgid)
                     } else if (cdata == 'halotel') {
