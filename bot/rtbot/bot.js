@@ -201,7 +201,7 @@ const rtfunction = async (app) => {
                     let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
                     try {
                         let botname = ctx.me.username
-                        let all_users = await rtStarterModel.find({ refferer: botname })
+                        let all_users = await rtStarterModel.find({ refferer: botname, paid: true })
                         await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
                         for (let [i, u] of all_users.entries()) {
                             await bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
@@ -218,7 +218,7 @@ const rtfunction = async (app) => {
                 }
             }
 
-            bot.command('convo', async ctx => {
+            bot.command('paid_convo', async ctx => {
                 convoFn(ctx)
             })
 
