@@ -4,7 +4,7 @@ const fametipsModel = require('../model/fametips')
 const supatipsModel = require('../model/supatips')
 const megasModel = require('../model/mega-odds')
 const over15Model = require('../model/over15db')
-const graphModel = require('../model/graph-tips')
+const bttsModel = require('../model/btts')
 const axios = require('axios').default
 
 //times
@@ -18,42 +18,30 @@ router.get('/favicon.ico', (req, res) => res.status(204).end());
 
 router.get('/', async (req, res) => {
     try {
-        //fametip ya leo //kama hakuna chukua toka kwa parent (supatips)
+        //leo
         let d = new Date().toLocaleDateString('en-GB', {timeZone: 'Africa/Nairobi'})
-        let ftips = await fametipsModel.find({ siku: d }).sort('time')
-
-        if(ftips.length == 0) {
-            ftips = await supatipsModel.find({ siku: d }).sort('time')
-        }
-
-        //fametips 100 za nyuma
-        let zaNyuma100 = await fametipsModel.find().limit(100).sort('-UTC3')
-
-        //fametip ya jana //kama hakuna chukua toka kwa parent (supatips)
+        //jana
         let _nd = new Date()
         _nd.setDate(_nd.getDate() - 1)
         let _d = _nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let ytips = await fametipsModel.find({ siku: _d }).sort('time')
-
-        if(ytips.length == 0) {
-            ytips = await supatipsModel.find({ siku: _d }).sort('time')
-        }
-
-        //fametip ya juzi //kama hakuna chukua toka kwa parent (supatips)
-        let _jd = new Date()
+        //juzi
+         let _jd = new Date()
         _jd.setDate(_jd.getDate() - 2)
         let _s = _jd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let jtips = await fametipsModel.find({ siku: _s }).sort('time')
-
-        if(jtips.length == 0) {
-            jtips = await supatipsModel.find({ siku: _s }).sort('time')
-        }
-
-        //fametip ya kesho
+        //kesho
         let new_d = new Date()
         new_d.setDate(new_d.getDate() + 1)
         let kesho = new_d.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
-        let ktips = await fametipsModel.find({ siku: kesho })
+
+        //find for all days
+        let allDays = await fametipsModel.find({siku: {$in: [d,_d, _s, kesho]}}).sort('time')
+        //fametips 100 za nyuma
+        let zaNyuma100 = await fametipsModel.find().limit(100).sort('-UTC3')
+
+        let ftips = allDays.filter(doc => doc.siku == d)
+        let ytips = allDays.filter(doc => doc.siku == _d)
+        let jtips = allDays.filter(doc => doc.siku == _s)
+        let ktips = allDays.filter(doc => doc.siku == kesho)
 
         //check if there is no any over 1.5
         let check_slip = await over15Model.find({ date: d })
@@ -89,16 +77,55 @@ router.get('/', async (req, res) => {
             if(copies.length > 0) {await over15Model.insertMany(copies)}
             if(copies2.length > 0) {await over15Model.insertMany(copies2)}
             if(copies3.length > 0) {await over15Model.insertMany(copies3)}
-            
-            
         }
 
-        let over15Leo = await over15Model.find({ date: d }).sort('time')
-        let over15Kesho = await over15Model.find({ date: kesho }).sort('time')
-        let over15Juzi = await over15Model.find({ date: _s }).sort('time')
-        let over15Jana = await over15Model.find({ date: _d }).sort('time')
+        let over15AllDays = await over15Model.find({date: {$in: [d,_d, _s, kesho]}}).sort('time')
+        let over15Leo = over15AllDays.filter(doc => doc.date == d)
+        let over15Kesho = over15AllDays.filter(doc => doc.date == kesho)
+        let over15Juzi = over15AllDays.filter(doc => doc.date == _s)
+        let over15Jana = over15AllDays.filter(doc => doc.date == _d)
 
         res.render('1-home/home', { ftips, ytips, ktips, jtips, zaNyuma100, over15Jana, over15Juzi, over15Kesho, over15Leo })
+    } catch (err) {
+        let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/copyMessage`
+        console.log(err.message, err)
+        await axios.post(tgAPI, {
+            chat_id: 741815228,
+            from_chat_id: -1001570087172, //matangazoDB
+            message_id: 43
+        }).catch(e=> console.log(e.response.data))
+    }
+})
+
+router.get('/both-teams-to-score', async (req, res) => {
+    try {
+        //leo
+        let d = new Date().toLocaleDateString('en-GB', {timeZone: 'Africa/Nairobi'})
+
+        //jana
+        let _nd = new Date()
+        _nd.setDate(_nd.getDate() - 1)
+        let _d = _nd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+
+        //juzi
+         let _jd = new Date()
+        _jd.setDate(_jd.getDate() - 2)
+        let _s = _jd.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+
+        //kesho
+        let new_d = new Date()
+        new_d.setDate(new_d.getDate() + 1)
+        let kesho = new_d.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+
+        //find for all days
+        let allDays = await bttsModel.find({date: {$in: [d,_d, _s, kesho]}}).sort('time')
+
+        let ftips = allDays.filter(doc => doc.date == d)
+        let ytips = allDays.filter(doc => doc.date == _d)
+        let jtips = allDays.filter(doc => doc.date == _s)
+        let ktips = allDays.filter(doc => doc.date == kesho)
+
+        res.render('5-bts/bts', { ftips, ytips, ktips, jtips })
     } catch (err) {
         let tgAPI = `https://api.telegram.org/bot${process.env.RT_TOKEN}/copyMessage`
         console.log(err.message, err)
