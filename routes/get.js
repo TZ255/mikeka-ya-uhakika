@@ -43,42 +43,7 @@ router.get('/', async (req, res) => {
         let jtips = allDays.filter(doc => doc.siku == _s)
         let ktips = allDays.filter(doc => doc.siku == kesho)
 
-        //check if there is no any over 1.5
-        let check_slip = await over15Model.find({ date: d })
-        if (check_slip.length < 1) {
-            //take from mkekamega
-            let betValues = [
-                'Over 2.5', 'GG & Over 2.5', 'GG', 'Over 1.5', '1st Half. Over 0.5', '1/1', '2/2', '1 & GG', '2 & GG', 'X2 & GG', '1X & GG', '1 & Over 1.5', '2 & Over 1.5', '1 & Over 2.5', '2 & Over 2.5', 'Home Total. Over 1.5', 'Away Total. Over 1.5', 'Over 3.5 Goals', 'Over 1.5 Goals', 'Over 2.5 Goals'
-              ];
-            let copies = await megasModel.find({bet: {$in: betValues}, date: d})
-            copies = copies.map(doc=> ({
-                ...doc.toObject(),
-                bet: 'Over 1.5',
-                odds: 1
-            }))
-
-            let copies2 = await supatipsModel.find({tip: {$in: betValues}, siku: d})
-            copies2 = copies2.map(doc=> ({
-                ...doc.toObject(),
-                bet: 'Over 1.5',
-                date: doc.siku,
-                odds: 1
-            }))
-
-            let copies3 = await fametipsModel.find({tip: {$in: betValues}, siku: d})
-            copies3 = copies3.map(doc=> ({
-                ...doc.toObject(),
-                bet: 'Over 1.5',
-                date: doc.siku,
-                odds: 1
-            }))
-
-            //add them to over15 collection
-            if(copies.length > 0) {await over15Model.insertMany(copies)}
-            if(copies2.length > 0) {await over15Model.insertMany(copies2)}
-            if(copies3.length > 0) {await over15Model.insertMany(copies3)}
-        }
-
+        //over 1.5
         let over15AllDays = await over15Model.find({date: {$in: [d,_d, _s, kesho]}}).sort('time')
         let over15Leo = over15AllDays.filter(doc => doc.date == d)
         let over15Kesho = over15AllDays.filter(doc => doc.date == kesho)
