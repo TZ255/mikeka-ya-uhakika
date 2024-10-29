@@ -138,8 +138,8 @@ router.get('/pmatch2/register', (req, res) => {
     res.redirect('https://pmaff.com/?serial=61292164&creative_id=1788')
 })
 
-router.get('/10bet/register', (req, res) => {
-    res.redirect('https://go.aff.10betafrica.com/ys6tiwg4')
+router.get('/888bet/register', (req, res) => {
+    res.redirect(`https://media.888africa.com/C.ashx?btag=a_416b_307c_&affid=356&siteid=416&adid=307&c=`)
 })
 
 router.get('/betway/register', (req, res) => {
