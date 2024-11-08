@@ -142,6 +142,10 @@ router.get('/888bet/register', (req, res) => {
     res.redirect(`https://media.888africa.com/C.ashx?btag=a_416b_307c_&affid=356&siteid=416&adid=307&c=`)
 })
 
+router.get('/leonbet/register', (req, res) => {
+    res.redirect(`https://c1li7tt5ck.com/?serial=44835&creative_id=1077&anid=`)
+})
+
 router.get('/betway/register', (req, res) => {
     let url = `https://www.betway.co.tz/?btag=P94949-PR24696-CM77068-TS1971458&`
     res.redirect(url)

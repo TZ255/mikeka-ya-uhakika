@@ -1,7 +1,9 @@
 <h2 class="h2" id="over-15" style="font-size: 16px;">Mikeka ya Over 1.5 Leo</h2>
 <p class="p">
-    Shinda nasi na mikeka hii ya uhakika ya Over 1.5 kila siku. Tuna zaidi ya asilimia 93 za ushindi katika mikeka hii ya kila siku ya Over 1.5 Fulltime <br><br>
-    <b>Over 1.5</b> ni utabiri wa jumla ya idadi ya magoli kwa pande zote mwisho wa mechi yatakuwa mawili au zaidi, mfano <b>1:1, 2:0, 0:2, 2:1, 1:2, 2:2 n.k</b>
+    Shinda nasi na mikeka hii ya uhakika ya Over 1.5 kila siku. Tuna zaidi ya asilimia 93 za ushindi katika mikeka hii
+    ya kila siku ya Over 1.5 Fulltime <br><br>
+    <b>Over 1.5</b> ni utabiri wa jumla ya idadi ya magoli kwa pande zote mwisho wa mechi yatakuwa mawili au zaidi,
+    mfano <b>1:1, 2:0, 0:2, 2:1, 1:2, 2:2 n.k</b>
 </p>
 
 <div class="toggle-cont">
@@ -39,13 +41,13 @@
                 </td>
                 <th class="tip-td"><%= el.bet %></th>
                 <td class="matokeo-tds-over15">
-                    <span class="m2" id="wekaBet">Bet</span>
+                    <span class="placed" id="wekaBet">Placed</span>
                 </td>
             </tr>
             <% }) %>
         </tbody>
     </table>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
 </div>
 
 <!-- yesterday -->
@@ -74,13 +76,13 @@
                 </td>
                 <th class="tip-td"><%= el.bet %></th>
                 <td class="matokeo-tds-over15">
-                    <span class="m2" id="wekaBet">Bet</span>
+                    <span class="placed" id="wekaBet">Placed</span>
                 </td>
             </tr>
             <% }) %>
         </tbody>
     </table>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
 </div>
 
 <!-- today -->
@@ -115,7 +117,9 @@
             <% }) %>
         </tbody>
     </table>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <% if (over15Leo.length > 0) { %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>
 
 <!-- tomorrow -->
@@ -150,11 +154,16 @@
             <% }) %>
         </tbody>
     </table>
-    <div class="zakesho" id="zakesho_unique">
-        * Mkeka wa Over 1.5 - Kesho <b id="siku_kesho_unique"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa
-        tayari.
-    </div>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <% if (over15Kesho.length === 0) { %>
+        <div class="zakesho" id="zakesho_unique">
+            * Mkeka wa Over 1.5 - Kesho <b id="siku_kesho_unique"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa
+            tayari.
+        </div>
+    <% } %>
+    <% if (over15Kesho.length > 0) { %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
+
 </div>
 
 <script>
@@ -206,22 +215,10 @@
         });
 
         ktoggle.addEventListener('click', () => {
-            const zakesho_txt = document.getElementById('zakesho_unique');
-
             ktoggle.classList.add('active_toggle');
             ytoggle.classList.remove('active_toggle');
             ltoggle.classList.remove('active_toggle');
             jtoggle.classList.remove('active_toggle');
-
-            // If you need to include more JavaScript logic here, add it accordingly
-
-            // Example: Stringify and parse JSON
-            const ktips = JSON.parse(`<%- JSON.stringify(over15Kesho) %>`);
-
-            // Example: Show "zakesho" text if no tips for tomorrow
-            if (ktips.length === 0) {
-                zakesho_txt.style.display = 'block';
-            }
 
             kday_cont.classList.remove('ficha');
             lday_cont.classList.add('ficha');
@@ -234,7 +231,7 @@
 
         matokeo_tds_over15.forEach((el) => {
             el.addEventListener('click', () => {
-                window.open('/gsb/register');
+                window.open('/leonbet/register');
             });
         });
     }

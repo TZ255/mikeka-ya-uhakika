@@ -1,7 +1,4 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Acme&family=Caveat&family=Hurricane&family=Palette+Mosaic&family=Smokum&family=Creepster&display=swap');
-
     *,
     *::before,
     *::after {
@@ -113,17 +110,14 @@
         border-bottom-right-radius: 6px;
     }
 
-    .left .aff h4 {
+    .left .aff .h4left {
+        padding-left: 14px;
+        font-size: 10px;
         font-size: small;
         margin-bottom: 1px;
     }
 
-    .left .aff .h4left {
-        padding-left: 14px;
-        font-size: 10px;
-    }
-
-    .left .tble-cont .aff h4 i {
+    .left .tble-cont .aff .h4left i {
         color: black;
     }
 
@@ -146,18 +140,22 @@
 
     .left .tble-cont .aff .sasa button:active,
     .left .tble-cont .aff .sasa button:hover {
-        background-color: #d3d3d3;
-        color: gray;
+        background-color: #ffd700;
+        border: 1px #1e90ff solid;
+        color: black;
     }
 
-    #blogo {
-        background-color: black;
-        color: gold;
+    .blogo {
+        background-color: white;
+        color: black;
         font-weight: bolder;
         padding: 8px 12px;
         width: fit-content;
         margin-bottom: 8px;
+        margin-left: -12px;
         cursor: pointer;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
     }
 
     main .right {
@@ -202,57 +200,77 @@
     }
 
     footer {
-        display: flex;
         background-color: white;
-        color: gray;
-        justify-content: space-between;
+        color: #808080;
         box-shadow: 0 0 0 white, 0 -12px 12px gray;
-        padding: 24px;
         margin-top: 64px;
+        padding: 36px 0;
     }
 
-    footer .left,
-    footer.right {
-        width: 47%;
+    footer .left {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 24px;
     }
 
-    footer li,
+    footer .footer {
+        display: flex;
+        justify-content: start;
+        flex-wrap: wrap;
+        width: 98%;
+        margin: 12px auto;
+    }
+
+    footer .footer li {
+        margin-top: 6px;
+    }
+
+    footer .footer .rightside,
+    footer .footer .middle,
+    footer .footer .leftside {
+        width: calc(95% / 3);
+        min-width: 320px;
+        font-size: 12px;
+        padding: 12px;
+    }
+
     footer a {
         text-decoration: none;
         color: #1e90ff;
         font-weight: bold;
-        cursor: pointer;
+    }
+
+    footer a:active,
+    footer a:hover {
+        color: #808080;
     }
 
     footer h4 {
-        font-size: 16px;
+        font-size: 14px !important;
     }
 
     footer h3 {
-        font-size: 20px;
+        font-size: 14px;
         margin-top: 10px;
     }
 
     footer .h4 {
-        color: gray;
+        color: #808080;
         margin-top: 12px;
-        margin-bottom: 0;
-        font-size: 18px;
-        margin-left: -24px;
+        margin-bottom: 8px;
         font-weight: bold;
+        border-bottom: 1px solid #d3d3d3;
+        width: fit-content;
+        padding-right: 6px;
     }
 
-    footer .right ul {
-        list-style: none;
-    }
-
-    footer .right ul li {
-        border-left: 6px gray solid;
-        padding-left: 4px;
+    /* footer .right ul li {
+        padding: 12px 4px;
         margin: 6px 0;
-    }
+    } */
 
-    footer #tg {
+    footer #tg,
+    footer #email {
         border: none;
         color: #1e90ff;
         font-weight: bold;
@@ -262,7 +280,7 @@
 
     footer #tg:active,
     footer #tg:hover {
-        color: brown;
+        color: gray;
     }
 
     #toAds {
@@ -290,19 +308,6 @@
 
         .navbar-brand {
             font-size: 24px !important;
-        }
-
-        footer h3 {
-            font-size: 18px;
-            margin-top: 12px;
-            border-right: 2px solid gray;
-            padding-right: 4px;
-        }
-
-        footer h4.rights {
-            font-size: 12px;
-            border-right: 2px solid gray;
-            padding-right: 4px;
         }
     }
 
