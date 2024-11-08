@@ -35,7 +35,9 @@
               </li>
         <% }) %>
     </ul>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <% if (jtips.length > 0) { %>
+        <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>
 
 <!-- yesterday -->
@@ -66,7 +68,9 @@
               </li>
         <% }) %>
     </ul>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <% if (ytips.length > 0) { %>
+        <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>
 
 
@@ -98,7 +102,9 @@
               </li>
         <% }) %>
     </ul>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <% if (ftips.length > 0) { %>
+        <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>
 
 
@@ -130,8 +136,12 @@
               </li>
         <% }) %>
     </ul>
-    <div class="zakesho" id="zakesho">
-        * Mkeka wa Kesho <b id="siku_kesho"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa tayari.
-    </div>
-    <%- include('../../0-global/aff-888.ejs'); %>
+    <% if (ktips.length === 0) { %>
+        <div class="zakesho" id="zakesho">
+            * Mkeka wa Kesho <b id="siku_kesho"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa tayari.
+        </div>
+    <% } %>
+    <% if (ktips.length > 0) { %>
+        <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>

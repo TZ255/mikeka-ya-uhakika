@@ -50,21 +50,10 @@
         })
 
         ktoggle.addEventListener('click', () => {
-            const zakesho_txt = document.getElementById('zakesho')
-
             ktoggle.classList.add('active_toggle')
             ytoggle.classList.remove('active_toggle')
             ltoggle.classList.remove('active_toggle')
             jtoggle.classList.remove('active_toggle')
-
-            //stringfy ejs obj then parse back to obj
-            const ktips = JSON.parse(`<%- JSON.stringify(ktips) %>`)
-
-            //kesho kama hamna onyesha hamna na ficha kesho cont
-            if (ktips.length == 0) {
-                zakesho_txt.style.display = 'block'
-            }
-
             kday_cont.classList.remove('ficha')
             lday_cont.classList.add('ficha')
             yday_cont.classList.add('ficha')
@@ -76,7 +65,7 @@
 
         matokeo_tds.forEach((el, indx) => {
             el.addEventListener('click', () => {
-                window.open('/gsb/register')
+                window.open('/leonbet/register')
             })
         })
     }
