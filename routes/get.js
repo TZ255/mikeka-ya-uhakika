@@ -143,7 +143,7 @@ router.get('/888bet/register', (req, res) => {
 })
 
 router.get('/leonbet/register', (req, res) => {
-    res.redirect(`https://c1li7tt5ck.com/?serial=44835&creative_id=1077&anid=`)
+    res.redirect(`https://c1li7tt5ck.com/?serial=44835&creative_id=1078&anid=`)
 })
 
 router.get('/betway/register', (req, res) => {
