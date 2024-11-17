@@ -117,7 +117,12 @@
             <% }) %>
         </tbody>
     </table>
-    <% if (over15Leo.length > 0) { %>
+    <% if (over15Leo.length === 0) { %>
+        <div class="zakesho" id="zakesho_unique">
+            * Mkeka wa Over 1.5 - Leo <b id="siku_kesho_unique"></b> bado uko kwenye maandalizi, rudi baada ya mda kidogo utakuwa tayari.
+        </div>
+    <% } %>
+    <% if (over15Leo.length > 2) { %>
     <%- include('../../0-global/aff-leon.ejs'); %>
     <% } %>
 </div>
@@ -160,7 +165,7 @@
             tayari.
         </div>
     <% } %>
-    <% if (over15Kesho.length > 0) { %>
+    <% if (over15Kesho.length > 2) { %>
     <%- include('../../0-global/aff-leon.ejs'); %>
     <% } %>
 

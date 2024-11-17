@@ -115,7 +115,14 @@
                 <% }) %>
         </tbody>
     </table>
-    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% if (ftips.length === 0) { %>
+        <div class="zakesho" id="zakesho">
+            * Mkeka wa Uhakika Leo <b id="siku_kesho"></b> bado uko kwenye maandalizi. Angalia mikeka mingine iliyotayari chini
+        </div>
+    <% } %>
+    <% if (ftips.length > 2) { %>
+        <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>
 
 
@@ -156,8 +163,12 @@
                 <% }) %>
         </tbody>
     </table>
-    <div class="zakesho" id="zakesho">
-        * Mkeka wa Uhakika Kesho <b id="siku_kesho"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa tayari.
-    </div>
-    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% if (ktips.length === 0) { %>
+        <div class="zakesho" id="zakesho">
+            * Mkeka wa Uhakika Kesho <b id="siku_kesho"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa tayari.
+        </div>
+    <% } %>
+    <% if (ktips.length > 2) { %>
+        <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
 </div>
