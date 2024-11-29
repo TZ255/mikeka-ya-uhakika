@@ -154,12 +154,12 @@ const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, 
     }
 }
 
-const WirePusher = async (message) => {
+const WirePusher = async (message, userid) => {
     try {
         let data = {
             id: "dX77mpGBL",
             title: "Business Message",
-            message: message ? message : "New media on Telegram",
+            message: message ? `${userid} => ${message}` : `${userid} => Sent a photo`,
             type: "Points"
         }
         await axios.get(`https://wirepusher.com/send?id=${data.id}&title=${data.title}&message=${data.message}&type=${data.type}`)

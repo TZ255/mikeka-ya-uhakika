@@ -67,7 +67,7 @@ const rtfunction = async (app) => {
                     bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
                 })
                 .catch(e => console.log(e.message))
-            app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 30000}))
+            app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
 
             const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'malipo', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
 
@@ -642,7 +642,7 @@ const rtfunction = async (app) => {
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //notify me for new message
-                        WirePusher(message)
+                        WirePusher(message, userid)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user.fullName) {
@@ -683,7 +683,7 @@ const rtfunction = async (app) => {
                                 let limit = 1,
                                     linkName = `for biz ${expire}`
                                 let link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
-                                await ctx.reply(link)
+                                await ctx.reply(link, { link_preview_options: { is_disabled: true } })
                                 break;
                         }
                     }
