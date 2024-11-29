@@ -1,8 +1,9 @@
 const OpenAI = require('openai');
-const axios = require('axios').default
+const axios = require('axios')
 const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
-const { checkPaidIfMemberPilauZone } = require('./fn')
+const { checkPaidIfMemberPilauZone } = require('./fn');
+
 
 const examples = {
     ex5: `Umepokea Tsh1,000.00, 747900466 Jol gombania. Salio jipya ni Tsh26,684.00. Muamala No. MI240406.1141.Q03294\n\nThe answer I need here is: {"ok": true, "name": "JOL GOMBANIA", "phone": "+255747900466", "trans_id": "MI240406.1141.Q03294", "amount": 1000}`,
@@ -153,4 +154,18 @@ const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, 
     }
 }
 
-module.exports = { extractMiamalaInfo, addingBusinessPoints };
+const WirePusher = async () => {
+    try {
+        let data = {
+            id: "dX77mpGBL",
+            title: "Business Message",
+            message: "Customer sent you a message on Telegram",
+            type: "Points"
+        }
+        await axios.post('https://wirepusher.com/send', data)
+    } catch (error) {
+        console.log(error?.message)
+    }
+}
+
+module.exports = { extractMiamalaInfo, addingBusinessPoints, WirePusher };

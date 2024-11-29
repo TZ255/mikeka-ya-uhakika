@@ -19,7 +19,7 @@ const rtfunction = async (app) => {
         const videosDB = require('./database/db')
         const aliExDB = require('./database/aliexpress')
         const extractInfoOpenAi = require('./functions/openai-chatid')
-        const { extractMiamalaInfo, addingBusinessPoints } = require('./functions/openai-post')
+        const { extractMiamalaInfo, addingBusinessPoints, WirePusher } = require('./functions/openai-post')
 
         //Middlewares
         const call_function = require('./functions/fn')
@@ -641,6 +641,8 @@ const rtfunction = async (app) => {
                     let biz_id = biz_conn.id
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
+                        //notify me for new message
+                        WirePusher()
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user.fullName) {
