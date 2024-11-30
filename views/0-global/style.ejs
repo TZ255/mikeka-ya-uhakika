@@ -5,9 +5,13 @@
         box-sizing: border-box;
     }
 
+    html {
+        background-color: #d3d3d3;
+    }
+
     body {
         background-color: white;
-        max-width: 1200px !important;
+        max-width: 1000px !important;
         margin: 0 auto !important;
     }
 
@@ -103,7 +107,7 @@
 
     .left .toggle-cont {
         padding: 12px 0;
-        margin-bottom: -16px;
+        margin-bottom: -8px;
     }
 
     .left .toggle-cont .toggles {
@@ -206,6 +210,17 @@
         cursor: pointer;
         border-top-right-radius: 16px;
         border-bottom-right-radius: 16px;
+    }
+
+    .left .maana li .brown {
+        background-color: black;
+        display: inline-block;
+        color: gold;
+        padding: 4px 1px;
+        border-radius: 6px;
+        width: 80px;
+        text-align: center;
+        font-size: 12px;
     }
 
     main .right {
@@ -369,6 +384,12 @@
         main .left,
         main .right {
             width: 100%;
+        }
+    }
+
+    @media (min-width: 800px) {
+        main .left {
+            box-shadow: 5px 0 10px #0000004d;
         }
     }
 </style>

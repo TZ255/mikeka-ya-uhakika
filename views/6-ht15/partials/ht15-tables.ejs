@@ -1,0 +1,148 @@
+<div class="toggle-cont" id="supa-za-leo">
+    <div class="toggles">
+        <div class="jtoggle" id="jtoggle">« Juzi</div>
+        <div class="ytoggle" id="ytoggle">Jana</div>
+        <div class="ltoggle active_toggle" id="ltoggle">⁕ Leo ⁕</div>
+        <div class="ktoggle" id="ktoggle">Kesho »</div>
+    </div>
+</div>
+
+<!-- juzi -->
+<div class="tble-cont ficha" id="jday">
+    <div class="table-head">
+        <h2 class="fw-bold">
+            ⭐ 1st Half U/O 1.5 Tips ⭐ <br>
+            <span class="h6" style="font-size: 12px;">Juzi: <%= jumasiku.juzi %> <%= trh.juzi %></span>
+        </h2>
+    </div>
+    <ul class="list-group">
+        <% jtips.forEach(el => { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center w-100">
+            <div class="match" style="width: 65%;">
+                <div class="time-league">
+                    <%= el.time %> |
+                    <%= el.league %>
+                </div>
+                <div class="match">
+                    <span class="home"><%= el.match.split(' - ')[0] %></span> <br>
+                    <span class="away"><%= el.match.split(' - ')[1] %></span>
+                </div>
+            </div>
+            <div class="badge d-flex justify-content-start" style="width: 35%;">
+                <span class="badge text-bg-primary rounded-pill w-100" style="font-size: 12px; padding: 12px 4px; max-width: 120px; background-color: #1e90ff !important; border-radius: 4px !important;" onclick="OpenAff()">
+                    <%= el.bet || el.tip %> HT
+                </span>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
+    <% if (jtips.length > 0) { %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
+</div>
+
+<!-- yesterday -->
+<div class="tble-cont ficha" id="yday">
+    <div class="table-head">
+        <h2>⭐ Under/Over 1.5 1st Half Tips ⭐ <br> Jana</h2>
+    </div>
+    <ul class="list-group">
+        <% ytips.forEach(el => { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center w-100">
+            <div class="match" style="width: 65%;">
+                <div class="time-league">
+                    <%= el.time %> |
+                    <%= el.league %>
+                </div>
+                <div class="match">
+                    <span class="home"><%= el.match.split(' - ')[0] %></span> <br>
+                    <span class="away"><%= el.match.split(' - ')[1] %></span>
+                </div>
+            </div>
+            <div class="badge d-flex justify-content-start" style="width: 35%;">
+                <span class="badge text-bg-primary rounded-pill w-100" style="font-size: 12px; padding: 12px 4px; max-width: 120px; background-color: #1e90ff !important; border-radius: 4px !important;" onclick="OpenAff()">
+                    <%= el.bet || el.tip %> HT
+                </span>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
+    <% if (ytips.length > 0) { %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
+</div>
+
+
+<!-- today -->
+<div class="tble-cont" id="lday">
+    <div class="table-head">
+        <h2>⭐ Under/Over 1.5 1st Half Tips ⭐ <br>Leo</h2>
+    </div>
+    <ul class="list-group">
+        <% stips.forEach(el => { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center w-100">
+            <div class="match" style="width: 65%;">
+                <div class="time-league">
+                    <%= el.time %> |
+                    <%= el.league %>
+                </div>
+                <div class="match">
+                    <span class="home"><%= el.match.split(' - ')[0] %></span> <br>
+                    <span class="away"><%= el.match.split(' - ')[1] %></span>
+                </div>
+            </div>
+            <div class="badge d-flex justify-content-start" style="width: 35%;">
+                <span class="badge text-bg-primary rounded-pill w-100" style="font-size: 12px; padding: 12px 4px; max-width: 120px; background-color: #1e90ff !important; border-radius: 4px !important;" onclick="OpenAff()">
+                    <%= el.bet || el.tip %> HT
+                </span>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
+    <% if (stips.length > 0) { %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
+</div>
+
+
+<!-- tomorrow -->
+<div class="tble-cont ficha" id="kday">
+    <div class="table-head">
+        <h2>⭐ Under/Over 1.5 1st Half Tips ⭐ <br>Kesho</h2>
+    </div>
+    <ul class="list-group">
+        <% ktips.forEach(el => { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center w-100">
+            <div class="match" style="width: 65%;">
+                <div class="time-league">
+                    <%= el.time %> |
+                    <%= el.league %>
+                </div>
+                <div class="match">
+                    <span class="home"><%= el.match.split(' - ')[0] %></span> <br>
+                    <span class="away"><%= el.match.split(' - ')[1] %></span>
+                </div>
+            </div>
+            <div class="badge d-flex justify-content-start" style="width: 35%;">
+                <span class="badge text-bg-primary rounded-pill w-100" style="font-size: 12px; padding: 12px 4px; max-width: 120px; background-color: #1e90ff !important; border-radius: 4px !important;" onclick="OpenAff()">
+                    <%= el.bet || el.tip %> HT
+                </span>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
+    <% if (ktips.length === 0) { %>
+    <div class="zakesho" id="zakesho">
+        * Mkeka wa Kesho <b id="siku_kesho"></b> bado haujaandaliwa, rudi baada ya mda kidogo utakuwa tayari.
+    </div>
+    <% } %>
+    <% if (ktips.length > 0) { %>
+    <%- include('../../0-global/aff-leon.ejs'); %>
+    <% } %>
+</div>
+
+<script>
+    function OpenAff() {
+        window.open('/leonbet/register')
+    }
+</script>
