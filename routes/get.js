@@ -148,11 +148,11 @@ router.get('/under-over-15-first-half', async (req, res) => {
             let over15 = ['Over 3.5', 'GG & Over 2.5', '2 & GG', '1 & GG', '2 & Over 2.5', '1 & Over 2.5', '12 & GG']
 
             if (under15.includes(target)) {
-                if (doc.tip) doc.tip = 'Over 1.5';
-                if (doc.bet) doc.bet = 'Over 1.5';
-            } else if (over15.includes(target)) {
                 if (doc.tip) doc.tip = 'Under 1.5';
                 if (doc.bet) doc.bet = 'Under 1.5';
+            } else if (over15.includes(target)) {
+                if (doc.tip) doc.tip = 'Over 1.5';
+                if (doc.bet) doc.bet = 'Over 1.5';
             }
             return doc;
         })
