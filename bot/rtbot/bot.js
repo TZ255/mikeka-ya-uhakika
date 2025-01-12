@@ -364,7 +364,7 @@ const rtfunction = async (app) => {
                             reply_markup: {
                                 inline_keyboard: [
                                     [
-                                        {text: 'Copy username', copy_text: userid}
+                                        {text: 'Copy username', copy_text: {text: userid}}
                                     ]
                                 ]
                             }
