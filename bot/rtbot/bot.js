@@ -356,11 +356,17 @@ const rtfunction = async (app) => {
                         }
                         let username = `${userid}`
                         let password = '1234'
-                        await PilauWebUserModel.create({
-                            username, password, points: tg_user.points
-                        })
+                        let pilauUser = await PilauWebUserModel.findOneAndUpdate({username})
+                        if(pilauUser && pilauUser.status == 'registered') {
+                            return await ctx.reply(`User tayari kasajiliwa pilauzone na status ya "registered"`)
+                        } else if(pilauUser && pilauUser.status == 'pending') {
+                            return await ctx.reply(`User tayari yupo pilauzone na status ya "pending" mpe link pilauzone.com/register akamilishe usajili`)
+                        }
+                        
                         let text = `Hongera! Account yako ya PilauZone imetengenezwa. Tumia username na password zifuatazo kukamilisha usajili:\n\n👉 Username: <b>${userid}</b>\n👉 Password: <b>1234</b>`
+                        await ctx.reply('✅ Done. Account created successfully')
                         return await ctx.api.sendMessage(userid, text, {
+                            parse_mode: 'HTML',
                             reply_markup: {
                                 inline_keyboard: [
                                     [
