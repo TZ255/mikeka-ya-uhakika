@@ -362,8 +362,8 @@ const rtfunction = async (app) => {
                         } else if(pilauUser && pilauUser.status == 'pending') {
                             return await ctx.reply(`User tayari yupo pilauzone na status ya "pending" mpe link pilauzone.com/register akamilishe usajili`)
                         }
-                        
-                        let text = `Hongera! Account yako ya PilauZone imetengenezwa. Tumia username na password zifuatazo kukamilisha usajili:\n\n👉 Username: <b>${userid}</b>\n👉 Password: <b>1234</b>`
+
+                        let text = `Hongera! Account yako ya PilauZone imetengenezwa. Tumia username na password zifuatazo kukamilisha usajili:\n\n👉 Username: <b>${userid}</b>\n👉 Password: <b>1234</b>\n\nCopy username yako hapo chini kisha fungua link hii kukamilisha usajili www.pilauzone.com/register`
                         await ctx.reply('✅ Done. Account created successfully')
                         return await ctx.api.sendMessage(userid, text, {
                             parse_mode: 'HTML',
