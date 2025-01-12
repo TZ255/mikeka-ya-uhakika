@@ -3,6 +3,7 @@ const { autoRetry } = require("@grammyjs/auto-retry")
 const axios = require('axios').default
 const OpenAI = require('openai')
 const mongoose = require('mongoose')
+const PilauWebUserModel = require('./database/pilauweb')
 
 const rtfunction = async (app) => {
 
@@ -341,6 +342,37 @@ const rtfunction = async (app) => {
                     })
                 } catch (err) {
                     console.log(err.message)
+                }
+            })
+
+            bot.command('pilauweb', async ctx=> {
+                try {
+                    let myid = ctx.chat.id
+                    if(ctx.match && ctx.match.includes('create') && [imp.shemdoe, imp.rtmalipo].includes(myid)) {
+                        let userid = Number(ctx.match.split('create ')[1].trim())
+                        let tg_user = await rtStarterModel.findOne({chatid: userid})
+                        if (!tg_user) {
+                            return await ctx.reply(`Invalid chatid: ${userid}`)
+                        }
+                        let username = `${userid}`
+                        let password = '1234'
+                        await PilauWebUserModel.create({
+                            username, password, points: tg_user.points
+                        })
+                        let text = `Hongera! Account yako ya PilauZone imetengenezwa. Tumia username na password zifuatazo kukamilisha usajili:\n\n👉 Username: <b>${userid}</b>\n👉 Password: <b>1234</b>`
+                        return await ctx.api.sendMessage(userid, text, {
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [
+                                        {text: 'Copy username', copy_text: userid}
+                                    ]
+                                ]
+                            }
+                        })
+                    }
+                } catch (error) {
+                    await ctx.reply(error.message)
+                    console.log(error.message, error)
                 }
             })
 
