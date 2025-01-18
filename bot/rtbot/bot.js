@@ -360,7 +360,7 @@ const rtfunction = async (app) => {
                         if(pilauUser && pilauUser.status == 'registered') {
                             return await ctx.reply(`User tayari kasajiliwa pilauzone na status ya "registered"`)
                         } else if(pilauUser && pilauUser.status == 'pending') {
-                            return await ctx.reply(`User tayari yupo pilauzone na status ya "pending" mpe link pilauzone.com/register akamilishe usajili`)
+                            return await ctx.reply(`User tayari yupo pilauzone na status ya "pending" mpe link pilauhub.com/register akamilishe usajili`)
                         }
 
                         //create user

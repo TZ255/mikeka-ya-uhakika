@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema(
     points: {type: Number, default: 0},
     videos: { type: Array },
     payments: { type: Array },
+    role: { type: String, default: 'user' },
     status: { type: String, default: 'pending' },
     resetOTP: { type: String, default: '' },
     otpExpires: { type: Date }
