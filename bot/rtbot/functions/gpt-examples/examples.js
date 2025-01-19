@@ -10,11 +10,9 @@ const examples = {
 };
 
 const mySructuredOutput = {
-    name: 'extractTransaction',
-    description: 'Extract transaction details (name, phone, amount, transaction ID) from a message',
     type: 'json_schema',
     json_schema: {
-        name: 'Extract transaction details',
+        name: 'extractTransaction',
         schema: {
             type: 'object',
             properties: {
