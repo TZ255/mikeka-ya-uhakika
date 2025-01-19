@@ -12,7 +12,7 @@ const examples = {
 const mySructuredOutput = {
     name: 'extractTransaction',
     description: 'Extract transaction details (name, phone, amount, transaction ID) from a message',
-    parameters: {
+    schema: {
         type: 'object',
         properties: {
             ok: {
