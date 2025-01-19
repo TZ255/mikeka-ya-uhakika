@@ -12,34 +12,39 @@ const examples = {
 const mySructuredOutput = {
     name: 'extractTransaction',
     description: 'Extract transaction details (name, phone, amount, transaction ID) from a message',
-    schema: {
-        type: 'object',
-        properties: {
-            ok: {
-                type: 'boolean',
-                description: 'True if at least name, trans_id and amount are found, false otherwise',
+    type: 'json_schema',
+    json_schema: {
+        name: 'Extract transaction details',
+        schema: {
+            type: 'object',
+            properties: {
+                ok: {
+                    type: 'boolean',
+                    description: 'True if at least name, trans_id and amount are found, false otherwise',
+                },
+                name: {
+                    type: 'string',
+                    description: "Sender's name. Always transform to capital letter",
+                },
+                phone: {
+                    type: 'string',
+                    description: 'Phone number. If missing write +255100 as phone number',
+                },
+                trans_id: {
+                    type: 'string',
+                    description: 'Transaction ID/reference number',
+                },
+                amount: {
+                    type: 'number',
+                    description: 'Transaction amount in numeric form. Excluding the decimal part',
+                },
             },
-            name: {
-                type: 'string',
-                description: "Sender's name. Always transform to capital letter",
-            },
-            phone: {
-                type: 'string',
-                description: 'Phone number. If missing write +255100 as phone number',
-            },
-            trans_id: {
-                type: 'string',
-                description: 'Transaction ID/reference number',
-            },
-            amount: {
-                type: 'number',
-                description: 'Transaction amount in numeric form. Excluding the decimal part',
-            },
+            required: ['ok', 'name', 'amount', 'trans_id', 'phone'],
+            additionalProperties: false
         },
-        required: ['ok', 'name', 'amount', 'trans_id', 'phone'],
-        additionalProperties: false
+        strict: true
     },
-    strict: true
+    
 }
 
 module.exports = {
