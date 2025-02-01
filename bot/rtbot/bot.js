@@ -56,7 +56,7 @@ const rtfunction = async (app) => {
         for (let t of tksn) {
             const bot = new Bot(t.TOKEN)
 
-            //use auto-retry
+            //use auto-retry plugin
             bot.api.config.use(autoRetry());
 
             let hookPath = `/telebot/${process.env.USER}/${t.NAME}`
