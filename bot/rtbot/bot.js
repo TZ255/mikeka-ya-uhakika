@@ -4,26 +4,24 @@ const axios = require('axios').default
 const OpenAI = require('openai')
 const mongoose = require('mongoose')
 const PilauWebUserModel = require('./database/pilauweb')
+const findMuamala = require('./functions/querymiamala')
+const rtStarterModel = require('./database/chats')
+const nyumbuModel = require('./database/nyumbus')
+const miamalaModel = require('./database/miamala');
+const malayaModel = require('./database/malaya')
+const videosDB = require('./database/db')
+const aliExDB = require('./database/aliexpress')
+const extractInfoOpenAi = require('./functions/openai-chatid')
+const { extractMiamalaInfo, addingBusinessPoints, WirePusher } = require('./functions/openai-post')
+const call_function = require('./functions/fn')
 
 const rtfunction = async (app) => {
-
     try {
         let tksn = [
             { NAME: 'rtbot', TOKEN: process.env.RT_TOKEN },
             { NAME: 'plbot', TOKEN: process.env.PL_TOKEN },
             { NAME: 'mvbot', TOKEN: process.env.MUVIKA_TOKEN }
         ]
-        const rtStarterModel = require('./database/chats')
-        const nyumbuModel = require('./database/nyumbus')
-        const miamalaModel = require('./database/miamala');
-        const malayaModel = require('./database/malaya')
-        const videosDB = require('./database/db')
-        const aliExDB = require('./database/aliexpress')
-        const extractInfoOpenAi = require('./functions/openai-chatid')
-        const { extractMiamalaInfo, addingBusinessPoints, WirePusher } = require('./functions/openai-post')
-
-        //Middlewares
-        const call_function = require('./functions/fn')
 
         //importants
         const imp = {
@@ -345,21 +343,21 @@ const rtfunction = async (app) => {
                 }
             })
 
-            bot.command('pilauweb', async ctx=> {
+            bot.command('pilauweb', async ctx => {
                 try {
                     let myid = ctx.chat.id
-                    if(ctx.match && ctx.match.includes('create') && [imp.shemdoe, imp.rtmalipo].includes(myid)) {
+                    if (ctx.match && ctx.match.includes('create') && [imp.shemdoe, imp.rtmalipo].includes(myid)) {
                         let userid = Number(ctx.match.split('create ')[1].trim())
-                        let tg_user = await rtStarterModel.findOne({chatid: userid})
+                        let tg_user = await rtStarterModel.findOne({ chatid: userid })
                         if (!tg_user) {
                             return await ctx.reply(`Invalid chatid: ${userid}`)
                         }
                         let username = `${userid}`
                         let password = '1234'
-                        let pilauUser = await PilauWebUserModel.findOne({username})
-                        if(pilauUser && pilauUser.status == 'registered') {
+                        let pilauUser = await PilauWebUserModel.findOne({ username })
+                        if (pilauUser && pilauUser.status == 'registered') {
                             return await ctx.reply(`User tayari kasajiliwa pilauzone na status ya "registered"`)
-                        } else if(pilauUser && pilauUser.status == 'pending') {
+                        } else if (pilauUser && pilauUser.status == 'pending') {
                             return await ctx.reply(`User tayari yupo pilauzone na status ya "pending" mpe link pilauhub.com/register akamilishe usajili`)
                         }
 
@@ -376,7 +374,7 @@ const rtfunction = async (app) => {
                             reply_markup: {
                                 inline_keyboard: [
                                     [
-                                        {text: 'Copy username', copy_text: {text: userid}}
+                                        { text: 'Copy username', copy_text: { text: userid } }
                                     ]
                                 ]
                             }
@@ -689,9 +687,9 @@ const rtfunction = async (app) => {
                         WirePusher(message, userid)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
-                        if (user && user.fullName) {
+                        if (user && user?.fullName) {
                             //check miamala ya user
-                            let tx = await miamalaModel.find({ name: user.fullName })
+                            let tx = await findMuamala(user.fullName)
                             if (tx.length > 0) {
                                 let emoji = '⚡⚡⚡'
                                 let points = 0
