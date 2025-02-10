@@ -684,8 +684,7 @@ const rtfunction = async (app) => {
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!malipoAdmins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //notify me for new message if
-                        console.log(userid)
-                        WirePusher(message, userid)
+                        WirePusher(message, Math.round(userid/100))
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user?.fullName) {
@@ -704,7 +703,7 @@ const rtfunction = async (app) => {
                                 //add points
                                 await addingBusinessPoints(bot, ctx, userid, points, imp, delay, txid, emoji)
                                 //clear wirepusher msg
-                                await WirePusherClear(userid)
+                                WirePusherClear(Math.round(userid/100))
                             }
                         }
                     } else if (malipoAdmins.includes(ctx.businessMessage.from.id)) {
@@ -735,7 +734,7 @@ const rtfunction = async (app) => {
                         }
 
                         //clear wirepusher
-                        WirePusherClear(uid)
+                        WirePusherClear(Math.round(uid/100))
                     }
                 } catch (error) {
                     console.log(error.message, error)
