@@ -675,14 +675,14 @@ const rtfunction = async (app) => {
             //business
             bot.on('business_message', async ctx => {
                 try {
-                    let admins = [imp.rtmalipo]
+                    let malipoAdmins = [imp.rtmalipo]
                     let rtbot_id = ctx.me.id
                     let message = ctx.businessMessage?.text
                     let userid = ctx.businessMessage.from.id
                     let biz_conn = await ctx.getBusinessConnection()
                     let biz_id = biz_conn.id
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
-                    if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
+                    if (!malipoAdmins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //notify me for new message if
                         console.log(userid)
                         WirePusher(message, userid)
@@ -707,7 +707,7 @@ const rtfunction = async (app) => {
                                 await WirePusherClear(userid)
                             }
                         }
-                    } else if (admins.includes(ctx.businessMessage.from.id)) {
+                    } else if (malipoAdmins.includes(ctx.businessMessage.from.id)) {
                         //kama ujumbe wangu unaanza na + or - na ukiconvert ni number
                         let uid = ctx.businessMessage.chat.id
                         if (message.startsWith('+') && Number(message)) {
@@ -735,7 +735,6 @@ const rtfunction = async (app) => {
                         }
 
                         //clear wirepusher
-                        console.log(uid)
                         WirePusherClear(uid)
                     }
                 } catch (error) {
