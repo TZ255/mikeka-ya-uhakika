@@ -684,6 +684,7 @@ const rtfunction = async (app) => {
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //notify me for new message if
+                        console.log(userid)
                         WirePusher(message, userid)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
@@ -734,6 +735,7 @@ const rtfunction = async (app) => {
                         }
 
                         //clear wirepusher
+                        console.log(uid)
                         WirePusherClear(uid)
                     }
                 } catch (error) {
