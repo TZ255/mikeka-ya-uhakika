@@ -700,7 +700,10 @@ const rtfunction = async (app) => {
                                     await t.deleteOne()
                                     txid = t.txid
                                 }
+                                //add points
                                 await addingBusinessPoints(bot, ctx, userid, points, imp, delay, txid, emoji)
+                                //clear wirepusher msg
+                                await WirePusherClear(userid)
                             }
                         }
                     } else if (admins.includes(ctx.businessMessage.from.id)) {
