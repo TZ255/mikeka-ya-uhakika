@@ -679,12 +679,13 @@ const rtfunction = async (app) => {
                     let rtbot_id = ctx.me.id
                     let message = ctx.businessMessage?.text
                     let userid = ctx.businessMessage.from.id
+                    let fname = ctx.businessMessage.from.first_name
                     let biz_conn = await ctx.getBusinessConnection()
                     let biz_id = biz_conn.id
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!malipoAdmins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //notify me for new message if
-                        WirePusher(message, Math.round(userid/100))
+                        WirePusher(message, Math.round(userid/100), fname)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user?.fullName) {

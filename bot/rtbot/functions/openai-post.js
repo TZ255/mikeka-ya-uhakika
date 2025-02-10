@@ -148,12 +148,12 @@ const addingBusinessPoints = async (bot, ctx, chatid, points, imp, delay, txid, 
     }
 }
 
-const WirePusher = async (message, userid) => {
+const WirePusher = async (message, userid, fname) => {
     try {
         let data = {
             id: "dX77mpGBL",
             title: "Reddit",
-            message: message ? `${userid} => ${message}` : `${userid} => Sent a media`,
+            message: message ? `${fname} \n${message}` : `${fname} \nSent a media`,
             type: "Points",
             message_id: Number(userid)
         }
