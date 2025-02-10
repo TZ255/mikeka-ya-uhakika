@@ -153,7 +153,7 @@ const WirePusher = async (message, userid, fname) => {
         let data = {
             id: "dX77mpGBL",
             title: "Reddit",
-            message: message ? `${fname} \n${message}` : `${fname} \nSent a media`,
+            message: message ? `${fname} => ${message}` : `${fname} => Sent a media`,
             type: "Points",
             message_id: Number(userid)
         }
