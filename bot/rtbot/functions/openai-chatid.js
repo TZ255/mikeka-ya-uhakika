@@ -3,7 +3,8 @@ const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
 
 //response format:
-const {examples, mySructuredOutput} = require('./gpt-examples/examples')
+const {examples, mySructuredOutput} = require('./gpt-examples/examples');
+const { muamalaQuery } = require('./querymiamala');
 
 
 const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
@@ -39,7 +40,8 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                     }
 
                     //delete all pending miamala with the same name from miamala db
-                    await miamalaModel.deleteMany({ name: data.name })
+                    let query = muamalaQuery(data.name)
+                    await miamalaModel.deleteMany(query)
                     //update user data
                     let upd = await rtStarterModel.findOneAndUpdate(
                         { chatid },

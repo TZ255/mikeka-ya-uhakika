@@ -4,7 +4,6 @@ const axios = require('axios').default
 const OpenAI = require('openai')
 const mongoose = require('mongoose')
 const PilauWebUserModel = require('./database/pilauweb')
-const findMuamala = require('./functions/querymiamala')
 const rtStarterModel = require('./database/chats')
 const nyumbuModel = require('./database/nyumbus')
 const miamalaModel = require('./database/miamala');
@@ -12,8 +11,9 @@ const malayaModel = require('./database/malaya')
 const videosDB = require('./database/db')
 const aliExDB = require('./database/aliexpress')
 const extractInfoOpenAi = require('./functions/openai-chatid')
-const { extractMiamalaInfo, addingBusinessPoints, WirePusher } = require('./functions/openai-post')
+const { extractMiamalaInfo, addingBusinessPoints, WirePusher, WirePusherClear } = require('./functions/openai-post')
 const call_function = require('./functions/fn')
+const { muamalaQuery } = require('./functions/querymiamala')
 
 const rtfunction = async (app) => {
     try {
@@ -683,13 +683,14 @@ const rtfunction = async (app) => {
                     let biz_id = biz_conn.id
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!admins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
-                        //notify me for new message
+                        //notify me for new message if
                         WirePusher(message, userid)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user?.fullName) {
                             //check miamala ya user
-                            let tx = await findMuamala(user.fullName)
+                            let query = muamalaQuery(user.fullName)
+                            let tx = await miamalaModel.find(query)
                             if (tx.length > 0) {
                                 let emoji = '⚡⚡⚡'
                                 let points = 0
@@ -704,8 +705,8 @@ const rtfunction = async (app) => {
                         }
                     } else if (admins.includes(ctx.businessMessage.from.id)) {
                         //kama ujumbe wangu unaanza na + or - na ukiconvert ni number
+                        let uid = ctx.businessMessage.chat.id
                         if (message.startsWith('+') && Number(message)) {
-                            let uid = ctx.businessMessage.chat.id
                             let points = Number(message)
                             let my_msg_id = ctx.businessMessage.message_id
                             let emoji = '✅'
@@ -728,6 +729,9 @@ const rtfunction = async (app) => {
                                 await ctx.reply(link, { link_preview_options: { is_disabled: true } })
                                 break;
                         }
+
+                        //clear wirepusher
+                        WirePusherClear(uid)
                     }
                 } catch (error) {
                     console.log(error.message, error)

@@ -154,12 +154,26 @@ const WirePusher = async (message, userid) => {
             id: "dX77mpGBL",
             title: "Reddit",
             message: message ? `${userid} => ${message}` : `${userid} => Sent a media`,
-            type: "Points"
+            type: "Points",
+            message_id: Number(userid)
         }
-        await axios.get(`https://wirepusher.com/send?id=${data.id}&title=${data.title}&message=${data.message}&type=${data.type}`)
+        await axios.get(`https://wirepusher.com/send?id=${data.id}&title=${data.title}&message=${data.message}&type=${data.type}&message_id=${data.message_id}`)
     } catch (error) {
         console.log(error?.message, error)
     }
 }
 
-module.exports = { extractMiamalaInfo, addingBusinessPoints, WirePusher };
+const WirePusherClear = async (message_id) => {
+    try {
+        let data = {
+            id: "dX77mpGBL",
+            type: "wirepusher_clear_notification",
+            message_id: Number(message_id)
+        }
+        await axios.get(`https://wirepusher.com/send?id=${data.id}&type=${data.type}&message_id=${data.message_id}`)
+    } catch (error) {
+        console.log(error?.message, error)
+    }
+}
+
+module.exports = { extractMiamalaInfo, addingBusinessPoints, WirePusher, WirePusherClear };
