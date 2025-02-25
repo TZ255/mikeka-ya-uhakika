@@ -9,7 +9,7 @@ const { examples, mySructuredOutput } = require('./gpt-examples/examples')
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
     const miamala = ['From: M-PESA']
-    const junkies = ['TIPS-AIRTELMONEY', 'TIPS-HALOTEL', 'TIPS-CRDB', 'TIPS-NMB', 'TIPS-NBC', 'TIPS-TIGOPESA', 'has received', 'Transfered', 'sent to', 'from Changisha account']
+    const junkies = ['TIPS-', 'has received', 'Transfered', 'sent to', 'from Changisha account']
     try {
         let txt = ctx.channelPost.text ? ctx.channelPost.text : 'no text'
         let msgid = ctx.channelPost.message_id;
