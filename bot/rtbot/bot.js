@@ -531,7 +531,7 @@ const rtfunction = async (app) => {
                         let mid = ctx.message.message_id
 
                         for (let m of miamala) {
-                            if (txt.toLowerCase().includes(m)) {
+                            if (txt.toLowerCase().includes(m) && ctx.chat.type == 'private') {
                                 await bot.api.sendMessage(imp.rtmalipo, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
 
                                 await bot.api.copyMessage(userid, imp.matangazoDB, 63, {
@@ -605,9 +605,9 @@ const rtfunction = async (app) => {
             bot.on('message:photo', async ctx => {
                 try {
                     let mid = ctx.message.message_id
-                    let username = ctx.chat.first_name
+                    let username = ctx.chat?.first_name
                     let surname = ''
-                    if (ctx.chat.last_name) {
+                    if (ctx.chat?.last_name) {
                         surname = ctx.chat.last_name
                         username = username + ' ' + surname
                     }
@@ -642,24 +642,26 @@ const rtfunction = async (app) => {
 
 
                     else {
-                        await bot.api.copyMessage(imp.halot, chatid, mid, {
-                            caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
-                            parse_mode: 'HTML'
-                        })
-                        await bot.api.copyMessage(imp.rtmalipo, chatid, mid, {
-                            caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
-                            parse_mode: 'HTML'
-                        })
-                        await delay(1000)
-                        await bot.api.copyMessage(chatid, imp.matangazoDB, 63, {
-                            reply_markup: {
-                                inline_keyboard: [
-                                    [
-                                        { text: `✉ Wasiliana na Admin Wetu Hapa`, url: 'https://t.me/pilauzone_admin' }
+                        if (ctx.chat.type == 'private') {
+                            await bot.api.copyMessage(imp.halot, chatid, mid, {
+                                caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
+                                parse_mode: 'HTML'
+                            })
+                            await bot.api.copyMessage(imp.rtmalipo, chatid, mid, {
+                                caption: cap + `\n\nfrom = <a href="tg://user?id=${chatid}">${username}</a>\nid = <code>${chatid}</code>&mid=${mid}`,
+                                parse_mode: 'HTML'
+                            })
+                            await delay(1000)
+                            await bot.api.copyMessage(chatid, imp.matangazoDB, 63, {
+                                reply_markup: {
+                                    inline_keyboard: [
+                                        [
+                                            { text: `✉ Wasiliana na Admin Wetu Hapa`, url: 'https://t.me/pilauzone_admin' }
+                                        ]
                                     ]
-                                ]
-                            }
-                        })
+                                }
+                            })
+                        }
                     }
                 } catch (err) {
                     if (!err.message) {
@@ -685,7 +687,7 @@ const rtfunction = async (app) => {
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!malipoAdmins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
                         //notify me for new message if
-                        WirePusher(message, Math.round(userid/100), fname)
+                        WirePusher(message, Math.round(userid / 100), fname)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user?.fullName) {
@@ -704,7 +706,7 @@ const rtfunction = async (app) => {
                                 //add points
                                 await addingBusinessPoints(bot, ctx, userid, points, imp, delay, txid, emoji)
                                 //clear wirepusher msg
-                                WirePusherClear(Math.round(userid/100))
+                                WirePusherClear(Math.round(userid / 100))
                             }
                         }
                     } else if (malipoAdmins.includes(ctx.businessMessage.from.id)) {
@@ -735,7 +737,7 @@ const rtfunction = async (app) => {
                         }
 
                         //clear wirepusher
-                        WirePusherClear(Math.round(uid/100))
+                        WirePusherClear(Math.round(uid / 100))
                     }
                 } catch (error) {
                     console.log(error.message, error)
