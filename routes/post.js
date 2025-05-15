@@ -20,7 +20,7 @@ const imp = {
     logsBin: -1001845473074,
     mylove: -1001748858805,
     mkekaLeo: -1001733907813,
-    matangazoDB: -1001570087172,
+    rtcopyDB: -1002634850653,
     r_chatting: -1001722693791,
     dstore: -1001245181784,
     linksChannel: -1002042952349,

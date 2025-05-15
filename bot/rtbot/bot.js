@@ -43,7 +43,7 @@ const rtfunction = async (app) => {
             mylove: -1001748858805,
             malayaDB: -1001783364680,
             rtgrp: -1001899312985,
-            matangazoDB: -1001570087172,
+            rtcopyDB: -1002634850653,
             aliDB: -1001801595269,
             aliProducts: -1001971329607,
             _pack1: -1001943515650,
@@ -143,16 +143,9 @@ const rtfunction = async (app) => {
                                 }
                             })
                         } else if (pload.toLowerCase() == 'iphone') {
-                            await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 33)
+                            await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 12)
                         } else if (pload.toLowerCase() == 'ongeza_points') {
-                            await call_function.payingInfo(bot, ctx, delay, imp, userid, 26)
-                        } else if (pload.toLowerCase() == 'get-wakubwa-pack1') {
-                            await ctx.replyWithChatAction('typing')
-                            setTimeout(() => {
-                                bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 36)
-                                    .catch(e => console.log(e.message, e))
-                            }, 1000)
-
+                            await call_function.payingInfo(bot, ctx, delay, imp, userid, 2)
                         }
                     }
                     else if (ctx.match && rateLimitter.includes(ctx.chat.id)) {
@@ -203,7 +196,7 @@ const rtfunction = async (app) => {
                         let all_users = await rtStarterModel.find({ refferer: botname, paid: true })
                         await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
                         for (let [i, u] of all_users.entries()) {
-                            await bot.api.copyMessage(u.chatid, imp.matangazoDB, msg_id)
+                            await bot.api.copyMessage(u.chatid, imp.rtcopyDB, msg_id)
                                 .catch((err) => {
                                     if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
                                         u.deleteOne()
@@ -232,7 +225,7 @@ const rtfunction = async (app) => {
                             setTimeout(() => {
                                 const np = 500 - u.points
                                 u.updateOne({ $set: { points: u.points + np } }).catch(e => console.log(e.message))
-                                bot.api.copyMessage(u.chatid, imp.matangazoDB, 42).then(() => {
+                                bot.api.copyMessage(u.chatid, imp.rtcopyDB, 13).then(() => {
                                     console.log('✅ done kwa ' + u.chatid);
                                 }).catch(e => console.log(e.message))
                             }, 40 * i);
@@ -252,7 +245,7 @@ const rtfunction = async (app) => {
 
                         all.forEach((u, i) => {
                             setTimeout(() => {
-                                bot.api.copyMessage(u.chatid, imp.matangazoDB, 65)
+                                bot.api.copyMessage(u.chatid, imp.rtcopyDB, 65)
                                     .then(() => console.log('✅ done kwa ' + u.chatid))
                                     .catch(e => console.log('❌ ' + e.message))
                             }, 40 * i)
@@ -321,7 +314,7 @@ const rtfunction = async (app) => {
 
             bot.command('msaada', async ctx => {
                 try {
-                    await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 25)
+                    await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 9)
                 } catch (err) {
                     console.log(err.message)
                 }
@@ -437,30 +430,30 @@ const rtfunction = async (app) => {
                         await ctx.answerCallbackQuery({ text: txt, cache_time: 10, show_alert: true })
                     } else if (['rudi_nyuma', 'ongeza_points'].includes(cdata)) {
                         await ctx.api.deleteMessage(chatid, cmsgid)
-                        await call_function.payingInfo(bot, ctx, delay, imp, chatid, 26)
+                        await call_function.payingInfo(bot, ctx, delay, imp, chatid, 2)
                     } else if (cdata == 'vid_ongeza_pts') {
-                        await call_function.payingInfo(bot, ctx, delay, imp, chatid, 26)
+                        await call_function.payingInfo(bot, ctx, delay, imp, chatid, 2)
                     } else if (cdata == 'voda') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 17, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 3, cmsgid)
                     } else if (cdata == 'tigo') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 18, cmsgid) //189
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 4, cmsgid) //189
                     } else if (cdata == 'airtel') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 19, cmsgid) //121
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 5, cmsgid) //121
                     } else if (cdata == 'halotel') {
-                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 170, cmsgid)
+                        await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 6, cmsgid)
                     } else if (cdata == 'safaricom') {
-                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 22, cmsgid)
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 7, cmsgid)
                     } else if (cdata == 'uganda') {
-                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 112, cmsgid)
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 8, cmsgid)
                     } else if (cdata == 'other_networks') {
-                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 23, cmsgid)
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 9, cmsgid)
                     }
                     else if (cdata == 'help-msaada') {
-                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 12, cmsgid)
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 9, cmsgid)
                     } else if (cdata == 'nimelipia') {
-                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 30, cmsgid)
+                        await call_function.rudiNyumaReply(bot, ctx, chatid, imp, 10, cmsgid)
                     } else if (cdata == 'video-zingine') {
-                        await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 37)
+                        await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 11)
                     }
                 } catch (err) {
                     console.log(err.message, err)
@@ -534,7 +527,7 @@ const rtfunction = async (app) => {
                             if (txt.toLowerCase().includes(m) && ctx.chat.type == 'private') {
                                 await bot.api.sendMessage(imp.rtmalipo, `<b>${txt}</b> \n\nfrom = <a href="tg://user?id=${userid}">${username}</a>\nid = <code>${userid}</code>&mid=${mid}`, { parse_mode: 'HTML' })
 
-                                await bot.api.copyMessage(userid, imp.matangazoDB, 63, {
+                                await bot.api.copyMessage(userid, imp.rtcopyDB, 10, {
                                     reply_markup: {
                                         inline_keyboard: [
                                             [
@@ -581,11 +574,11 @@ const rtfunction = async (app) => {
                                 break;
 
                             case '➕ Ongeza Points': case '/ONGEZA_POINTS':
-                                await call_function.payingInfo(bot, ctx, delay, imp, userid, 26)
+                                await call_function.payingInfo(bot, ctx, delay, imp, userid, 2)
                                 break;
 
                             case '⛑ Help / Msaada ⛑':
-                                await bot.api.copyMessage(userid, imp.matangazoDB, 25)
+                                await bot.api.copyMessage(userid, imp.rtcopyDB, 9)
                                 break;
 
                             default:
@@ -652,7 +645,7 @@ const rtfunction = async (app) => {
                                 parse_mode: 'HTML'
                             })
                             await delay(1000)
-                            await bot.api.copyMessage(chatid, imp.matangazoDB, 63, {
+                            await bot.api.copyMessage(chatid, imp.rtcopyDB, 10, {
                                 reply_markup: {
                                     inline_keyboard: [
                                         [

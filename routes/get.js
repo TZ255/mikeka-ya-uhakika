@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
         console.log(err.message, err)
         await axios.post(tgAPI, {
             chat_id: 741815228,
-            from_chat_id: -1001570087172, //matangazoDB
+            from_chat_id: -1002634850653, //rtcopyDB
             message_id: 43
         }).catch(e => console.log(e.response.data))
     }
@@ -98,7 +98,7 @@ router.get('/both-teams-to-score', async (req, res) => {
         console.log(err.message, err)
         await axios.post(tgAPI, {
             chat_id: 741815228,
-            from_chat_id: -1001570087172, //matangazoDB
+            from_chat_id: -1002634850653, //rtcopyDB
             message_id: 43
         }).catch(e => console.log(e.response.data))
     }
@@ -175,7 +175,7 @@ router.get('/under-over-15-first-half', async (req, res) => {
         let tgAPI = `https://api.telegram.org/bot${process.env.LAURA_TOKEN}/copyMessage`
         await axios.post(tgAPI, {
             chat_id: 741815228,
-            from_chat_id: -1001570087172, //matangazoDB
+            from_chat_id: -1002634850653, //rtcopyDB
             message_id: 126
         }).catch(e => console.log(e.message, e))
     }
@@ -196,7 +196,7 @@ router.get('/odds-blog', async (req, res) => {
         console.log(err.message, err)
         await axios.post(tgAPI, {
             chat_id: 741815228,
-            from_chat_id: -1001570087172, //matangazoDB
+            from_chat_id: -1002634850653, //rtcopyDB
             message_id: 43
         }).catch(e => console.log(e.response.data))
     }

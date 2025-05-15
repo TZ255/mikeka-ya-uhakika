@@ -120,7 +120,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
 
 const payingInfo = async (bot, ctx, delay, imp, userid, mid) => {
     await ctx.replyWithChatAction('typing')
-    await bot.api.copyMessage(userid, imp.matangazoDB, mid, {
+    await bot.api.copyMessage(userid, imp.rtcopyDB, mid, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -207,7 +207,7 @@ const addingPoints = async (ctx, chatid, points, imp) => {
 }
 
 const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    let info = await bot.api.copyMessage(chatid, imp.matangazoDB, msgid, {
+    let info = await bot.api.copyMessage(chatid, imp.rtcopyDB, msgid, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -225,7 +225,7 @@ const mtandaoCallBack = async (bot, ctx, chatid, imp, msgid, cbmid) => {
 }
 
 const rudiNyumaReply = async (bot, ctx, chatid, imp, msgid, cbmid) => {
-    await bot.api.copyMessage(chatid, imp.matangazoDB, msgid, {
+    await bot.api.copyMessage(chatid, imp.rtcopyDB, msgid, {
         reply_markup: {
             inline_keyboard: [
                 [
