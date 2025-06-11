@@ -6,6 +6,7 @@ const postRouter = require('./routes/post')
 const elimit = require('express-rate-limit')
 const rahatupu_bot = require('./bot/rtbot/bot')
 var cors = require('cors')
+const { saveWordToDatabase } = require('./routes/fns/englishclub-scrap')
 
 const app = express()
 
@@ -43,6 +44,18 @@ app.use(getRouter)
 if (process.env.environment == 'production') {
     //
 }
+
+//set interval to update the english club database
+setInterval(() => {
+    const now = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi' });
+    const [h, m, s] = now.split(':').map(Number);
+
+    if (h === 10 && process.env.environment !== 'local') {
+        if (m === 0) saveWordToDatabase('idiom');
+        if (m === 5) saveWordToDatabase('phrase');
+        if (m === 10) saveWordToDatabase('slang');
+    }
+}, 60000);
 
 
 app.listen(process.env.PORT || 3000, () => console.log('Running on port 3000'))

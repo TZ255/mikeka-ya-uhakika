@@ -234,6 +234,10 @@ router.get('/contact/telegram', (req, res) => {
     res.redirect('https://t.me/+owXoXwLlSHxmYjJk')
 })
 
+router.get('/API/testing', async (req, res)=> {
+    res.end()
+})
+
 router.get('*', (req, res) => {
     res.sendStatus(404)
 })
