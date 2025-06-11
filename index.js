@@ -50,7 +50,7 @@ setInterval(() => {
     const now = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi' });
     const [h, m, s] = now.split(':').map(Number);
 
-    if (h === 9 && process.env.environment !== 'local') {
+    if (h === 10 && process.env.environment !== 'local') {
         if (m === 0) saveWordToDatabase('idiom');
         if (m === 5) saveWordToDatabase('phrase');
         if (m === 10) saveWordToDatabase('slang');

@@ -51,7 +51,14 @@ const saveWordToDatabase = async (word_type) => {
             link: englishClub.link
         });
         await newEntry.save();
-        return await sendTGNotification(`✅ New entry saved: ${languageLearning.term} (${languageLearning.type})`);
+        await sendTGNotification(`✅ New entry saved: ${languageLearning.term} (${languageLearning.type})`);
+        return await axios.post(`http://${process.env.VPS_IP}:3100/post/english`, {
+            type: languageLearning.type,
+            term: languageLearning.term,
+            meaning: languageLearning.meaning,
+            examples: languageLearning.examples,
+            challenge: languageLearning.challenge
+        })
     } catch (error) {
         console.log(error.message, error)
         return await sendTGNotification(`❗️ Error saving entry: ${error.message}`);
