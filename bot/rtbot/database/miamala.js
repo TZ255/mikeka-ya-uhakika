@@ -9,10 +9,10 @@ const MiamalaSchema = new Schema({
     createdAt: { 
         type: Date, 
         default: Date.now, 
-        expires: '15m'
+        expires: '30m'
     }
 }, { strict: false, timestamps: false });
 
 const ohymy = mongoose.connection.useDb('ohmyNew');
-const model = ohymy.model('Miamala', MiamalaSchema);
-module.exports = model;
+const miamalaModel = ohymy.model('Miamala', MiamalaSchema);
+module.exports = miamalaModel;
