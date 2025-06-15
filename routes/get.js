@@ -240,6 +240,16 @@ router.get('/API/testing', async (req, res)=> {
     res.end()
 })
 
+router.get('/send/sms', async (req, res)=> {
+    console.log('get api')
+    res.status(200).end()
+})
+
+router.post('/send/sms', async (req, res)=> {
+    console.log('post api')
+    res.status(200).end()
+})
+
 router.get('*', (req, res) => {
     res.sendStatus(404)
 })
