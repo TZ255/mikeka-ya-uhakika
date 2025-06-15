@@ -6,10 +6,10 @@ const MiamalaSchema = new Schema({
     phone: { type: String },
     name: { type: String },
     amt: { type: Number },
-    createdAt: { 
-        type: Date, 
-        default: Date.now, 
-        expires: '30m'
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        index: { expires: '30m' }
     }
 }, { strict: false, timestamps: false });
 

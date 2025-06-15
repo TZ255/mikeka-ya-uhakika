@@ -12,6 +12,7 @@ const axios = require('axios').default
 const TimeAgo = require('javascript-time-ago')
 const en = require('javascript-time-ago/locale/en')
 const { WeekDayFn } = require('./fns/weekday')
+const miamalaModel = require('../bot/rtbot/database/miamala')
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
@@ -235,6 +236,7 @@ router.get('/contact/telegram', (req, res) => {
 })
 
 router.get('/API/testing', async (req, res)=> {
+    //await miamalaModel.syncIndexes()
     res.end()
 })
 
