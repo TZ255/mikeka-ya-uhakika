@@ -698,6 +698,8 @@ const rtfunction = async (app) => {
                                 }
                                 //add points
                                 await addingBusinessPoints(bot, ctx, userid, points, imp, delay, txid, emoji)
+                                //mark biz msg as read
+                                await ctx.readBusinessMessage().catch(e => console.log(e?.message))
                                 //clear wirepusher msg
                                 WirePusherClear(Math.round(userid / 100))
                             }
@@ -718,6 +720,8 @@ const rtfunction = async (app) => {
 
                             //add business points
                             await addingBusinessPoints(bot, ctx, uid, points, imp, delay, uid, emoji)
+                            //delete the +message
+                            await ctx.deleteBusinessMessages([my_msg_id])
                         }
                         switch (message.toLowerCase()) {
                             case 'link':
