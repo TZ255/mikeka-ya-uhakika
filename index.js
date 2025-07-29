@@ -7,6 +7,7 @@ const elimit = require('express-rate-limit')
 const rahatupu_bot = require('./bot/rtbot/bot')
 var cors = require('cors')
 const { saveWordToDatabase } = require('./routes/fns/englishclub-scrap')
+const edithaBotHandler = require('./bot/edithabot/bot')
 
 const app = express()
 
@@ -35,6 +36,7 @@ app.set('trust proxy', true) //our app is hosted on server using proxy to pass u
 if (process.env.environment == 'production') {
     rahatupu_bot.rtBot(app)
 }
+edithaBotHandler(app)
 app.use(cors())
 app.use(limiter)
 app.use(postRouter)
