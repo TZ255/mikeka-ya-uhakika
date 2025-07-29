@@ -35,8 +35,9 @@ app.set('trust proxy', true) //our app is hosted on server using proxy to pass u
 //attach webhook
 if (process.env.environment == 'production') {
     rahatupu_bot.rtBot(app)
+    edithaBotHandler(app)
 }
-edithaBotHandler(app)
+
 app.use(cors())
 app.use(limiter)
 app.use(postRouter)
