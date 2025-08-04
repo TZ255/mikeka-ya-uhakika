@@ -731,15 +731,6 @@ const rtfunction = async (app) => {
                                 let link = await call_function.createChannelLink(bot, imp.newRT, expire, limit, linkName, imp.rtmalipo)
                                 await ctx.reply(link, { link_preview_options: { is_disabled: true } })
                                 break;
-
-                            case 'voda 👇':
-                                return await ctx.copyMessage(imp.rtcopyDB, 3)
-                            case 'tigo 👇':
-                                return await ctx.copyMessage(imp.rtcopyDB, 4)
-                            case 'airtel 👇':
-                                return await ctx.copyMessage(imp.rtcopyDB, 5)
-                            case 'halotel 👇':
-                                return await ctx.copyMessage(imp.rtcopyDB, 6)
                         }
 
                         //clear wirepusher
