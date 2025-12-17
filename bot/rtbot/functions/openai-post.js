@@ -1,11 +1,29 @@
 const OpenAI = require('openai');
+const { z } = require('zod')
+const { zodTextFormat } = require('openai/helpers/zod');
+
 const axios = require('axios')
 const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
 const { checkPaidIfMemberPilauZone } = require('./fn');
 
 //response format:
-const { examples, mySructuredOutput } = require('./gpt-examples/examples')
+const { examples } = require('./gpt-examples/examples')
+
+//miamala schema
+const miamalaSchema = z.object({
+    ok: z.boolean().describe('True if at least name, trans_id and amount are found, false otherwise'),
+    name: z.string()
+        .transform(val => val.toUpperCase())
+        .describe("Sender's name. Always transform to capital letter"),
+    phone: z.string()
+        .default('+255100')
+        .describe('Phone number with the country code including the + sign. If missing write +255100 as phone number'),
+    trans_id: z.string().describe('Transaction ID/reference number'),
+    amount: z.number()
+        .int()
+        .describe('Transaction amount in numeric form. Excluding the decimal parts'),
+});
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
     const miamala = ['From: M-PESA', 'From: MIXX BY YAS']
@@ -28,36 +46,33 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 apiKey: process.env.openAIKey,
             });
 
-            async function main() {
-                const chatCompletion = await openai.chat.completions.create({
-                    model: 'gpt-4o-mini',
-                    messages: [{ role: 'system', content: command }],
-                    response_format: mySructuredOutput
+            const response = await openai.responses.parse({
+                model: "gpt-5-mini",
+                input: command,
+                text: {
+                    format: zodTextFormat(miamalaSchema, "parsedTransaction"),
+                },
+            });
+
+            const parsedTransaction = response.output_parsed;
+
+            if (!parsedTransaction.ok) {
+                return await ctx.reply('Some information is not found', {
+                    reply_parameters: { message_id: userTrans },
                 });
-
-                let data = JSON.parse(chatCompletion.choices[0].message.content);
-                console.log(data)
-
-                if (!data.ok) {
-                    return await ctx.reply('Some information is not found', {
-                        reply_parameters: { message_id: userTrans },
-                    });
-                }
-
-                let validate = await miamalaModel.findOne({ txid: data.trans_id })
-                if (!validate) {
-                    let upd = await miamalaModel.create({
-                        name: data.name, phone: data.phone, txid: data.trans_id, amt: data.amount
-                    })
-
-                    await ctx.reply(
-                        `<code>${upd.txid}</code> of amt <code>${upd.amt}</code> saved to db`,
-                        { parse_mode: 'HTML', disable_notification: 'true', reply_parameters: { message_id: msgid } }
-                    );
-                }
             }
 
-            main();
+            let validate = await miamalaModel.findOne({ txid: parsedTransaction.trans_id })
+            if (!validate) {
+                let upd = await miamalaModel.create({
+                    name: parsedTransaction.name, phone: parsedTransaction.phone, txid: parsedTransaction.trans_id, amt: parsedTransaction.amount
+                })
+
+                await ctx.reply(
+                    `<code>${upd.txid}</code> of amt <code>${upd.amt}</code> saved to db`,
+                    { parse_mode: 'HTML', disable_notification: 'true', reply_parameters: { message_id: msgid } }
+                );
+            }
         }
     } catch (error) {
         await ctx.reply(error.message);
