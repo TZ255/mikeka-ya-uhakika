@@ -69,7 +69,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 })
 
                 await ctx.reply(
-                    `<code>${upd.txid}</code> of amt <code>${upd.amt}</code> saved to db`,
+                    `Txid: <code>${upd.txid}</code> of amt <code>${upd.amt}</code>, name <code>${upd.name}</code> and phone <code>${upd.phone}</code> saved to db`,
                     { parse_mode: 'HTML', disable_notification: 'true', reply_parameters: { message_id: msgid } }
                 );
             }
