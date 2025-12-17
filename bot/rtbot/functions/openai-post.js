@@ -8,7 +8,7 @@ const { checkPaidIfMemberPilauZone } = require('./fn');
 const { examples, mySructuredOutput } = require('./gpt-examples/examples')
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
-    const miamala = ['From: M-PESA']
+    const miamala = ['From: M-PESA', 'From: MIXX BY YAS']
     const junkies = ['TIPS-', 'has received', 'Transfered', 'sent to', 'from Changisha account']
     try {
         let txt = ctx.channelPost.text ? ctx.channelPost.text : 'no text'
