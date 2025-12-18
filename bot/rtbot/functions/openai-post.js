@@ -58,7 +58,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
 
             if (!parsedTransaction.ok) {
                 return await ctx.reply('Some information is not found', {
-                    reply_parameters: { message_id: userTrans },
+                    reply_parameters: { message_id: msgid },
                 });
             }
 
