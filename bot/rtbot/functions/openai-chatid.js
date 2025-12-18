@@ -5,7 +5,6 @@ const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
 
 //response format:
-const { examples } = require('./gpt-examples/examples');
 const { muamalaQuery } = require('./querymiamala');
 
 //miamala schema
@@ -33,8 +32,8 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
 
         for (let t of lipaTexts) {
             if (txt.toLowerCase().includes(t)) {
-                let muamala = txt.split('Message:')[1];
-                let command = `"${muamala}"\n\nExtract information according to the response_format provided. Refer to the following examples for the valid response:\n\nExample 1: ${examples.ex1}\n\nExample 2: ${examples.ex2}\n\nExample 3: ${examples.ex3}\n\nExample 4: ${examples.ex4}\n\nExample 5: ${examples.ex5}\n\nExample 6: ${examples.ex6}\n\nFor the following examples always return "ok: false" as they contains companies names or they have no sender names. Example 1: "${examples.false1}"\nExample 2: "${examples.false2}"`;
+                let muamala = txt.split('Message:')[1].trim();
+                let command = `"${muamala}"\n\nExtract information according to the response format provided`;
 
                 const openai = new OpenAI({
                     apiKey: process.env.openAIKey,

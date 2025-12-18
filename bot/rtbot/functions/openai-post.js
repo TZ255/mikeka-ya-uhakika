@@ -7,15 +7,12 @@ const rtStarterModel = require('../database/chats');
 const miamalaModel = require('../database/miamala');
 const { checkPaidIfMemberPilauZone } = require('./fn');
 
-//response format:
-const { examples } = require('./gpt-examples/examples')
-
 //miamala schema
 const miamalaSchema = z.object({
     ok: z.boolean().describe('True if at least name, trans_id and amount are found, false otherwise'),
     name: z.string()
         .transform(val => val.toUpperCase())
-        .describe("Sender's name. Always transform to capital letter"),
+        .describe("Sender's name. Always transform to capital letter. Ignore company names. If the transaction if from a company and no real sender's name found, ignore and set ok to false"),
     phone: z.string()
         .default('+255100')
         .describe('Phone number with the country code including the + sign. If missing write +255100 as phone number'),
@@ -27,20 +24,20 @@ const miamalaSchema = z.object({
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
     const miamala = ['From: M-PESA', 'From: MIXX BY YAS']
-    const junkies = ['TIPS-', 'has received', 'Transfered', 'sent to', 'from Changisha account']
+    const junkies = ['TIPS-', 'has received', 'Transfered', 'sent to', 'from Changisha account', 'umelipa']
     try {
         let txt = ctx.channelPost.text ? ctx.channelPost.text : 'no text'
         let msgid = ctx.channelPost.message_id;
 
         //filtering the text
         //check if any term of miamala exist
-        let includesMiamala = miamala.some(term => txt.includes(term));
+        let includesMiamala = miamala.some(term => txt.toLowerCase().includes(term.toLowerCase()));
         //check if all term of junkies doestnt exist
-        let excludesJunkies = junkies.every(term => !txt.includes(term));
+        let excludesJunkies = junkies.every(term => !txt.toLowerCase().includes(term.toLowerCase()));
 
         if (includesMiamala && excludesJunkies) {
-            let muamala = txt.split('Message:')[1];
-            let command = `"${muamala}"\n\nExtract information according to the response_format provided. Refer to the following examples for the valid response:\n\nExample 1: ${examples.ex1}\n\nExample 2: ${examples.ex2}\n\nExample 3: ${examples.ex3}\n\nExample 4: ${examples.ex4}\n\nExample 5: ${examples.ex5}\n\nExample 6: ${examples.ex6}\n\nFor the following examples always return "ok: false" as they contains companies names or they have no sender names. Example 1: "${examples.false1}"\nExample 2: "${examples.false2}"`;
+            let muamala = txt.split('Message:')[1].trim();
+            let command = `"${muamala}"\n\nExtract information according to the response format provided.`;
 
             const openai = new OpenAI({
                 apiKey: process.env.openAIKey,
@@ -57,7 +54,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
             const parsedTransaction = response.output_parsed;
 
             if (!parsedTransaction.ok) {
-                return await ctx.reply('Some information is not found', {
+                return await ctx.reply('Some information are not found', {
                     reply_parameters: { message_id: msgid },
                 });
             }
@@ -69,7 +66,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 })
 
                 await ctx.reply(
-                    `<blockquote>${upd.amt} from ${upd.name}, ${upd.phone} with Txid: ${upd.txid} saved to db</blockquote>`,
+                    `${upd.amt} from ${upd.name}, ${upd.phone}`,
                     { parse_mode: 'HTML', disable_notification: true, reply_parameters: { message_id: msgid } }
                 );
 
