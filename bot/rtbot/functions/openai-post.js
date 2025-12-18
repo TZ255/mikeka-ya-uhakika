@@ -74,7 +74,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 );
 
                 //check if is for vip tips, call the tips api
-                if (parsedTransaction?.amount >= 8000 && parsedTransaction.amount < 9000) {
+                if ((parsedTransaction?.amount >= 8000 && parsedTransaction.amount < 9000) || parsedTransaction?.phone === '+255757259678') {
                     // call yaUhakikaTips Webhook
                     const yaUhakikaServer = "https://yauhakika.up.railway.app/api/payment-webhook"
                     try {
