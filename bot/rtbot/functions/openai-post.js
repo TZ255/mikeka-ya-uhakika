@@ -69,8 +69,8 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 })
 
                 await ctx.reply(
-                    `Txid: <code>${upd.txid}</code> of amt <code>${upd.amt}</code>, name <code>${upd.name}</code> and phone <code>${upd.phone}</code> saved to db`,
-                    { parse_mode: 'HTML', disable_notification: 'true', reply_parameters: { message_id: msgid } }
+                    `<blockquote>${upd.amt} from ${upd.name}, ${upd.phone} with Txid: ${upd.txid} saved to db</blockquote>`,
+                    { parse_mode: 'HTML', disable_notification: true, reply_parameters: { message_id: msgid } }
                 );
 
                 //check if is for vip tips, call the tips api
