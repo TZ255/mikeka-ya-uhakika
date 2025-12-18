@@ -72,6 +72,26 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                     `Txid: <code>${upd.txid}</code> of amt <code>${upd.amt}</code>, name <code>${upd.name}</code> and phone <code>${upd.phone}</code> saved to db`,
                     { parse_mode: 'HTML', disable_notification: 'true', reply_parameters: { message_id: msgid } }
                 );
+
+                //check if is for vip tips, call the tips api
+                if (parsedTransaction?.amount >= 8000 && parsedTransaction.amount < 9000) {
+                    // call yaUhakikaTips Webhook
+                    const yaUhakikaServer = "https://yauhakika.up.railway.app/api/payment-webhook"
+                    try {
+                        await axios.post(yaUhakikaServer, {phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS})
+                    } catch (error) {
+                        await ctx.reply(`Error calling yaUhakikaTips Webhook: ${error.message}`);
+                    }
+                }
+                if (parsedTransaction?.amount >= 9000 && parsedTransaction.amount < 10000) {
+                    // call MTips Webhook
+                    const mtipsServer = "https://mikekatips.fly.dev/api/payment-webhook"
+                    try {
+                        await axios.post(mtipsServer, {phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS})
+                    } catch (error) {
+                        await ctx.reply(`Error calling MTips Webhook: ${error.message}`);
+                    }
+                }
             }
         }
     } catch (error) {
