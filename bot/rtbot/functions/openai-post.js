@@ -44,7 +44,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
             });
 
             const response = await openai.responses.parse({
-                model: "gpt-5-mini",
+                model: "gpt-4.1-mini",
                 input: command,
                 text: {
                     format: zodTextFormat(miamalaSchema, "parsedTransaction"),
