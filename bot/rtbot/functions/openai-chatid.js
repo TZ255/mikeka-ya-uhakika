@@ -40,7 +40,7 @@ const extractInfoOpenAi = async (bot, ctx, imp, lipaTexts) => {
                 });
 
                 const response = await openai.responses.parse({
-                    model: "gpt-5-mini",
+                    model: "gpt-5-nano",
                     input: command,
                     text: {
                         format: zodTextFormat(miamalaSchema, "parsedTransaction"),
