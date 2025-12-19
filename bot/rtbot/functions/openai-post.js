@@ -44,10 +44,14 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
             });
 
             const response = await openai.responses.parse({
-                model: "gpt-5-nano",
+                model: "gpt-5-mini",
                 input: command,
+                reasoning: {
+                    effort: "low"
+                },
                 text: {
                     format: zodTextFormat(miamalaSchema, "parsedTransaction"),
+                    verbosity: "low"
                 },
             });
 
@@ -75,7 +79,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                     // call yaUhakikaTips Webhook
                     const yaUhakikaServer = "https://yauhakika.up.railway.app/api/payment-webhook"
                     try {
-                        await axios.post(yaUhakikaServer, {phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS})
+                        await axios.post(yaUhakikaServer, { phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS })
                     } catch (error) {
                         await ctx.reply(`Error calling yaUhakikaTips Webhook: ${error.message}`);
                     }
@@ -84,7 +88,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                     // call MTips Webhook
                     const mtipsServer = "https://mikekatips.fly.dev/api/payment-webhook"
                     try {
-                        await axios.post(mtipsServer, {phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS})
+                        await axios.post(mtipsServer, { phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS })
                     } catch (error) {
                         await ctx.reply(`Error calling MTips Webhook: ${error.message}`);
                     }
