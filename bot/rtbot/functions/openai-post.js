@@ -12,7 +12,7 @@ const miamalaSchema = z.object({
     ok: z.boolean().describe('True if at least name, trans_id and amount are found, false otherwise'),
     name: z.string()
         .transform(val => val.toUpperCase())
-        .describe("Sender's name. Always transform to capital letter. Ignore company names. If the transaction if from a company and no real sender's name found, ignore and set ok to false"),
+        .describe("Sender's name. Always transform to capital letter."),
     phone: z.string()
         .default('+255100')
         .describe('Phone number with the country code including the + sign. If missing write +255100 as phone number'),
@@ -24,7 +24,7 @@ const miamalaSchema = z.object({
 
 const extractMiamalaInfo = async (bot, ctx, imp) => {
     const miamala = ['From: M-PESA', 'From: MIXX BY YAS']
-    const junkies = ['TIPS-', 'has received', 'Transfered', 'sent to', 'from Changisha account', 'umelipa']
+    const junkies = ['TIPS-', 'has received', 'Transfered', 'sent to', 'from Changisha account', 'umelipa', 'withdraw', 'umetoa']
     try {
         let txt = ctx.channelPost.text ? ctx.channelPost.text : 'no text'
         let msgid = ctx.channelPost.message_id;
@@ -66,7 +66,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 })
 
                 await ctx.reply(
-                    `${upd.amt} from ${upd.name}, ${upd.phone}`,
+                    `<i>${upd.amt} from ${upd.name}</i>`,
                     { parse_mode: 'HTML', disable_notification: true, reply_parameters: { message_id: msgid } }
                 );
 
