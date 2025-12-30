@@ -50,11 +50,11 @@ const edithaBotHandler = async (app) => {
     //setting webhook
     try {
         let hookPath = `/telebot/${process.env.USER}/editha`
+        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
         await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
             drop_pending_updates: true
         })
         await bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
     } catch (error) {
         console.error(error?.message)
     }
