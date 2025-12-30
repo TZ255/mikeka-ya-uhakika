@@ -59,12 +59,12 @@ const rtfunction = async (app) => {
 
             let hookPath = `/telebot/${process.env.USER}/${t.NAME}`
             app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-            bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-                drop_pending_updates: true
-            }).then(() => {
-                    console.log(`webhook for ${t.NAME} is set`)
-                    bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-                }).catch(e => console.log(e.message))
+            // bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+            //     drop_pending_updates: true
+            // }).then(() => {
+            //         console.log(`webhook for ${t.NAME} is set`)
+            //         bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+            //     }).catch(e => console.log(e.message))
 
             const miamala = ['nimelipia', 'tayari', 'nimelipa', 'tayali', 'malipo', 'umetuma kikamilifu', 'umetuma tsh', 'you have paid', 'utambulisho wa muamala', 'confirmed. tsh', 'imethibitishwa', 'umechangia', 'transaction id', 'rt limited', '13015916', 'nmelpa', 'nmetma', 'nimeshalipa', 'nishanunua', 'nshanunua', 'nmelipa']
 

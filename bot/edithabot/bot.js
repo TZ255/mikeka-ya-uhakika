@@ -51,12 +51,12 @@ const edithaBotHandler = async (app) => {
     try {
         let hookPath = `/telebot/${process.env.USER}/editha`
         app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
-        }).then(()=> {
-            bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`).catch(e => {})
-        })
-        .catch(e => {})
+        // bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+        //     drop_pending_updates: true
+        // }).then(()=> {
+        //     bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`).catch(e => {})
+        // })
+        // .catch(e => {})
     } catch (error) {
         console.error(error?.message)
     }
