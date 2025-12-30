@@ -48,17 +48,19 @@ const edithaBotHandler = async (app) => {
     const bot = new Bot(process.env.EDITHA_TOKEN)
 
     //setting webhook
-    try {
-        let hookPath = `/telebot/${process.env.USER}/editha`
-        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-        // bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-        //     drop_pending_updates: true
-        // }).then(()=> {
-        //     bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`).catch(e => {})
-        // })
-        // .catch(e => {})
-    } catch (error) {
-        console.error(error?.message)
+    let hookPath = `/telebot/${process.env.USER}/editha`
+    app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
+
+    if (process.env.environment === "local") {
+        try {
+            await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                drop_pending_updates: true
+            })
+            await bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+        } catch (error) {
+            console.error(error?.message)
+            await bot.api.sendMessage(imp.shemdoe, `Failed to set webhook for Editha`)
+        }
     }
 
     //use auto-retry
