@@ -683,11 +683,12 @@ const rtfunction = async (app) => {
                     let biz_id = biz_conn.id
                     //angalia msg sio yangu mwenyewe && robot ni rt && bizid ni kwenye chat yangu
                     if (!malipoAdmins.includes(ctx.businessMessage.from.id) && rtbot_id == 6286589854 && biz_conn.user.id == imp.rtmalipo) {
-                        //notify me for new message if
-                        WirePusher(message, Math.round(userid / 100), fname)
                         //check if user is on db and has name and phone
                         let user = await rtStarterModel.findOne({ chatid: userid })
                         if (user && user?.fullName) {
+                            //update user info with biz conn id
+                            user.biz_id = biz_id
+                            await user.save()
                             //check miamala ya user
                             let query = muamalaQuery(user.fullName)
                             let tx = await miamalaModel.find(query)
@@ -704,8 +705,6 @@ const rtfunction = async (app) => {
                                 await addingBusinessPoints(bot, ctx, userid, points, imp, delay, txid, emoji)
                                 //mark biz msg as read
                                 await ctx.readBusinessMessage().catch(e => console.log(e?.message))
-                                //clear wirepusher msg
-                                WirePusherClear(Math.round(userid / 100))
                             }
                         }
                     } else if (malipoAdmins.includes(ctx.businessMessage.from.id)) {
@@ -736,9 +735,6 @@ const rtfunction = async (app) => {
                                 await ctx.reply(link, { link_preview_options: { is_disabled: true } })
                                 break;
                         }
-
-                        //clear wirepusher
-                        WirePusherClear(Math.round(uid / 100))
                     }
                 } catch (error) {
                     console.log(error.message, error)
