@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 const rtSchema = new Schema({
     chatid: {type: Number,},
     username: {type: String},
+    biz_id: {type: String},
     refferer: {type: String},
     handle: {type: String},
     movie: {type: Number, default: 0},

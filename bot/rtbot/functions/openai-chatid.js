@@ -12,7 +12,7 @@ const miamalaSchema = z.object({
     ok: z.boolean().describe('True if at least name, trans_id and amount are found, false otherwise'),
     name: z.string()
         .transform(val => val.toUpperCase())
-        .describe("Sender's name. Always transform to capital letter"),
+        .describe("Sender’s name. Always convert to uppercase. Make sure it is the actual sender’s name and not a mobile network or service name (e.g. M-Pesa, Vodacom, HaloPesa, Airtel, etc.)"),
     phone: z.string()
         .default('+255100')
         .describe('Phone number with the country code including the + sign. If missing write +255100 as phone number'),
