@@ -73,7 +73,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 //check if is for vip tips, call the tips api
                 if ((parsedTransaction?.amount >= 8000 && parsedTransaction.amount < 9000) || parsedTransaction?.phone === '+255757259678') {
                     // call yaUhakikaTips Webhook
-                    const yaUhakikaServer = "https://yauhakika.up.railway.app/api/payment-webhook"
+                    const yaUhakikaServer = "https://mikekayauhakika.com/api/payment-webhook"
                     try {
                         await axios.post(yaUhakikaServer, { phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS })
                     } catch (error) {
@@ -82,7 +82,7 @@ const extractMiamalaInfo = async (bot, ctx, imp) => {
                 }
                 if (parsedTransaction?.amount >= 9000 && parsedTransaction.amount < 10000) {
                     // call MTips Webhook
-                    const mtipsServer = "https://mikekatips.fly.dev/api/payment-webhook"
+                    const mtipsServer = "https://mikekatips.co.tz/api/payment-webhook"
                     try {
                         await axios.post(mtipsServer, { phone: parsedTransaction.phone, status: "COMPLETED", SECRET: process.env.PASS })
                     } catch (error) {
