@@ -190,7 +190,11 @@ const edithaBotHandler = async (app) => {
 
     bot.command('p_videos', async ctx => {
         try {
-            await bot.api.copyMessage(ctx.chat.id, imp.pzone, 17879)
+            let url = `https://getafilenow.com/1584699`
+            let inline_keyboard = new InlineKeyboard().url('🔞 UNLOCK NOW', url)
+            await bot.api.copyMessage(ctx.chat.id, imp.pzone, 17879, {
+                reply_markup: inline_keyboard
+            })
         } catch (err) {
             console.log(err.message)
         }
