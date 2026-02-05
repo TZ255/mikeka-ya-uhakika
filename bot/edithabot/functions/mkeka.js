@@ -6,7 +6,7 @@ const sendMkeka3 = async (ctx, delay, bot, imp) => {
         let bwTZ = `http://bet-link.top/betway-tz/register`
         let gsb = 'http://bet-link.top/gsb-tz/register'
         let pm = `https://pmaff.com/?serial=61291818&creative_id=1788`
-        let ke = `http://bet-link.top/22bet/register`
+        let ke = `http://bet-link.top/yellowbet-ke/register`
         let betWinner = `http://bet-link.top/betwinner/register`
         let ug = `http://bet-link.top/gsb-ug/register`
         let prm = `http://bet-link.top/premierbet/register`
@@ -29,7 +29,7 @@ const sendMkeka3 = async (ctx, delay, bot, imp) => {
                 odds = (odds * m.odds).toFixed(2)
             }
 
-            let finaText = txt + `<b>🔥 Total Odds: ${Number(odds).toLocaleString('en-US')}</b>\n\n•••••\n\n<blockquote>Betslip prepared at <b>22Bet</b> with 200% bonus on your first deposit</blockquote>\n\n<b>Register with 22Bet \n\n👤 (Kenya 🇰🇪)\n<a href="${betWinner}">https://betwinner.ke/register\nhttps://betwinner.ke/register</a>\n\n👤 (Uganda 🇺🇬)\n<a href="${ug}">https://www.gsb.ug/register</a>\n\n👤 (Tanzania 🇹🇿)\n<a href="${bwTZ}">https://betway.co.tz/register</a>\n\n\n•••</b>`
+            let finaText = txt + `<b>🔥 Total Odds: ${Number(odds).toLocaleString('en-US')}</b>\n\n•••••\n\n<blockquote>Betslip prepared at <b>YellowBet</b> with 100% bonus on your first deposit</blockquote>\n\n<b>Register with YellowBet \n\n👤 (Kenya 🇰🇪)\n<a href="${ke}">https://yellowbet.ke/register</a>\n\n👤 (Uganda 🇺🇬)\n<a href="${ug}">https://www.gsb.ug/register</a>\n\n👤 (Tanzania 🇹🇿)\n<a href="${bwTZ}">https://betway.co.tz/register</a>\n\n\n•••</b>`
 
             await ctx.reply(finaText, { parse_mode: 'HTML', disable_web_page_preview: true })
         } else {
