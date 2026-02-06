@@ -13,6 +13,8 @@ const TimeAgo = require('javascript-time-ago')
 const en = require('javascript-time-ago/locale/en')
 const { WeekDayFn } = require('./fns/weekday')
 const miamalaModel = require('../bot/rtbot/database/miamala')
+const KenyanNyumbuModel = require('../bot/edithabot/database/kenyanDb')
+const UgandanNyumbuModel = require('../bot/edithabot/database/chats')
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
@@ -235,8 +237,7 @@ router.get('/contact/telegram', (req, res) => {
     res.redirect('https://t.me/+owXoXwLlSHxmYjJk')
 })
 
-router.get('/API/testing', async (req, res)=> {
-    //await miamalaModel.syncIndexes()
+router.get('/api/testing', async (req, res)=> {
     res.end()
 })
 

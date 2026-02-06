@@ -4,8 +4,7 @@ const startFn = (bot, ugandanDb, kenyanDb, imp, delay, InlineKeyboard) => {
     bot.command('start', async ctx => {
         let defaultReplyMkp = {
             keyboard: [
-                [{ text: "💰 MONEY" }, { text: "🍑 PU$$Y" }],
-                [{ text: "🎯 BET OF THE DAY (🔥)" }]
+                [{ text: "🎯 BET OF THE DAY 🔥" }]
             ],
             is_persistent: true,
             resize_keyboard: true
@@ -38,6 +37,7 @@ const startFn = (bot, ugandanDb, kenyanDb, imp, delay, InlineKeyboard) => {
                     })
                 }
             } else {
+                return ctx.reply(`Hi! My name is Editha. I am your daily source of premium football betting tips. \n\nClick /slip to get today's betslip.`, { reply_markup: defaultReplyMkp })
                 let url = `https://getafilenow.com/1584699`
                 let inline_keyboard = new InlineKeyboard().url('🔞 UNLOCK NOW', url)
                 await ctx.api.copyMessage(ctx.chat.id, imp.pzone, 17879, {

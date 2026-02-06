@@ -7,9 +7,8 @@ const post_to_channels = (my_channels_db, keChannels, bot, imp) => {
         let ch_link = 'http://t.me/cute_edithabot?start=malaya_kenya'
         let keyb = [
             [{ text: "❌❌ Video za Kutombana ❤️", url: ch_link },],
-            [{ text: "🔥 Sex Calls 🔞", url: ch_link },],
-            [{ text: "🍑🍑 SUGAR MUMMIES 💋", url: ch_link },],
-            [{ text: "🔞 KENYAN XXX VIDEOS ❌❌❌", url: ch_link },],
+            [{ text: "🍑🍑 SUGAR MAMA 💋", url: ch_link },],
+            [{ text: "🔞 KENYAN POOONO VIDEOS ❌❌❌", url: ch_link },],
             [{ text: "🔥🔥 KENYAN HOT GIRLS 🔞", url: ch_link }]
         ]
     
@@ -32,10 +31,9 @@ const post_to_channels = (my_channels_db, keChannels, bot, imp) => {
         let txt = ctx.message.text
         let ch_link = 'http://t.me/cute_edithabot?start=ug_whores'
         let keyb = [
-            [{ text: "❌❌ UGANDAN ESCORTS | Everywhere ❤️", url: ch_link },],
-            [{ text: "🔥 Sexy Calls 🔞", url: ch_link },],
-            [{ text: "🍑🍑 SUGAR MUMMIES 💋", url: ch_link },],
-            [{ text: "🔞 UGANDAN XXX VIDEOS ❌❌❌", url: ch_link },],
+            [{ text: "❌❌ UGANDAN ESCORTS ❤️", url: ch_link },],
+            [{ text: "🍑🍑 SUGAR MAMAS 💋", url: ch_link },],
+            [{ text: "🔞 UGANDAN POOONO VIDEOS ❌❌❌", url: ch_link },],
             [{ text: "🔥🔥 KAMPALA HOT GIRLS 🔞", url: ch_link }]
         ]
     
