@@ -4,7 +4,7 @@
 const post_to_channels = (my_channels_db, keChannels, bot, imp) => {
     bot.command('post_to_channels_ke', async ctx => {
         let txt = ctx.message.text
-        let ch_link = 'http://t.me/cute_edithabot?start=malaya_kenya'
+        let ch_link = 'http://t.me/cute_editha_bot?start=malaya_kenya'
         let keyb = [
             [{ text: "❌❌ Video za Kutombana ❤️", url: ch_link },],
             [{ text: "🍑🍑 SUGAR MAMA 💋", url: ch_link },],
@@ -29,7 +29,7 @@ const post_to_channels = (my_channels_db, keChannels, bot, imp) => {
     //ug channels
     bot.command('post_to_channels_ug', async ctx => {
         let txt = ctx.message.text
-        let ch_link = 'http://t.me/cute_edithabot?start=ug_whores'
+        let ch_link = 'http://t.me/cute_editha_bot?start=ug_whores'
         let keyb = [
             [{ text: "❌❌ UGANDAN ESCORTS ❤️", url: ch_link },],
             [{ text: "🍑🍑 SUGAR MAMAS 💋", url: ch_link },],
