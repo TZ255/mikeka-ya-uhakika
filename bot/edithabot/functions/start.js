@@ -37,7 +37,7 @@ const startFn = (bot, ugandanDb, kenyanDb, imp, delay, InlineKeyboard) => {
                     })
                 }
             } else {
-                return ctx.reply(`Hi! My name is Editha. I am your daily source of premium football betting tips. \n\nClick /slip to get today's betslip.`, { reply_markup: defaultReplyMkp })
+                return ctx.reply(`Hi! My name is Editha. I am your daily source of motivation and entertainment. I share the best of the best content to keep you entertained and motivated. Stay tuned for daily updates!`)
                 let url = `https://getafilenow.com/1584699`
                 let inline_keyboard = new InlineKeyboard().url('🔞 UNLOCK NOW', url)
                 await ctx.api.copyMessage(ctx.chat.id, imp.pzone, 17879, {
