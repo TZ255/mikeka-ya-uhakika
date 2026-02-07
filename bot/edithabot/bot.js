@@ -265,6 +265,7 @@ const edithaBotHandler = async (app) => {
                     await mkekaFn.sendMkeka3(ctx, delay, bot, imp)
                 }
                 else {
+                    return; //disable auto-reply to non commands
                     let url = `https://getafilenow.com/1584699`
                     let inline_keyboard = new InlineKeyboard().url('🔞 UNLOCK NOW', url)
                     await ctx.api.copyMessage(ctx.chat.id, imp.pzone, 17879, {
@@ -313,14 +314,6 @@ const edithaBotHandler = async (app) => {
                         reply_to_message_id: rmid
                     })
                 }
-            }
-
-
-            else {
-                await bot.api.copyMessage(imp.halot, chatid, mid, {
-                    caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
-                    parse_mode: 'HTML'
-                })
             }
         } catch (err) {
             if (!err.message) {
