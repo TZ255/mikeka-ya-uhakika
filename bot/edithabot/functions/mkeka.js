@@ -1,5 +1,77 @@
 const mkekaMega = require('../database/mkeka-mega')
 const waombajiModel = require('../database/waombaji')
+const tg_slips = require('../database/tg_slips')
+
+const sendMkeka1 = async (ctx, delay, bot, imp) => {
+    try {
+        const tz = 'Africa/Nairobi';
+
+        // helper to format date dd/mm/yyyy in Nairobi TZ
+        const formatDate = (date) =>
+            new Intl.DateTimeFormat('en-GB', {
+                timeZone: tz,
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }).format(date);
+
+        // get Nairobi time safely
+        const now = new Date();
+        const parts = new Intl.DateTimeFormat('en-GB', {
+            timeZone: tz,
+            hour: '2-digit',
+            hour12: false
+        }).formatToParts(now);
+
+        const hour = Number(parts.find(p => p.type === 'hour').value);
+
+        const todayStr = formatDate(now);
+
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = formatDate(tomorrow);
+
+        // fetch both slips in parallel
+        const [todaySlip, tomorrowSlip] = await Promise.all([
+            tg_slips.findOne({ siku: todayStr, brand: 'gsb' }).lean(),
+            tg_slips.findOne({ siku: tomorrowStr, brand: 'gsb' }).lean()
+        ]);
+
+        // sending window 00 → 21:59
+        const isSendingHours = hour >= 0 && hour < 22;
+
+        // =========================
+        // CASE 1: within sending hours
+        if (isSendingHours) {
+            if (todaySlip) {
+                await ctx.replyWithChatAction('upload_photo');
+                await delay(400);
+                return bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, todaySlip.mid);
+            }
+
+            await ctx.replyWithChatAction('typing');
+            await delay(700);
+            return ctx.reply('Betslip namba 1 bado haiko tayari... jaribu betslip namba 3 /betslip3');
+        }
+
+        // =========================
+        // CASE 2: after sending hours (22+)
+        if (tomorrowSlip) {
+            await ctx.replyWithChatAction('upload_photo');
+            await delay(400);
+            return bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, tomorrowSlip.mid);
+        }
+
+        await ctx.replyWithChatAction('typing');
+        await delay(700);
+        return ctx.reply(
+            'Betslip za leo tumefunga tayari... betslip za kesho bado hazijaandaliwa.\n\nJaribu tena baadae.'
+        );
+
+    } catch (error) {
+        console.error('sendMkeka1 error:', error?.message || error);
+    }
+};
 
 const sendMkeka3 = async (ctx, delay, bot, imp) => {
     try {
@@ -45,5 +117,5 @@ const sendMkeka3 = async (ctx, delay, bot, imp) => {
 }
 
 module.exports = {
-    sendMkeka3
+    sendMkeka3, sendMkeka1
 }

@@ -106,7 +106,16 @@ const edithaBotHandler = async (app) => {
         }
     })
 
-    bot.command(['slip', 'betslip', 'mkeka'], async ctx => {
+    bot.command(['slip', 'betslip', 'mkeka', 'slip1', 'betslip1', 'mkeka1'], async ctx => {
+        try {
+            await mkekaFn.sendMkeka1(ctx, delay, bot, imp)
+        } catch (err) {
+            console.log(err)
+            await ctx.reply(err.message).catch(e => console.log(e.message))
+        }
+    })
+
+    bot.command(['slip3', 'betslip3', 'mkeka3'], async ctx => {
         try {
             await mkekaFn.sendMkeka3(ctx, delay, bot, imp)
         } catch (err) {
