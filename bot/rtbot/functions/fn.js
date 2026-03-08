@@ -71,7 +71,7 @@ const sendPaidVideo = async (ctx, delay, bot, imp, vid, userid, OS) => {
     let type = OS
     let botname = ctx.me.username
     await ctx.replyWithChatAction('upload_video')
-    let dvid = await bot.api.copyMessage(userid, imp.ohmyDB, vid.msgId, {
+    let dvid = await bot.api.copyMessage(userid, imp.bckp_db, vid.msgId, {
         protect_content: false,
         reply_markup: {
             keyboard: [

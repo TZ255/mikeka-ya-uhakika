@@ -48,7 +48,8 @@ const rtfunction = async (app) => {
             aliProducts: -1001971329607,
             _pack1: -1001943515650,
             lipaPtsCh: -1002104835299,
-            newRT: -1002228998665
+            newRT: -1002228998665,
+            bckp_db: -1002363155302
         }
 
         for (let t of tksn) {
