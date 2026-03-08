@@ -123,7 +123,7 @@ const rtfunction = async (app) => {
                             let vid = await videosDB.findOne({ nano })
 
                             let user = await rtStarterModel.findOne({ chatid: userid })
-                            if (user.points > 249) {
+                            if (user.paid === true && user.points > 249) {
                                 if (pload.includes('iphone-')) {
                                     await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, iphone)
                                 } else if (pload.includes('android-')) {

@@ -17,5 +17,5 @@ const rtSchema = new Schema({
 }, {strict: false, timestamps: true })
 
 const ohymy = mongoose.connection.useDb('ohmyNew')
-const model = ohymy.model('rtbot-starter', rtSchema)
-module.exports = model
+const rtStarterModel = ohymy.model('rtbot-starter', rtSchema)
+module.exports = rtStarterModel
