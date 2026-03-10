@@ -36,7 +36,7 @@ const rtfunction = async (app) => {
             sh1xbet: 5755271222,
             rtmalipo: 5849160770,
             xzone: -1001740624527,
-            ohmyDB: -1001586042518,
+            ohmyDB: -1002363155302,
             xbongo: -1001263624837,
             mikekaDB: -1001696592315,
             logsBin: -1001845473074,
@@ -49,7 +49,7 @@ const rtfunction = async (app) => {
             _pack1: -1001943515650,
             lipaPtsCh: -1002104835299,
             newRT: -1002228998665,
-            bckp_db: -1002363155302
+            bckp_db: -1003856489191
         }
 
         for (let t of tksn) {
