@@ -19,7 +19,6 @@ router.post('/webhook/wasender', async (req, res) => {
     if (!event || !data) return console.error('Invalid webhook payload: missing event or data');
 
     const signature = req.headers['x-webhook-signature']
-    console.log('Headers:', req.headers)
     if (!signature || signature !== WEBHOOK_SECRET) return console.error('Invalid webhook signature');
 
     if (event === "messages.received" ) {
@@ -31,10 +30,7 @@ router.post('/webhook/wasender', async (req, res) => {
     }
     
     try {
-        res.status(200).json({
-            status: 'success',
-            message: 'WhatsApp route is working'
-        })
+        //
     } catch (error) {
         console.error(error)
     }
