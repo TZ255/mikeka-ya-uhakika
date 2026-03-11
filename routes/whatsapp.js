@@ -28,6 +28,12 @@ router.post('/webhook/wasender', async (req, res) => {
     if (event === "messages.upsert" ) {
         return console.log('Received new message upsert:', data)
     }
+
+    if (event === "chats.upsert" ) {
+        return console.log('Received new chat upsert:', data)
+    }
+
+    console.log('Received unhandled event:', event, data)
     
     try {
         //
