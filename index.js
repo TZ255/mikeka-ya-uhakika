@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const getRouter = require('./routes/get')
+const whatsappRoutes = require('./routes/whatsapp')
 const postRouter = require('./routes/post')
 const elimit = require('express-rate-limit')
 const rahatupu_bot = require('./bot/rtbot/bot')
@@ -41,6 +42,7 @@ if (process.env.environment == 'production') {
 app.use(cors())
 app.use(limiter)
 app.use(postRouter)
+app.use(whatsappRoutes)
 app.use(getRouter)
 
 //attach polling
