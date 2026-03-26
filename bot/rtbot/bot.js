@@ -14,6 +14,7 @@ const extractInfoOpenAi = require('./functions/openai-chatid')
 const { extractMiamalaInfo, addingBusinessPoints, WirePusher, WirePusherClear } = require('./functions/openai-post')
 const call_function = require('./functions/fn')
 const { muamalaQuery } = require('./functions/querymiamala')
+const tgTrailerModel = require('./database/gif')
 
 const rtfunction = async (app) => {
     try {
@@ -49,7 +50,8 @@ const rtfunction = async (app) => {
             _pack1: -1001943515650,
             lipaPtsCh: -1002104835299,
             newRT: -1002228998665,
-            bckp_db: -1003856489191
+            bckp_db: -1003856489191,
+            trailer_chan: -1001608248942
         }
 
         for (let t of tksn) {
@@ -381,6 +383,28 @@ const rtfunction = async (app) => {
                 } catch (error) {
                     await ctx.reply(error.message)
                     console.log(error.message, error)
+                }
+            })
+
+            bot.command('trailer', async ctx => {
+                try {
+                    if (!ctx.message?.reply_to_message || !ctx.message.reply_to_message?.video) return;
+
+                    let caption = ctx.message.reply_to_message.caption
+                    let saved_caption = caption.split("🎥")[1]?.trim() || null
+                    if (!saved_caption) return await ctx.reply("Tumeshindwa pata caption. Wrong format");
+
+                    let db_caption = await videosDB.findOne({ caption: saved_caption });
+                    if (!saved_caption) return await ctx.reply("Tumeshindwa pata caption. No DB Video found");
+
+                    let nano = db_caption?.nano
+                    let trailer = await tgTrailerModel.findOne({ nano })
+                    if (!trailer) return await ctx.reply("Trailer ya video hii haipo");
+
+                    await ctx.api.copyMessage(ctx.chat.id, imp.trailer_chan, trailer.gifId)
+                } catch (error) {
+                    await ctx.reply('Kumetokea tatizo kwenye kutafuta trailer...').catch(e => { })
+                    console.log(error?.message)
                 }
             })
 
