@@ -15,6 +15,7 @@ const { WeekDayFn } = require('./fns/weekday')
 const miamalaModel = require('../bot/rtbot/database/miamala')
 const KenyanNyumbuModel = require('../bot/edithabot/database/kenyanDb')
 const UgandanNyumbuModel = require('../bot/edithabot/database/chats')
+const { sendWhatsAppTextMessage, sendPollToMkekaChannel } = require('../bot/mkekaleo-wh/bot')
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
@@ -238,6 +239,7 @@ router.get('/contact/telegram', (req, res) => {
 })
 
 router.get('/api/testing', async (req, res)=> {
+    //sendPollToMkekaChannel(null)
     res.end()
 })
 
