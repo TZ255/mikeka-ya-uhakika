@@ -112,47 +112,47 @@ const rtfunction = async (app) => {
                     if (ctx.match && !rateLimitter.includes(ctx.chat.id)) {
                         rateLimitter.push(ctx.chat.id)
                         let pload = ctx.match
-                        if (pload.includes('&size')) { pload = pload.split('&size')[0] }
+                        if (pload.includes('&size')) { pload = pload.split('&size')[0] };
+
                         let userid = ctx.chat.id
+
                         if (pload.includes('RTBOT-') || pload.includes('MOVIE-FILE')) {
                             let android = `https://t.me/+lcBycrCJ_9o0ZGI0`
                             let iphone = `https://t.me/+dGYRm-FoKJI3MWM8`
                             let gen = `https://telegra.ph/Channels-za-RT-Premium-08-20-2`
                             let nano = ''
-                            if (pload.includes('RTBOT-')) { nano = pload.split('RTBOT-')[1] }
-                            if (pload.includes('MOVIE-FILE')) { nano = pload.split('MOVIE-FILE')[1] }
+                            let file_type = ''
+                            if (pload.includes('RTBOT-')) {
+                                nano = pload.split('RTBOT-')[1]
+                                file_type = 'Video'
+                            }
+                            if (pload.includes('MOVIE-FILE')) {
+                                nano = pload.split('MOVIE-FILE')[1]
+                                file_type = 'Movie'
+                            }
 
-                            let vid = await videosDB.findOne({ nano })
+                            const [vid, user] = await Promise.all([
+                                await videosDB.findOne({ nano }),
+                                await rtStarterModel.findOne({ chatid: userid })
+                            ]);
 
-                            let user = await rtStarterModel.findOne({ chatid: userid })
-                            if (user.paid === true && user.points > 249) {
-                                if (pload.includes('iphone-')) {
-                                    await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, iphone)
-                                } else if (pload.includes('android-')) {
-                                    await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, android)
-                                } else if (pload.includes('MOVIE-FILE')) {
-                                    await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, 'movie')
-                                } else {
-                                    await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, gen)
-                                }
+                            if (!user) return await ctx.reply('Samahani! Huwezi pokea huduma hii. Wasiliana na admin');
+                            if (!vid) return await ctx.reply('Samahani! Huduma hii imesitishwa kwa muda. Wasiliana na admin');
+
+                            if (user.points < 250) return await call_function.payingInfo(ctx, user, file_type);
+
+                            if (pload.includes('iphone-')) {
+                                await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, iphone)
+                            } else if (pload.includes('android-')) {
+                                await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, android)
+                            } else if (pload.includes('MOVIE-FILE')) {
+                                await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, 'movie')
                             } else {
-                                await call_function.payingInfo(bot, ctx, delay, imp, userid, 16)
+                                await call_function.sendPaidVideo(ctx, delay, bot, imp, vid, userid, gen)
                             }
                         }
-                        if (pload.toLowerCase() == 'verified_list') {
-                            await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7755, {
-                                reply_markup: {
-                                    inline_keyboard: [
-                                        [
-                                            { text: 'Omba kuongezwa kwenye List Hii', url: 'http://t.me/blackberry255' }
-                                        ]
-                                    ]
-                                }
-                            })
-                        } else if (pload.toLowerCase() == 'iphone') {
-                            await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 12)
-                        } else if (pload.toLowerCase() == 'ongeza_points') {
-                            await call_function.payingInfo(bot, ctx, delay, imp, userid, 2)
+                        if (pload.toLowerCase() == 'ongeza_points') {
+                            await call_function.payingCopyInfo(bot, ctx, delay, imp, userid, 2)
                         }
                     }
                     else if (ctx.match && rateLimitter.includes(ctx.chat.id)) {
@@ -313,7 +313,7 @@ const rtfunction = async (app) => {
 
             bot.command(['ongeza_pts', 'ongeza_points'], async ctx => {
                 try {
-                    await call_function.payingInfo(bot, ctx, delay, imp, ctx.chat.id, 26)
+                    await call_function.payingCopyInfo(bot, ctx, delay, imp, ctx.chat.id, 26)
                 } catch (err) {
                     console.log(err.message)
                 }
@@ -459,9 +459,9 @@ const rtfunction = async (app) => {
                         await ctx.answerCallbackQuery({ text: txt, cache_time: 10, show_alert: true })
                     } else if (['rudi_nyuma', 'ongeza_points'].includes(cdata)) {
                         await ctx.api.deleteMessage(chatid, cmsgid)
-                        await call_function.payingInfo(bot, ctx, delay, imp, chatid, 2)
+                        await call_function.payingCopyInfo(bot, ctx, delay, imp, chatid, 2)
                     } else if (cdata == 'vid_ongeza_pts') {
-                        await call_function.payingInfo(bot, ctx, delay, imp, chatid, 2)
+                        await call_function.payingCopyInfo(bot, ctx, delay, imp, chatid, 2)
                     } else if (cdata == 'voda') {
                         await call_function.mtandaoCallBack(bot, ctx, chatid, imp, 3, cmsgid)
                     } else if (cdata == 'tigo') {
@@ -603,10 +603,10 @@ const rtfunction = async (app) => {
                                 break;
 
                             case '➕ Ongeza Points': case '/ONGEZA_POINTS':
-                                await call_function.payingInfo(bot, ctx, delay, imp, userid, 2)
+                                await call_function.payingCopyInfo(bot, ctx, delay, imp, userid, 2)
                                 break;
 
-                            case '⛑ Help / Msaada ⛑':
+                            case '⛑ Help / Msaada ⛑': case '⛑ Help': case '⛑ Help (Msaada)':
                                 await bot.api.copyMessage(userid, imp.rtcopyDB, 9)
                                 break;
 
